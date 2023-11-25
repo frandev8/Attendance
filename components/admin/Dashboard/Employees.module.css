@@ -1,0 +1,9 @@
+.iconAvatar {
+  height: 42px;
+  width: 42px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e6eaf5;
+}

@@ -1,0 +1,39 @@
+.container {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 20px;
+}
+
+.header {
+  text-align: center;
+  font-size: 24px;
+}
+
+.body {
+  padding: 20px;
+  font-size: 16px;
+}
+
+.footer {
+  text-align: center;
+  font-size: 14px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.btn-secondary {
+  background-color: #ffffff;
+  color: #007bff;
+}

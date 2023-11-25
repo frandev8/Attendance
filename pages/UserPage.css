@@ -1,0 +1,19 @@
+.header1 {
+  text-align: center;
+}
+
+.main1 {
+  margin: 0 auto;
+  width: 50%;
+  padding: 20px;
+}
+
+.footer1 {
+  text-align: center;
+}
+
+@media (max-width: 576px) {
+  .main1 {
+    width: 100%;
+  }
+}

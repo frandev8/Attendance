@@ -1,0 +1,30 @@
+.header2 {
+  text-align: center;
+}
+
+.main2 {
+  margin: 0 auto;
+  width: 50%;
+  padding: 20px;
+}
+
+.footer2 {
+  text-align: center;
+}
+
+.table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  border: 1px solid black;
+  padding: 5px;
+}
+
+@media (max-width: 576px) {
+  .main2 {
+    width: 100%;
+  }
+}
