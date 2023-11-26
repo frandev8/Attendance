@@ -13,8 +13,10 @@ export function UserEmailVerifyPage() {
   const navigate = useNavigate();
 
   async function confirmEmailHandler() {
+    const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
     const response = await fetch(
-      `http://localhost:3000/employee/verify/${params.id}/${params.token}`
+      `${serverURL}/employee/verify/${params.id}/${params.token}`
     );
 
     if (!response.ok) {
@@ -66,8 +68,12 @@ export async function action({ request, params }) {
   const isConfirm = data.get("key");
 
   if (isConfirm) {
+
+    const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+
     const response = await fetch(
-      `http://localhost:3000/employee/verify/:${employeeId}/:${employeeToken}`
+      `${serverURL}/employee/verify/:${employeeId}/:${employeeToken}`
     );
 
     if (!response.ok) {

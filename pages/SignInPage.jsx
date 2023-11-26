@@ -101,6 +101,8 @@ export function SignInPage() {
 export async function action({ request }) {
   const data = await request.formData();
 
+  const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
   const role = data.get("role");
 
   const formData = {
@@ -110,7 +112,7 @@ export async function action({ request }) {
   };
 
   if (role == "employee") {
-    const response = await fetch("http://localhost:3000/employee/login", {
+    const response = await fetch(`${serverURL}/employee/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -133,7 +135,7 @@ export async function action({ request }) {
 
     return redirect("/user");
   } else if (role == "admin") {
-    const response = await fetch("http://localhost:3000/admin/login", {
+    const response = await fetch(`${serverURL}/admin/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

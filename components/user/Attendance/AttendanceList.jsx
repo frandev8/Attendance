@@ -21,11 +21,12 @@ const AttendanceList = () => {
 
   useEffect(() => {
     async function fetchData() {
-
       const userId = "654acbf48626cf74c1d45549";
 
+      const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
       const response = await fetch(
-        `http://localhost:3000/employee/attendance/${userId}`
+        `${serverURL}/employee/attendance/${userId}`
       );
 
       if (!response.ok) {

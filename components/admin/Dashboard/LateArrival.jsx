@@ -22,7 +22,9 @@ export default function LateArrival() {
 
     const loginToken = document.cookie.match("(^|;)\\s?adminLogToken=([^;]+)");
 
-    const response = await fetch(`http://localhost:3000/admin/attendance/late`);
+    const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+    const response = await fetch(`${serverURL}/admin/attendance/late`);
 
     if (!response.ok) {
       throw json({ msg: "Couldn't fetch data" }, { status: 500 });

@@ -21,9 +21,9 @@ export default function Absent() {
 
     const loginToken = document.cookie.match("(^|;)\\s?adminLogToken=([^;]+)");
 
-    const response = await fetch(
-      `http://localhost:3000/admin/attendance/absent`
-    );
+    const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+    const response = await fetch(`${serverURL}/admin/attendance/absent`);
 
     if (!response.ok) {
       throw json({ msg: "Couldn't fetch data" }, { status: 500 });

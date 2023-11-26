@@ -21,8 +21,10 @@ export default function Employees() {
 
     const loginToken = document.cookie.match("(^|;)\\s?adminLogToken=([^;]+)");
 
+    const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
     const response = await fetch(
-      `http://localhost:3000/admin/employee/activated`
+      `${serverURL}/admin/employee/activated`
     );
 
     if (!response.ok) {

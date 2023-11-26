@@ -13,8 +13,10 @@ export function AdminEmailVerifyPage() {
   const navigate = useNavigate();
 
   async function confirmEmailHandler() {
+    const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
     const response = await fetch(
-      `http://localhost:3000/admin/verify/${params.id}/${params.token}`
+      `${serverURL}/admin/verify/${params.id}/${params.token}`
     );
 
     if (!response.ok) {
@@ -66,8 +68,10 @@ export async function action({ request, params }) {
   const isConfirm = data.get("key");
 
   if (isConfirm) {
+    const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
     const response = await fetch(
-      `http://localhost:3000/admin/verify/:${employeeId}/:${employeeToken}`
+      `${serverURL}/admin/verify/:${employeeId}/:${employeeToken}`
     );
 
     if (!response.ok) {

@@ -12,8 +12,10 @@ function MyTimeSheet() {
 
   const userId = "654acbf48626cf74c1d45549";
 
+  const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
   const onClockInHandler = async () => {
-    const res = await fetch(`http://localhost:3000/employee/${userId}`);
+    const res = await fetch(`${serverURL}/employee/${userId}`);
 
     if (!res.ok) {
       return;
@@ -24,18 +26,17 @@ function MyTimeSheet() {
     if (!canClockIn(today, employee.lastCheckInDate)) {
       const loginToken = document.cookie.match("(^|;)\\s?token=([^;]+)");
 
-      const res = await fetch(
-        "http://localhost:3000/employee/attendance/clockIn",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          // credentials: "include",
-          body: JSON.stringify({
-            clockInTime: today.toISOString(),
-            loginToken: loginToken[2],
-          }),
-        }
-      );
+      const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+      const res = await fetch(`${serverURL}/employee/attendance/clockIn`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        // credentials: "include",
+        body: JSON.stringify({
+          clockInTime: today.toISOString(),
+          loginToken: loginToken[2],
+        }),
+      });
 
       if (!res.ok) {
         return;
@@ -60,18 +61,17 @@ function MyTimeSheet() {
     const loginToken = document.cookie.match("(^|;)\\s?token=([^;]+)");
     const clockInToken = document.cookie.match("(^|;)\\s?clockInToken=([^;]+)");
 
-    const res = await fetch(
-      "http://localhost:3000/employee/attendance/clockOut",
-      {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          clockOutTime: date.toISOString(),
-          loginToken: loginToken[2],
-          clockInToken: clockInToken[2],
-        }),
-      }
-    );
+    const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+    const res = await fetch(`${serverURL}/employee/attendance/clockOut`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        clockOutTime: date.toISOString(),
+        loginToken: loginToken[2],
+        clockInToken: clockInToken[2],
+      }),
+    });
     setClockBtn((prev) => !prev);
   };
 

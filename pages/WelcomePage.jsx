@@ -154,7 +154,7 @@ export function WelcomePage() {
 // }
 
 export async function HomeAction({ request }) {
-  console.log("I got called");  
+  console.log("I got called");
   const data = await request.formData();
 
   const role = data.get("role");

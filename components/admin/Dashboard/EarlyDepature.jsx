@@ -20,8 +20,10 @@ export default function Departure() {
 
     const loginToken = document.cookie.match("(^|;)\\s?adminLogToken=([^;]+)");
 
+    const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
     const response = await fetch(
-      `http://localhost:3000/admin/attendance/early-departure`
+      `${serverURL}/admin/attendance/early-departure`
     );
 
     if (!response.ok) {
@@ -29,7 +31,6 @@ export default function Departure() {
     }
 
     const results = await response.json();
-    
 
     setEarlyDepartureCount(results.early.length);
   }

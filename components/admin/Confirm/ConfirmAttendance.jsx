@@ -27,8 +27,10 @@ const ConfirmAttendance = () => {
   async function fetchData() {
     const userId = "654acbf48626cf74c1d45549";
 
+    const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
     const response = await fetch(
-      `http://localhost:3000/admin/confirm-attendance/pending`
+      `${serverURL}/admin/confirm-attendance/pending`
     );
 
     if (!response.ok) {

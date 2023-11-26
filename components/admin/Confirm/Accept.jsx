@@ -11,10 +11,12 @@ function Accept({ refreshAttendanceList }) {
     const attendanceId = "655c8972a805d2a502144812";
     const userId = "654acbf48626cf74c1d45549";
 
+    const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
     const loginToken = document.cookie.match("(^|;)\\s?adminLogToken=([^;]+)");
 
     const response = await fetch(
-      `http://localhost:3000/admin/confirm-attendance/${userId}/accept`,
+      `${serverURL}/admin/confirm-attendance/${userId}/accept`,
       {
         method: "POST",
         headers: {

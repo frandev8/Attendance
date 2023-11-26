@@ -1,7 +1,8 @@
 import { json } from "react-router-dom";
 
 export const land = async (role = "employee", data) => {
-  const response = await fetch(`http://localhost:300/${role}/login`, {
+  
+  const response = await fetch(`${serverURL}/${role}/login`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -12,7 +13,9 @@ export const land = async (role = "employee", data) => {
   return response;
 };
 export const create = async (role, data) => {
-  const response = await fetch(`http://localhost:3000/${role}/register`, {
+
+
+  const response = await fetch(`${serverURL}/${role}/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
