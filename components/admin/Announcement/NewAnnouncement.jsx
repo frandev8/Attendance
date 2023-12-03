@@ -1,22 +1,12 @@
 import Paper from "@mui/material/Paper";
 import { useMutation } from "@tanstack/react-query";
-import {
-  Button,
-  DatePicker,
-  Divider,
-  Flex,
-  Form,
-  Input,
-  Select,
-  Space,
-  Spin,
-} from "antd";
+import { Button, Divider, Form, Input, Space, Spin } from "antd";
 import PropTypes from "prop-types";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { postTimeOff, queryClient } from "../../../utils/http";
-import { isTimeOffFormValid } from "../../../utils/joiValidation";
+import { isAnnouncementFormValid } from "../../../utils/joiValidation";
 
 const { TextArea } = Input;
 
@@ -39,9 +29,7 @@ const BackDrop = ({ closeModal }) => {
 
 const ModalOverlay = ({ closeModal }) => {
   const textAreaRef = useRef();
-  const [timeOffType, setTimeOffType] = useState();
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
+  const titleInputRef = useRef();
 
   const navigate = useNavigate();
 
@@ -53,28 +41,13 @@ const ModalOverlay = ({ closeModal }) => {
     },
   });
 
-  const handleTimeOffType = (value) => {
-    setTimeOffType(value);
-  };
-
-  const handleStartDateChange = (date, dateString) => {
-    console.log(date, dateString);
-    setStartDate(dateString);
-  };
-  const handleEndDateChange = (date, dateString) => {
-    console.log(date, dateString);
-    setEndDate(dateString);
-  };
-
-  const handleNewTimeOffForm = () => {
+  const handleNewAnnouncementForm = () => {
     const formData = {
-      type: timeOffType,
-      startDate,
-      endDate,
-      reason: textAreaRef.current.value?.trim(),
+      title: titleInputRef.current.value?.trim(),
+      message: textAreaRef.current.value?.trim(),
     };
 
-    if (isTimeOffFormValid(formData)) {
+    if (isAnnouncementFormValid(formData)) {
       mutate({ formData: formData });
     }
   };
@@ -102,7 +75,7 @@ const ModalOverlay = ({ closeModal }) => {
           }}
         >
           <Space direction="vertical">
-            <div>Request Time Off </div>
+            <div>New Announcement </div>
             <Divider />
             <Form
               labelCol={{
@@ -116,28 +89,14 @@ const ModalOverlay = ({ closeModal }) => {
                 maxWidth: 600,
               }}
             >
-              <Form.Item label="Type">
-                <Select
-                  placeholder="Select Leave Type"
-                  onChange={handleTimeOffType}
-                >
-                  <Select.Option value="casual">casual</Select.Option>
-                  <Select.Option value="sick">sick</Select.Option>
-                  <Select.Option value="earned">earned</Select.Option>
-                  <Select.Option value="adjustment">adjustment</Select.Option>
-                </Select>
+              <Form.Item label="Title">
+                <Input placeholder="" ref={titleInputRef} />
               </Form.Item>
-              <Form.Item label="Start Date">
-                <DatePicker onChange={handleStartDateChange} />
-              </Form.Item>
-              <Form.Item label="End Date">
-                <DatePicker onChange={handleEndDateChange} />
-              </Form.Item>
-              <Form.Item label="Reason">
+              <Form.Item label="Message">
                 <TextArea
                   rows={4}
                   ref={textAreaRef}
-                  placeholder="What's the reason?"
+                  placeholder="Enter your message..."
                 />
               </Form.Item>
             </Form>
@@ -147,7 +106,7 @@ const ModalOverlay = ({ closeModal }) => {
           <Button type="primary" danger onClick={() => closeModal()}>
             Cancel
           </Button>
-          <Button type="primary" onClick={handleNewTimeOffForm}>
+          <Button type="primary" onClick={handleNewAnnouncementForm}>
             {isPending ? <Spin /> : "Done"}
           </Button>
         </div>
@@ -156,7 +115,7 @@ const ModalOverlay = ({ closeModal }) => {
   );
 };
 
-export const NewTimeOff = ({ closeModal }) => {
+export const NewAnnouncement = ({ closeModal }) => {
   return (
     <>
       {createPortal(
@@ -175,7 +134,7 @@ ModalOverlay.propTypes = {
   closeModal: PropTypes.func,
 };
 
-NewTimeOff.propTypes = {
+NewAnnouncement.propTypes = {
   closeModal: PropTypes.func,
 };
 

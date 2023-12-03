@@ -3,9 +3,10 @@ import MovingIcon from "@mui/icons-material/Moving";
 import PeopleIcon from "@mui/icons-material/People";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
+import { useQuery } from "@tanstack/react-query";
+import { Spin } from "antd";
 import * as React from "react";
-import { useEffect, useLayoutEffect, useState } from "react";
-import { json } from "react-router-dom";
+import { fetchAttendanceSummary } from "../../../utils/http";
 import styles from "./Employees.module.css";
 import Title from "./Title";
 
@@ -14,40 +15,21 @@ function preventDefault(event) {
 }
 
 export default function OnTime() {
-  const [count, setonTimeCount] = useState(0);
-
-  async function getTimeOutCount() {
-    const attendanceId = "655c8972a805d2a502144812";
-    const userId = "654acbf48626cf74c1d45549";
-
-    const loginToken = document.cookie.match("(^|;)\\s?adminLogToken=([^;]+)");
-
-    const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
-
-
-    const response = await fetch(
-      `${serverURL}/admin/attendance/onTime`
-    );
-
-    if (!response.ok) {
-      throw json({ msg: "Couldn't fetch data" }, { status: 500 });
-    }
-
-    const results = await response.json();
-
-    setonTimeCount(results.onTime.length);
-  }
-
-  useLayoutEffect(() => {
-    getTimeOutCount();
-  }, []);
+  const { data, isPending } = useQuery({
+    queryKey: ["attendance", { type: "onTime" }],
+    queryFn: () => fetchAttendanceSummary({ onTime: true }),
+  });
 
   return (
     <React.Fragment>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography component="p" variant="h4">
-          {count}
-        </Typography>
+        {isPending && <Spin />}
+        {data && (
+          <Typography component="p" variant="h4">
+            {data.length}
+          </Typography>
+        )}
+
         <div className={styles.iconAvatar}>
           <img src="../../../src/assets/Icons/onTime.svg" alt="" />
         </div>

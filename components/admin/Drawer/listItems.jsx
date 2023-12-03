@@ -1,7 +1,9 @@
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import EventBusyIcon from "@mui/icons-material/EventBusy";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PeopleIcon from "@mui/icons-material/People";
+import ScheduleSendIcon from "@mui/icons-material/ScheduleSend";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ThumbsUpDownIcon from "@mui/icons-material/ThumbsUpDown";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -20,9 +22,10 @@ export function MainListItems() {
     isEmployee: false,
     isSetting: false,
     isLogout: true,
+    isTimeOff: true,
   });
 
-  const { isDashboard, isConfirm, isEmployee, isSetting, isLogout } =
+  const { isDashboard, isConfirm, isEmployee, isSetting, isTimeOff, isLogout } =
     linkActive;
 
   const handleLinkActive = (property) => {
@@ -57,9 +60,21 @@ export function MainListItems() {
       >
         <ListItemButton>
           <ListItemIcon>
-            <ThumbsUpDownIcon sx={{ color: isConfirm ? "blue" : "" }} />
+            <ScheduleSendIcon sx={{ color: isConfirm ? "blue" : "" }} />
           </ListItemIcon>
-          <ListItemText primary="Confirm" />
+          <ListItemText primary="Attendance" />
+        </ListItemButton>
+      </NavLink>
+      <NavLink
+        to="timeOff"
+        onClick={() => handleLinkActive("timeOff")}
+        className={({ isActive }) => (isActive ? "active" : undefined)}
+      >
+        <ListItemButton>
+          <ListItemIcon>
+            <EventBusyIcon sx={{ color: isTimeOff ? "blue" : "" }} />
+          </ListItemIcon>
+          <ListItemText primary="Leave" />
         </ListItemButton>
       </NavLink>
       <NavLink

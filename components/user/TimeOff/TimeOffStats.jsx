@@ -3,11 +3,20 @@ import { Button } from "antd";
 import React from "react";
 import TimeOffCard from "../Cards/TimeOffCard";
 
-function TimeOffStats() {
+function TimeOffStats({ setModalOpen }) {
+  function requestTimeOffHandler() {
+    setModalOpen();
+  }
+
   return (
     <div>
       <div>
-        <Button type="primary" danger icon={<HourglassTopIcon />}>
+        <Button
+          type="primary"
+          onClick={requestTimeOffHandler}
+          danger
+          icon={<HourglassTopIcon />}
+        >
           Request Time Off
         </Button>
       </div>

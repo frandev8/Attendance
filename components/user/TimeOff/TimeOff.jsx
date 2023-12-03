@@ -1,53 +1,49 @@
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import Copyright from "../../combine/logsComponents/CopyRight";
-// import Absent from "./Absent";
-// import Chart from "./Chart";
-import styles from "./TimeOff.module.css";
-// import Deposits from "./Deposits";
-// import Departure from "./EarlyDepature";
-// import Employees from "./Employees";
-// import LateArrival from "./LateArrival";
-// import OnTime from "./OnTime";
-// import TimeOff from "./TimeOff";
+import { useState } from "react";
 import { Navigate } from "react-router-dom";
-// import AttendanceCard from "../Cards/AttendanceCard";
-// import Announcement from "./Announcement";
-// import AttendanceStats from "./AttendanceStats";
-// import Clockin from "./Clockin";
-// import DashboardTimeline from "./DashboardTimeline";
-// import MyTimeSheet from "./MyTimesheet";
-import RecentLeaves from "../Dashboard/RecentLeaves";
-// import TimeOffStats from "./TimeOffStats";
+import Copyright from "../../combine/logsComponents/CopyRight";
 import Announcement from "../Dashboard/Announcement";
-import TimeOffStats from "../Dashboard/TimeOffStats";
+import RecentLeaves from "../Dashboard/RecentLeaves";
 import History from "./History";
-// import Today from "./Today";
+import { NewTimeOff } from "./NewTimeOff";
+import styles from "./TimeOff.module.css";
+import TimeOffStats from "./TimeOffStats";
 
 function TimeOffPage() {
   const token = document.cookie.match("(^|;)\\s?token=([^;]+)");
-  console.log(token);
+
+  const [isModalOpen, setModalStatus] = useState(false);
 
   if (!token) {
     return <Navigate to="/" replace />;
   }
 
+  function setModalOpen() {
+    setModalStatus(true);
+  }
+
+  function setModalClose() {
+    setModalStatus(false);
+  }
+
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4, backgroundColor: "#F1F2F6" }}>
       <div className={styles.container} id="container">
-        <div className={(styles.box, styles.item1)}>
+        <div
+          className={(styles.box, styles.item1)}
+          style={{ height: "max-content" }}
+        >
           <Paper
             sx={{
               p: 1,
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
-              height: "100%",
             }}
           >
-            <TimeOffStats />
-            {/* <MyTimeSheet /> */}
+            <TimeOffStats setModalOpen={setModalOpen} />
           </Paper>
         </div>
         <div className={(styles.box, styles.item2)}>
@@ -84,11 +80,10 @@ function TimeOffPage() {
             }}
           >
             <History />
-            {/* total clock in */}
-            {/* <AttendanceStats /> */}
           </Paper>
         </div>
       </div>
+      {isModalOpen && <NewTimeOff closeModal={setModalClose} />}
 
       <Copyright sx={{ pt: 4 }} />
     </Container>

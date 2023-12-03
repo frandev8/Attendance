@@ -9,7 +9,7 @@ import { Select, Space, TimePicker } from "antd";
 import dayjs from "dayjs";
 import React from "react";
 
-function SortConfirm() {
+function SortAttendance() {
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
@@ -84,4 +84,4 @@ function SortConfirm() {
   );
 }
 
-export default SortConfirm;
+export default SortAttendance;

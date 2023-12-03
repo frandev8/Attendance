@@ -2,7 +2,7 @@ import { Container } from "@mui/material";
 import { Tabs } from "antd";
 import React from "react";
 import AccountSettings from "./AccountSettings";
-import Notification from "./Notification";
+import Announcement from "./AnnouncementSettings";
 import PasswordSettings from "./PasswordSettings";
 
 const onChange = (key) => {
@@ -22,7 +22,7 @@ const items = [
   {
     key: "3",
     label: "Notification",
-    children: <Notification />,
+    children: <Announcement />,
   },
 ];
 const SettingsPage = () => (
