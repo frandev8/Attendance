@@ -1,17 +1,17 @@
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import Copyright from "../../combine/logsComponents/CopyRight";
-import "./Dashboard.css";
 import { Navigate } from "react-router-dom";
+import Copyright from "../../combine/logsComponents/CopyRight";
+import Announcement from "../Announcement/Announcement";
 import AttendanceCard from "../Cards/AttendanceCard";
+import RecentLeaves from "../TimeOff/RecentLeaves";
 import TimeOffStats from "../TimeOff/TimeOffStats";
-import Announcement from "./Announcement";
 import AttendanceStats from "./AttendanceStats";
 import Clockin from "./Clockin";
+import "./Dashboard.css";
 import DashboardTimeline from "./DashboardTimeline";
 import MyTimeSheet from "./MyTimesheet";
-import RecentLeaves from "./RecentLeaves";
 // import Today from "./Today";
 
 function UserDashboard() {

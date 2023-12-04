@@ -1,64 +1,59 @@
-import { Button, Table } from "antd";
+import { DataGrid } from "@mui/x-data-grid";
+import { useQuery } from "@tanstack/react-query";
+import { Button, Spin, Table } from "antd";
 import { useEffect, useState } from "react";
+import { fetchAnnouncement } from "../../../utils/http";
 
 const columns = [
+  { field: "date", sortable: false, headerName: "Date", width: 130 },
+  { field: "title", headerName: "title", sortable: false, width: 90 },
+
+  // {
+  //   field: "date",
+  //   headerName: "Day",
+  //   sortable: false,
+  //   width: 60,
+  // },
   {
-    title: "Clock in",
-    dataIndex: "name",
-  },
-  {
-    title: "status",
-    dataIndex: "age",
-  },
-  {
-    title: "Clock in",
-    dataIndex: "address",
+    field: "message",
+    headerName: "Message",
+    sortable: false,
+    description: "This column shows the message of the notification.",
+    width: 120,
+    type: "string",
   },
 ];
 
 const AnnouncementList = () => {
-  const [data, setData] = useState([]);
+  let rows = [];
 
-  useEffect(() => {
-    async function fetchData() {
-      const userId = "654acbf48626cf74c1d45549";
+  const { data, isPending } = useQuery({
+    queryKey: ["announcement"],
+    queryFn: fetchAnnouncement,
+    // staleTime: 5000,
+  });
 
-
-      const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
-
-
-      const response = await fetch(
-        `${serverURL}/employee/attendance/${userId}`
-      );
-
-      if (!response.ok) {
-        return;
-      }
-
-      const attendance = await response.json();
-
-      setData(() => {
-        const newData = [];
-
-        for (let i = 0; i <= attendance.length; i++) {
-          newData.push({
-            key: i,
-            name: `Edward King ${i}`,
-            age: 32,
-            address: `London, Park Lane no. ${i}`,
-          });
-        }
-
-        return newData;
-      });
-    }
-
-    fetchData();
-  }, []);
+  if (data) {
+    console.log(data);
+    rows = data.map((list) => {
+      return { ...list, id: list._id };
+    });
+  }
 
   return (
     <div>
-      <Table columns={columns} dataSource={data} />
+      {isPending && <Spin />}
+      {data && (
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 5 },
+            },
+          }}
+        />
+      )}
     </div>
   );
 };

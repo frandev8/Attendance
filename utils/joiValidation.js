@@ -15,6 +15,7 @@ export function isTimeOffFormValid(data) {
 
 export function isNotificationFormValid(data) {
   const schema = Joi.object({
+    date: Joi.date().required(),
     title: Joi.string().required().not().empty(),
     message: Joi.string().required().not().empty(),
   });
@@ -24,6 +25,7 @@ export function isNotificationFormValid(data) {
 
 export function isAnnouncementFormValid(data) {
   const schema = Joi.object({
+    date: Joi.date().required(),
     title: Joi.string().required().not().empty(),
     message: Joi.string().required().not().empty(),
   });

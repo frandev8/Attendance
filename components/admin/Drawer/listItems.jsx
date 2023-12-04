@@ -21,8 +21,8 @@ export function MainListItems() {
     isConfirm: false,
     isEmployee: false,
     isSetting: false,
-    isLogout: true,
-    isTimeOff: true,
+    isLogout: false,
+    isTimeOff: false,
   });
 
   const { isDashboard, isConfirm, isEmployee, isSetting, isTimeOff, isLogout } =
@@ -35,6 +35,7 @@ export function MainListItems() {
       isEmployee: property === "employees",
       isSetting: property === "settings",
       isLogout: property === "logout",
+      isTimeOff: property === "timeOff",
     });
   };
   return (

@@ -1,23 +1,23 @@
+import { useQuery } from "@tanstack/react-query";
 import { Avatar, DatePicker, Divider, List, Space } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
-
-const data = [
-  {
-    title: "Ant Design Title 1",
-  },
-  {
-    title: "Ant Design Title 2",
-  },
-  // {
-  //   title: "Ant Design Title 3",
-  // },
-  // {
-  //   title: "Ant Design Title 4",
-  // },
-];
+import { fetchTimeOff } from "../../../utils/http";
 
 function RecentLeaves() {
+  const { data: myData, isPending } = useQuery({
+    queryKey: ["leave", { type: "recent" }],
+    queryFn: () => fetchTimeOff({ pending: true }),
+  });
+
+  const data = [
+    // {
+    //   title: "Ant Design Title 1",
+    // },
+    // {
+    //   title: "Ant Design Title 2",
+    // },
+  ];
   const onChange = (date, dateString) => {
     console.log(date, dateString);
   };

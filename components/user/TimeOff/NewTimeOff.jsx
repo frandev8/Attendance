@@ -58,25 +58,26 @@ const ModalOverlay = ({ closeModal }) => {
   };
 
   const handleStartDateChange = (date, dateString) => {
-    console.log(date, dateString);
     setStartDate(dateString);
   };
   const handleEndDateChange = (date, dateString) => {
-    console.log(date, dateString);
     setEndDate(dateString);
   };
 
   const handleNewTimeOffForm = () => {
+    console.log(textAreaRef.current.resizableTextArea.textArea.value);
     const formData = {
       type: timeOffType,
       startDate,
       endDate,
-      reason: textAreaRef.current.value?.trim(),
+      reason: textAreaRef.current.resizableTextArea.textArea.value?.trim(),
     };
 
-    if (isTimeOffFormValid(formData)) {
-      mutate({ formData: formData });
+    const { error } = isTimeOffFormValid(formData);
+    if (error) {
+      return;
     }
+    mutate({ formData: formData });
   };
 
   return (

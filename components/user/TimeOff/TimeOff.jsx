@@ -4,10 +4,10 @@ import Paper from "@mui/material/Paper";
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import Copyright from "../../combine/logsComponents/CopyRight";
-import Announcement from "../Dashboard/Announcement";
-import RecentLeaves from "../Dashboard/RecentLeaves";
+import Announcement from "../Announcement/Announcement";
 import History from "./History";
 import { NewTimeOff } from "./NewTimeOff";
+import RecentLeaves from "./RecentLeaves";
 import styles from "./TimeOff.module.css";
 import TimeOffStats from "./TimeOffStats";
 

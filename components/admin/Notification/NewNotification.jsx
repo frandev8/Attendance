@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { useRef } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
-import { postTimeOff, queryClient } from "../../../utils/http";
+import { postNotification, queryClient } from "../../../utils/http";
 import { isNotificationFormValid } from "../../../utils/joiValidation";
 
 const { TextArea } = Input;
@@ -34,22 +34,27 @@ const ModalOverlay = ({ closeModal }) => {
   const navigate = useNavigate();
 
   const { mutate, isPending, isError, error } = useMutation({
-    mutationFn: postTimeOff,
+    mutationFn: postNotification,
     onSuccess: () => {
       // queryClient.invalidateQueries({queryKey:[""]})
-      navigate("../");
+      navigate("./");
     },
   });
 
   const handleNewNotificationForm = () => {
     const formData = {
-      title: titleInputRef.current.value?.trim(),
-      message: textAreaRef.current.value?.trim(),
+      title: titleInputRef.current.input.value?.trim(),
+      message: textAreaRef.current.resizableTextArea.textArea.value?.trim(),
+      date: new Date().toISOString(),
     };
 
-    if (isNotificationFormValid(formData)) {
-      mutate({ formData: formData });
+    const { error } = isNotificationFormValid(formData);
+    if (error) {
+      return;
     }
+
+    // console.log(formData);
+    mutate({ formData: formData });
   };
 
   return (

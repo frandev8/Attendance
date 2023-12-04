@@ -42,21 +42,6 @@ const rows = [
   { id: "1", duration: "Snow", type: "casual", status: "pending", day: 5 },
 ];
 
-export function DataTable() {
-  return (
-    <div style={{ height: 400, width: "100%" }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
-          },
-        }}
-      />
-    </div>
-  );
-}
 
 const History = () => {
   const [data, setData] = useState([]);

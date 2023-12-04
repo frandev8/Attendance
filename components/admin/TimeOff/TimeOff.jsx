@@ -8,7 +8,7 @@ import { Container } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { Avatar, Card, Spin } from "antd";
 import { Navigate } from "react-router-dom";
-import { fetchAttendance } from "../../../utils/http";
+import { fetchTimeOff } from "../../../utils/http";
 import Accept from "./Accept";
 import ClockIn from "./ClockIn";
 import ClockOut from "./ClockOut";
@@ -21,8 +21,8 @@ const TimeOff = () => {
   const token = document.cookie.match("(^|;)\\s?adminLogToken=([^;]+)");
 
   const { data, isPending } = useQuery({
-    queryKey: ["attendance", { type: "pending" }],
-    queryFn: () => fetchAttendance({ pending: true }),
+    queryKey: ["timeOff", { type: "pending" }],
+    queryFn: () => fetchTimeOff({ pending: true }),
   });
 
   if (!token) {
