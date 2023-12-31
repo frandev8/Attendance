@@ -5,9 +5,14 @@ import {
   useParams,
   useSubmit,
 } from "react-router-dom";
-import styles from "./UserEmailVerifyPage.module.css";
 
-export function UserEmailVerifyPage() {
+import EmailIcon from "@mui/icons-material/Email";
+import { Button, Result } from "antd";
+import React from "react";
+import styles from "./AdminEmailVerifyPage.module.css";
+import TokenInput from "./TokenInput";
+
+export function AdminEmailVerifyPage() {
   const submit = useSubmit();
   const params = useParams();
   const navigate = useNavigate();
@@ -16,7 +21,7 @@ export function UserEmailVerifyPage() {
     const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
     const response = await fetch(
-      `${serverURL}/employee/verify/${params.id}/${params.token}`
+      `${serverURL}/admin/verify/${params.id}/${params.token}`
     );
 
     if (!response.ok) {
@@ -44,7 +49,7 @@ export function UserEmailVerifyPage() {
           below to confirm your email address.
         </p>
 
-        <a href="" className={styles.btn} onClick={confirmEmailHandler}>
+        <a href="#" className={styles.btn} onClick={confirmEmailHandler}>
           Confirm Email
         </a>
 
@@ -68,12 +73,10 @@ export async function action({ request, params }) {
   const isConfirm = data.get("key");
 
   if (isConfirm) {
-
     const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
-
     const response = await fetch(
-      `${serverURL}/employee/verify/:${employeeId}/:${employeeToken}`
+      `${serverURL}/admin/verify/:${employeeId}/:${employeeToken}`
     );
 
     if (!response.ok) {
@@ -83,3 +86,24 @@ export async function action({ request, params }) {
     return redirect("/");
   }
 }
+
+const AdminEmailVerification = () => (
+  <Result
+    icon={<EmailIcon />}
+    title="Email Verification"
+    subTitle="Please check your inbox and enter the verification code below to verify your email address. It will expire in the future."
+    extra={
+      <>
+        <TokenInput />
+        <Button type="primary" key="console">
+          Verify
+        </Button>
+        <div>
+          <Button type="link">Resend Code</Button>
+          <Button type="link">Change email</Button>
+        </div>
+      </>
+    }
+  />
+);
+export default AdminEmailVerification;

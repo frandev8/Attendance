@@ -4,7 +4,7 @@ import Paper from "@mui/material/Paper";
 import { Navigate } from "react-router-dom";
 import Copyright from "../../combine/logsComponents/CopyRight";
 import Absent from "./Absent";
-import Chart from "./Chart";
+import Chart from "./Chart2";
 import styles from "./Dashboard.module.css";
 import Deposits from "./Deposits";
 import Departure from "./EarlyDepature";
@@ -15,11 +15,6 @@ import TimeOff from "./TimeOff";
 import Today from "./Today";
 
 function Dashboard() {
-  const token = document.cookie.match("(^|;)\\s?adminLogToken=([^;]+)");
-
-  if (!token) {
-    return <Navigate to="/" replace />;
-  }
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4, backgroundColor: "#F1F2F6" }}>
       <div className={styles.container} id="container">

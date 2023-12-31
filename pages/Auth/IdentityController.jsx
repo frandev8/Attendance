@@ -1,8 +1,8 @@
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
-
 import CssBaseline from "@mui/material/CssBaseline";
+import { useSearchParams } from "react-router-dom";
 
 import Grid from "@mui/material/Grid";
 
@@ -11,11 +11,17 @@ import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
-import { json, redirect } from "react-router-dom";
-import SignIn from "../components/combine/logsComponents/SignIn";
-import SignUp from "../components/combine/logsComponents/SignUp";
-import styles from "./WelcomePage.module.css";
+import { Outlet } from "react-router-dom";
+// import SignIn from "../../components/combine/logsComponents/SignInForm.jsx";
+// import { saveAdminId, saveUserId } from "../../src/store/main.js";
+// import {
+//   saveAdminId as saveAdminIdOnBrowser,
+//   saveUserId as saveUserIdOnBrowser,
+//   setAdminLoginToken,
+//   setUserLoginToken,
+// } from "../../utils/auth.js";
+
+import styles from "./IdentityController.module.css";
 
 function Copyright(props) {
   return (
@@ -35,16 +41,7 @@ function Copyright(props) {
   );
 }
 
-export function WelcomePage() {
-  const [loginState, setLoginState] = useState(true);
-
-  function moveToSignIn() {
-    setLoginState(true);
-  }
-  function moveToSignUp() {
-    setLoginState(false);
-  }
-
+export function IdentityController() {
   // TODO remove, this demo shouldn't need to reset the theme
 
   const defaultTheme = createTheme();
@@ -90,16 +87,13 @@ export function WelcomePage() {
                 }}
               >
                 <Typography component="h1" variant="h5">
-                  Dave Multimedia
+                  Kasapa Media
                 </Typography>
                 <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
                   <LockOutlinedIcon />
                 </Avatar>
-                {loginState ? (
-                  <SignIn moveToSignUp={moveToSignUp}></SignIn>
-                ) : (
-                  <SignUp moveToSignIn={moveToSignIn}></SignUp>
-                )}
+
+                <Outlet />
               </Box>
             </Grid>
           </Grid>
@@ -109,91 +103,68 @@ export function WelcomePage() {
   );
 }
 
-// export async function LogActions({ request }) {
-//   const data = request.formData();
+// //  signup action
 
-//   console.log("I got called");
+// export async function action({ request, dispatch }) {
+//   const data = await request.formData();
 
-//   const role = data.get(role);
-//   if (data.formType == "signin") {
-//     const response = await fetch("http://localhost:300/employee/login", {
+//   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+//   const role = data.get("role");
+
+//   const formData = {
+//     username: data.get("username"),
+//     password: data.get("password"),
+//     role: role,
+//   };
+
+//   if (role == "employee") {
+//     const response = await fetch(`${serverURL}/employee/login`, {
 //       method: "POST",
 //       headers: {
 //         "Content-Type": "application/json",
 //       },
-//       body: JSON.stringify(data),
+//       body: JSON.stringify(formData),
 //     });
 
 //     if (!response.ok) {
 //       throw json({ msg: "Couldn't fetch data" }, { status: 500 });
 //     }
 
-//     return response;
-//   } else if (data.formType == "signup") {
-//     const response = await fetch("http://localhost:300/employee/register", {
+//     const results = await response.json();
+
+//     // store the token as a cookie
+//     setUserLoginToken(results.userToken);
+
+//     // store user id to local host
+//     saveUserIdOnBrowser(results.userId);
+
+//     dispatch(saveUserId({ userId: results.userId }));
+
+//     return redirect("/user");
+//   } else if (role == "admin") {
+//     const response = await fetch(`${serverURL}/admin/login`, {
 //       method: "POST",
 //       headers: {
 //         "Content-Type": "application/json",
 //       },
-//       body: JSON.stringify(data),
+//       body: JSON.stringify(formData),
 //     });
 
 //     if (!response.ok) {
 //       throw json({ msg: "Couldn't fetch data" }, { status: 500 });
 //     }
 
-//     console.log("from front end");
-//     // redirect("/");
+//     const results = await response.json();
 
-//     return response;
+//     // store the token as a cookie
+//     setAdminLoginToken(results.adminToken);
+
+//     // store admin id to local host
+//     saveAdminIdOnBrowser(results.adminId);
+
+//     dispatch(saveAdminId({ adminId: results.adminId }));
+
+//     return redirect("/admin");
 //   }
 // }
-
-// export async function action({ request }) {
-//   console.log("I got called");
-// }
-
-export async function HomeAction({ request }) {
-  console.log("I got called");
-  const data = await request.formData();
-
-  const role = data.get("role");
-  const formType = data.get("formType");
-
-  if (formType == "signin") {
-    if (role == "user") {
-      const response = SignIn(role, "employee");
-      if (!response.ok) {
-        throw json({ msg: "Couldn't fetch data" }, { status: 500 });
-      }
-
-      // redirect("/");
-      return response;
-    } else if (role == "admin") {
-      const response = SignIn(role, "admin");
-      if (!response.ok) {
-        throw json({ msg: "Couldn't fetch data" }, { status: 500 });
-      }
-
-      // redirect("/");
-      return response;
-    }
-  } else if (formType == "signup") {
-    if (role == "user") {
-      const response = SignUp(role, "employee");
-      if (!response.ok) {
-        throw json({ msg: "Couldn't fetch data" }, { status: 500 });
-      }
-
-      // redirect("/");
-      return response;
-    } else if (role == "admin") {
-      const response = SignUp(role, "admin");
-      if (!response.ok) {
-        throw json({ msg: "Couldn't fetch data" }, { status: 500 });
-      }
-
-      return redirect("/");
-    }
-  }
-}

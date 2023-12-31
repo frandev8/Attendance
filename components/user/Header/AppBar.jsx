@@ -10,6 +10,7 @@ import { styled } from "@mui/material/styles";
 import { Avatar, Badge, Divider, List, Popover } from "antd";
 import PropTypes from "prop-types";
 import React from "react";
+import ViewNotification from "../Notification/ViewNotification";
 
 const drawerWidth = 240;
 
@@ -32,23 +33,6 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 function TopBar({ toggleDrawer, open }) {
-  const listData = [
-    "Racing car sprays burning fuel into crowd.",
-    "Japanese princess to wed commoner.",
-    "Australian walks 100km after outback crash.",
-    "Man charged over missing wedding girl.",
-    "Los Angeles battles huge wildfires.",
-  ];
-
-  const content = (
-    <List
-      size="large"
-      bordered
-      dataSource={listData}
-      renderItem={(item) => <List.Item>{item}</List.Item>}
-    />
-  );
-
   return (
     <AppBar position="absolute" open={open}>
       <Toolbar
@@ -87,17 +71,7 @@ function TopBar({ toggleDrawer, open }) {
         <div className="flex items-center">
           {/* {!open && <SearchOutlined />} */}
           <Divider type="vertical" />
-          <IconButton color="inherit" sx={{ maxWidth: "40px" }}>
-            <Popover
-              placement="topLeft"
-              title={"Notification"}
-              content={content}
-            >
-              <Badge count={5}>
-                <NotificationsIcon />
-              </Badge>
-            </Popover>
-          </IconButton>
+          <ViewNotification />
           <Divider type="vertical" />
           <Avatar
             style={{ backgroundColor: "#87d068" }}

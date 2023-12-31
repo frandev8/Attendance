@@ -1,6 +1,7 @@
 import { Container } from "@mui/material";
 import { Tabs } from "antd";
 import React from "react";
+import { fetchAdminById } from "../../../utils/http";
 import AccountSettings from "./AccountSettings";
 import Announcement from "./AnnouncementSettings";
 import PasswordSettings from "./PasswordSettings";
@@ -25,9 +26,15 @@ const items = [
     children: <Announcement />,
   },
 ];
-const SettingsPage = () => (
+const AdminSettingsPage = () => (
   <Container maxWidth="lg" sx={{ mt: 4, mb: 4, backgroundColor: "#F1F2F6" }}>
     <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
   </Container>
 );
-export default SettingsPage;
+
+export async function loader({ id }) {
+  const avatar = await fetchAdminById({ id });
+
+  return avatar;
+}
+export default AdminSettingsPage;

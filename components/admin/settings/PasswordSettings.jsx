@@ -1,9 +1,19 @@
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { useMutation } from "@tanstack/react-query";
 import { Button, Input, Space } from "antd";
 import React from "react";
+import { changeAdminPassword } from "../../../utils/http";
+
 import ErrorPasswordDetails from "./ErrorPasswordDetails";
 const PasswordSettings = () => {
   const [passwordVisible, setPasswordVisible] = React.useState(false);
+
+  const { data, isPending, mutate, error, isError } = useMutation({
+    mutationFn: changeAdminPassword,
+    onSuccess: (data) => {
+      console.log("successful update");
+    },
+  });
 
   return (
     <>

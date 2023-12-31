@@ -11,8 +11,15 @@ import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { json, redirect } from "react-router-dom";
-import SignIn from "../components/combine/logsComponents/SignIn";
+import { json, Outlet, redirect } from "react-router-dom";
+import SignIn from "../../components/combine/logsComponents/SignInForm.jsx";
+import { saveAdminId, saveUserId } from "../../src/store/main.js";
+import {
+  saveAdminId as saveAdminIdOnBrowser,
+  saveUserId as saveUserIdOnBrowser,
+  setAdminLoginToken,
+  setUserLoginToken,
+} from "../../utils/auth.js";
 
 import styles from "./SignInPage.module.css";
 
@@ -34,7 +41,7 @@ function Copyright(props) {
   );
 }
 
-export function SignInPage() {
+export function LogInAuthPage() {
   // TODO remove, this demo shouldn't need to reset the theme
 
   const defaultTheme = createTheme();
@@ -86,7 +93,9 @@ export function SignInPage() {
                   <LockOutlinedIcon />
                 </Avatar>
 
-                <SignIn></SignIn>
+                {/* <SignIn></SignIn>
+                 */}
+                <Outlet></Outlet>
               </Box>
             </Grid>
           </Grid>
@@ -98,64 +107,4 @@ export function SignInPage() {
 
 //  signup action
 
-export async function action({ request }) {
-  const data = await request.formData();
 
-  const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
-
-  const role = data.get("role");
-
-  const formData = {
-    username: data.get("username"),
-    password: data.get("password"),
-    role: role,
-  };
-
-  if (role == "employee") {
-    const response = await fetch(`${serverURL}/employee/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
-
-    if (!response.ok) {
-      throw json({ msg: "Couldn't fetch data" }, { status: 500 });
-    }
-
-    const token = await response.json();
-
-    const expirationDate = new Date();
-    expirationDate.setHours(expirationDate.getHours() + 5);
-
-    document.cookie = `token=${
-      token.data
-    }; expires=${expirationDate.toUTCString()}`;
-
-    return redirect("/user");
-  } else if (role == "admin") {
-    const response = await fetch(`${serverURL}/admin/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
-
-    if (!response.ok) {
-      throw json({ msg: "Couldn't fetch data" }, { status: 500 });
-    }
-
-    const token = await response.json();
-
-    const expirationDate = new Date();
-    expirationDate.setHours(expirationDate.getHours() + 5);
-
-    document.cookie = `adminLogToken=${
-      token.data
-    }; expires=${expirationDate.toUTCString()}`;
-
-    return redirect("/admin");
-  }
-}

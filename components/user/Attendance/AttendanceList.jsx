@@ -1,63 +1,68 @@
-import { Button, Table } from "antd";
-import { useEffect, useState } from "react";
-
+import { Container, Divider, Paper } from "@mui/material";
+import Box from "@mui/material/Box";
+import { Table } from "antd";
+import React from "react";
+import "./AttendanceRecordsDashboard.css";
 const columns = [
   {
-    title: "Clock in",
-    dataIndex: "name",
-  },
-  {
-    title: "status",
-    dataIndex: "age",
+    title: "Date",
+    dataIndex: "date",
+    width: 130,
   },
   {
     title: "Clock in",
-    dataIndex: "address",
+    dataIndex: "clock-in",
+    width: 100,
+  },
+  {
+    title: "Clock out",
+    dataIndex: "clock-out",
+    width: 100,
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
   },
 ];
 
-const AttendanceList = () => {
-  const [data, setData] = useState([]);
 
-  useEffect(() => {
-    async function fetchData() {
-      const userId = "654acbf48626cf74c1d45549";
+const data = [];
 
-      const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
-      const response = await fetch(
-        `${serverURL}/employee/attendance/${userId}`
-      );
+for (let i = 0; i < 70; i++) {
+  data.push({
+    key: i,
+    date: `20 Jan 2023 `,
+    "clock-in": "8:30 am",
+    "clock-out": "4:30 pm",
+    status: `approved`,
+  });
+}
 
-      if (!response.ok) {
-        return;
-      }
+{
+  /* <div>Employee List</div>
+          <Divider style={{ marginTop: "5px", marginBottom: "5px" }} /> */
+}
 
-      const attendance = await response.json();
-
-      setData(() => {
-        const newData = [];
-
-        for (let i = 0; i <= attendance.length; i++) {
-          newData.push({
-            key: i,
-            name: `Edward King ${i}`,
-            age: 32,
-            address: `London, Park Lane no. ${i}`,
-          });
-        }
-
-        return newData;
-      });
-    }
-
-    fetchData();
-  }, []);
-
-  return (
-    <div>
-      <Table columns={columns} dataSource={data} />
-    </div>
-  );
-};
+const AttendanceList = () => (
+  <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+    <div>Attendance Records</div>
+    <Divider style={{ marginTop: "5px", marginBottom: "5px" }} />
+    <Box sx={{ width: "100%" }}>
+      <Table
+        columns={columns}
+        dataSource={data}
+        pagination={{
+          pageSize: 10,
+        }}
+        style={{ tableLayout: "fixed" }}
+        scroll={{
+          y: 240,
+          x: true,
+        }}
+        className={"customTable"}
+      />
+    </Box>
+  </Container>
+);
 export default AttendanceList;

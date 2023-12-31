@@ -1,0 +1,6 @@
+.main {
+  position: relative;
+  overflow-x: none;
+  height: calc(370.23px - 150.23px);
+  overflow-y: auto;
+}

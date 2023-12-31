@@ -45,7 +45,7 @@ export default function SignIn() {
 
   const submit = useSubmit();
 
-  function handleForm(e) {
+  function handleSubmit(e) {
     e.preventDefault();
 
     const data = new FormData(e.currentTarget);
@@ -56,16 +56,13 @@ export default function SignIn() {
       role: role,
     };
 
+    submit({ ...formData }, { method: "POST" });
     const { error } = validateLogin(formData);
     if (error) {
       console.log(error.details[0].message);
       return;
     }
 
-    console.log(formData);
-
-    submit({ ...formData }, { method: "GET" });
-    console.log("I was called!");
   }
 
   const handleChange = (event) => {
@@ -79,7 +76,7 @@ export default function SignIn() {
   return (
     <>
       <div>
-        <Form method="post">
+        <form method="post" onSubmit={handleSubmit}>
           {/* <Box component="form" noValidate onSubmit={handleForm} sx={{ mt: 1 }}> */}
           <TextField
             margin="normal"
@@ -142,7 +139,7 @@ export default function SignIn() {
           </Grid>
           <Copyright sx={{ mt: 5 }} />
           {/* </Box> */}
-        </Form>
+        </form>
       </div>
     </>
   );

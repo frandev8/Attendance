@@ -1,14 +1,18 @@
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
+import AttendanceTrend from "../../admin/Dashboard/Deposits";
 import Copyright from "../../combine/logsComponents/CopyRight";
 import AttendanceList from "./AttendanceList";
 import styles from "./History.module.css";
 
 // import Clockin from "./Clockin";
 // import MyTimeSheet from "./MyTimesheet";
-
 import DashboardTimeline from "../Dashboard/DashboardTimeline";
+import AttendanceStats from "./AttendanceStatsHistory";
+import OnTimeline from "./OnTimeline";
+
+import Overtime from "./Overtime";
 // import Today from "./Today";
 
 function AttendanceHistory() {
@@ -25,7 +29,7 @@ function AttendanceHistory() {
               height: "100%",
             }}
           >
-            Stats, check in, check out, ...
+            <AttendanceStats />
           </Paper>
         </div>
 
@@ -34,11 +38,11 @@ function AttendanceHistory() {
             sx={{
               p: 2,
               display: "flex",
-              flexDirection: "column",
-              // height: "100%",
+              // flexDirection: "column",
+              height: "100%",
             }}
           >
-            overtime
+            <Overtime />
           </Paper>
         </div>
         <div className={(styles.box, styles.item3)}>
@@ -47,10 +51,11 @@ function AttendanceHistory() {
               p: 2,
               display: "flex",
               flexDirection: "column",
-              // height: "100%",
+              height: "250px",
             }}
           >
-            On timeline
+            onTime
+            <OnTimeline />
           </Paper>
         </div>
         <div className={(styles.box, styles.item4)}>
@@ -64,6 +69,18 @@ function AttendanceHistory() {
           >
             <AttendanceList />
           </Paper>{" "}
+        </div>
+        <div className={(styles.box, styles.item5)}>
+          <Paper
+            sx={{
+              p: 2,
+              display: "flex",
+              flexDirection: "column",
+              // height: "100%",
+            }}
+          >
+            join date
+          </Paper>
         </div>
       </div>
 

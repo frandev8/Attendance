@@ -13,6 +13,7 @@ import ListSubheader from "@mui/material/ListSubheader";
 import * as React from "react";
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { deleteAdminId } from "../../../utils/auth";
 import "./listItems.css";
 
 export function MainListItems() {
@@ -38,6 +39,11 @@ export function MainListItems() {
       isTimeOff: property === "timeOff",
     });
   };
+
+  const handleLogOut = () => {
+    deleteAdminId();
+  };
+
   return (
     <React.Fragment>
       <NavLink
@@ -102,7 +108,7 @@ export function MainListItems() {
           <ListItemText primary="Settings" />
         </ListItemButton>
       </NavLink>
-      <Link to="/">
+      <Link to="/" onClick={handleLogOut}>
         <ListItemButton>
           <ListItemIcon>
             <LogoutIcon />

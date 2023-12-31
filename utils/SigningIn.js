@@ -1,7 +1,6 @@
 import { json } from "react-router-dom";
 
 export const land = async (role = "employee", data) => {
-  
   const response = await fetch(`${serverURL}/${role}/login`, {
     method: "GET",
     headers: {
@@ -13,8 +12,6 @@ export const land = async (role = "employee", data) => {
   return response;
 };
 export const create = async (role, data) => {
-
-
   const response = await fetch(`${serverURL}/${role}/register`, {
     method: "POST",
     headers: {
@@ -23,6 +20,17 @@ export const create = async (role, data) => {
     body: JSON.stringify(data),
   });
 
-
   return response;
+};
+
+export const getUserLoginToken = () => {
+  const token = document.cookie.match("(^|;)\\s?token=([^;]+)");
+  console.log(token);
+
+  if (!token) {
+    return;
+  }
+  
+
+  return token;
 };

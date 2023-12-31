@@ -4,170 +4,118 @@ import Paper from "@mui/material/Paper";
 import { Navigate } from "react-router-dom";
 import Copyright from "../../combine/logsComponents/CopyRight";
 import Announcement from "../Announcement/Announcement";
+import DashboardTimeline from "../Attendance/AttendanceRecordsDashboard";
+import AttendanceStats, {
+  AttendanceStats2,
+} from "../Attendance/AttendanceStats";
 import AttendanceCard from "../Cards/AttendanceCard";
 import RecentLeaves from "../TimeOff/RecentLeaves";
 import TimeOffStats from "../TimeOff/TimeOffStats";
-import AttendanceStats from "./AttendanceStats";
 import Clockin from "./Clockin";
-import "./Dashboard.css";
-import DashboardTimeline from "./DashboardTimeline";
+import styles from "./Dashboard.module.css";
 import MyTimeSheet from "./MyTimesheet";
 // import Today from "./Today";
 
 function UserDashboard() {
-  const token = document.cookie.match("(^|;)\\s?token=([^;]+)");
-  console.log(token);
-
-  if (!token) {
-    return <Navigate to="/" replace />;
-  }
-
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4, backgroundColor: "#F1F2F6" }}>
-      <div className="container" id="container">
-        <div className="box item1">
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <div className={`${styles.container}  h-full w-full`} id="container">
+        <div
+          className={`w-full h-[20%]  flex justify-between  ${styles.block1} `}
+        >
+          <div
+            className={`${styles.box} ${styles.item1} h-inherit border-2 border-black`}
+          >
+            <Paper
+              sx={{
+                p: 1,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                height: "100%",
+              }}
+              className=" bg-[#0000ff]"
+            >
+              <MyTimeSheet />
+            </Paper>
+          </div>
+
+          <div className={`${styles.box} ${styles.item2}`}>
+            <Paper
+              sx={{
+                width: "100%",
+              }}
+            >
+              <AttendanceStats />
+            </Paper>
+          </div>
+
+          <div className={`${styles.box} ${styles.item2b}`}>
+            <Paper
+              sx={{
+                width: "100%",
+              }}
+            >
+              <AttendanceStats2 />
+            </Paper>
+          </div>
+
+          <div className={`${styles.box} ${styles.item3} h-inherit`}>
+            <Paper
+              sx={{
+                p: 2,
+                display: "flex",
+                flexDirection: "column",
+                height: "100%",
+              }}
+            >
+              <TimeOffStats />
+            </Paper>
+          </div>
+        </div>
+        <div className="w-full flex gap-3 mt-[25px] mb-[25px] justify-between">
+          <div className={`${styles.box} ${styles.item4} `}>
+            {" "}
+            <Paper
+              sx={{
+                p: 2,
+                display: "flex",
+                flexDirection: "column",
+                height: 370.23,
+              }}
+            >
+              <Announcement />
+            </Paper>
+          </div>
+
+          <div className={`${styles.box} ${styles.item5}`}>
+            {" "}
+            <Paper
+              sx={{
+                p: 2,
+                display: "flex",
+                flexDirection: "column",
+                height: 370.23,
+                overflow: "hidden",
+              }}
+            >
+              <RecentLeaves />
+            </Paper>
+          </div>
+        </div>
+
+        <div className={`${styles.box} ${styles.item6}`}>
+          {" "}
           <Paper
             sx={{
-              p: 1,
+              p: 2,
               display: "flex",
               flexDirection: "column",
-              justifyContent: "space-between",
               height: "100%",
-            }}
-          >
-            <MyTimeSheet />
-          </Paper>
-        </div>
-        <div className="box item2">
-          <Paper
-            sx={{
-              p: 2,
-              display: "flex",
-              flexDirection: "column",
-              // height: "100%",
-            }}
-          >
-            My request
-            {/* <Employees /> */}
-          </Paper>
-        </div>
-        <div className="box item3">
-          <Paper
-            sx={{
-              p: 2,
-              display: "flex",
-              flexDirection: "column",
-              // height: "100%",
-            }}
-          >
-            My timeline
-            {/* <OnTime /> */}
-          </Paper>{" "}
-        </div>
-        <div className="box item4">
-          <Paper
-            sx={{
-              p: 2,
-              display: "flex",
-              flexDirection: "column",
-              // height: "100%",
-            }}
-          >
-            {/* total clock in */}
-            <AttendanceStats />
-          </Paper>
-        </div>
-        <div className="box item5">
-          <Paper
-            sx={{
-              p: 1,
-              display: "flex",
-              flexDirection: "column",
-              // height: "100%",
-            }}
-          >
-            {/* total clock out  */}
-            <AttendanceCard />
-          </Paper>
-        </div>
-        <div className="box item6">
-          <Paper
-            sx={{
-              p: 2,
-              display: "flex",
-              flexDirection: "column",
-              // height: "100%",
+              background: "#F4F6FA",
             }}
           >
             <DashboardTimeline />
-            {/* <Departure /> */}
-          </Paper>
-        </div>
-        <div className="box item7">
-          <Paper
-            sx={{
-              p: 2,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              // height: "100%",
-            }}
-          >
-            holiday
-            {/* <TimeOff /> */}
-          </Paper>
-        </div>
-        <div className="box item8">
-          {" "}
-          <Paper
-            sx={{
-              p: 2,
-              display: "flex",
-              flexDirection: "column",
-              height: 270.23,
-            }}
-          >
-            <Announcement />
-          </Paper>
-        </div>
-        <div className="box item9">
-          {" "}
-          <Paper
-            sx={{
-              p: 2,
-              display: "flex",
-              flexDirection: "column",
-              height: "100%",
-            }}
-          >
-            Celebrations
-            {/* <Deposits /> */}
-          </Paper>
-        </div>
-        <div className="box item10">
-          {" "}
-          <Paper
-            sx={{
-              p: 2,
-              display: "flex",
-              flexDirection: "column",
-              height: "100%",
-            }}
-          >
-            <RecentLeaves />
-          </Paper>
-        </div>
-        <div className="box item11">
-          {" "}
-          <Paper
-            sx={{
-              p: 2,
-              display: "flex",
-              flexDirection: "column",
-              height: "100%",
-            }}
-          >
-            <TimeOffStats />
           </Paper>
         </div>
       </div>

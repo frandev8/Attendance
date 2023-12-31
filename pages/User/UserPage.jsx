@@ -1,6 +1,6 @@
 // import { Dashboard } from "@mui/icons-material";
-import Dashboard from "../components/admin/Dashboard/Dashboard";
-import "./AdminPage.css";
+
+import "./UserPage.css";
 
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -9,13 +9,13 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import * as React from "react";
 
 import { Outlet } from "react-router-dom";
-import SideBar from "../components/admin/Drawer/SideBar";
-import TopBar from "../components/admin/Header/AppBar";
+import SideBar from "../../components/user/Drawer/SideBar";
+import TopBar from "../../components/user/Header/AppBar";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function AdminPage() {
+export default function UserPage() {
   const [open, setOpen] = React.useState(false);
   const toggleDrawer = () => {
     setOpen(!open);

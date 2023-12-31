@@ -1,33 +1,28 @@
 import { DataGrid } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
-import { Spin } from "antd";
+import { Spin, Table } from "antd";
 import { useEffect, useState } from "react";
 import { fetchNotification } from "../../../utils/http";
 
 const columns = [
-  { field: "date", sortable: false, headerName: "Date", width: 130 },
-  { field: "title", headerName: "title", sortable: false, width: 90 },
-
-  // {
-  //   field: "date",
-  //   headerName: "Day",
-  //   sortable: false,
-  //   width: 60,
-  // },
   {
-    field: "message",
-    headerName: "Message",
-    sortable: false,
-    description: "This column shows the message of the notification.",
-    width: 120,
-    type: "string",
+    title: "Date",
+    dataIndex: "date",
+    width: 130,
+  },
+  {
+    title: "Title",
+    dataIndex: "title",
+    width: 100,
+  },
+  {
+    title: "Message",
+    dataIndex: "message",
   },
 ];
 
 const NotificationList = () => {
   // const [data, setData] = useState([]);
-
-  let rows = [];
 
   const { data, isPending } = useQuery({
     queryKey: ["notification"],
@@ -35,25 +30,44 @@ const NotificationList = () => {
     // staleTime: 5000,
   });
 
+  let rows = [];
+
+  for (let i = 0; i < 70; i++) {
+    rows.push({
+      key: i,
+      date: "20 Jan 2023",
+      message: "my message",
+      title: "my title",
+    });
+  }
+
+  let original = [];
+
   if (data) {
     console.log(data);
-    rows = data.map((list) => {
-      return { ...list, id: list._id };
+    original = data.map((list) => {
+      return { ...list, key: list._id };
     });
+
+    console.log(original);
   }
 
   return (
     <div>
       {isPending && <Spin />}
       {data && (
-        <DataGrid
-          rows={rows}
+        <Table
           columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 5 },
-            },
+          dataSource={rows}
+          pagination={{
+            pageSize: 10,
           }}
+          style={{ tableLayout: "fixed" }}
+          scroll={{
+            y: 240,
+            x: true,
+          }}
+          className={"customTable"}
         />
       )}
     </div>

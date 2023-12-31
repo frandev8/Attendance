@@ -14,8 +14,8 @@ import Typography from "@mui/material/Typography";
 
 import { json, redirect } from "react-router-dom";
 
-import SignUp from "../components/combine/logsComponents/SignUp";
-import { create } from "../utils/SigningIn";
+import SignUp from "../../components/combine/logsComponents/SignUpForm";
+import { create } from "../../utils/SigningIn";
 import styles from "./SignUpPage.module.css";
 
 function Copyright(props) {
@@ -102,7 +102,7 @@ export function SignUpPage() {
 
 export async function action({ request }) {
   const data = await request.formData();
-  
+
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
   const role = data.get("role");
@@ -129,16 +129,13 @@ export async function action({ request }) {
 
     return response;
   } else if (role == "admin") {
-    const response = await fetch(
-      `${serverURL}/admin/register`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      }
-    );
+    const response = await fetch(`${serverURL}/admin/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
 
     if (!response.ok) {
       throw json({ msg: "Couldn't fetch data" }, { status: 500 });

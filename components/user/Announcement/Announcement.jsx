@@ -1,46 +1,49 @@
 import { useQuery } from "@tanstack/react-query";
-import { Avatar, Divider, List, Space } from "antd";
+import { Avatar, Divider, List, Space, Spin } from "antd";
+import moment from "moment";
 import React from "react";
+import { getDateDuration } from "../../../utils/date";
 import { fetchNotification } from "../../../utils/http";
+import styles from "./Announcement.module.css";
 
 function Announcement() {
-  // const { data, isPending } = useQuery({
-  //   queryKey: ["notification"],
-  //   queryFn: fetchNotification,
-  // });
-  const data = [
-    // {
-    //   title: "Ant Design Title 1",
-    // },
-    // {
-    //   title: "Ant Design Title 2",
-    // },
-  ];
+  const { data, isPending } = useQuery({
+    queryKey: ["notification"],
+    queryFn: fetchNotification,
+  });
+
+  const myData = [{}, {}, {}, {}, {}, {}, {}, {}, {}];
 
   return (
     <Space direction="vertical">
       <div>
         Announcement <span>(1 new)</span>
       </div>
-      <Divider />
+      <Divider style={{ marginTop: "5px", marginBottom: "5px" }} />
       <div>
-        <List
-          itemLayout="horizontal"
-          dataSource={data}
-          renderItem={(item, index) => (
-            <List.Item>
-              <List.Item.Meta
-                avatar={
-                  <Avatar
-                    src={`https://xsgames.co/randomusers/avatar.php?g=pixel&key=${index}`}
-                  />
-                }
-                title={<a href="https://ant.design">{item?.title}</a>}
-                description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-              />
-            </List.Item>
-          )}
-        />
+        {isPending && <Spin />}
+
+        {data && (
+          <List
+            itemLayout="horizontal"
+            dataSource={myData}
+            className={`${styles["main"]}  `}
+            renderItem={(item, index) => (
+              <List.Item>
+                <List.Item.Meta
+                  avatar={<Avatar src={`/src/assets/images/bell.png`} />}
+                  title={<>{item?.title}</>}
+                  description={
+                    <div>
+                      <div>{item?.message}</div>
+                      <div>{getDateDuration(item?.date)}</div>
+                    </div>
+                  }
+                />
+              </List.Item>
+            )}
+          />
+        )}
       </div>
     </Space>
   );

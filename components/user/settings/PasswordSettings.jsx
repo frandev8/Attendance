@@ -1,8 +1,19 @@
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { useMutation } from "@tanstack/react-query";
 import { Input, Space } from "antd";
 import React from "react";
+import { changeEmployeePassword } from "../../../utils/http";
 import ErrorPasswordDetails from "./ErrorPasswordDetails";
+
 const PasswordSettings = () => {
+  
+  const { data, isPending, mutate, error, isError } = useMutation({
+    mutationFn: changeEmployeePassword,
+    onSuccess: (data) => {
+      console.log("successful update");
+    },
+  });
+
   return (
     <>
       <h1>Password</h1>

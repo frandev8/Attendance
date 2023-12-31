@@ -14,6 +14,7 @@ import {
 import PropTypes from "prop-types";
 import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { postTimeOff, queryClient } from "../../../utils/http";
 import { isTimeOffFormValid } from "../../../utils/joiValidation";
@@ -42,6 +43,8 @@ const ModalOverlay = ({ closeModal }) => {
   const [timeOffType, setTimeOffType] = useState();
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
+
+  const userId = useSelector((state) => state.user.userId);
 
   const navigate = useNavigate();
 
@@ -77,7 +80,7 @@ const ModalOverlay = ({ closeModal }) => {
     if (error) {
       return;
     }
-    mutate({ formData: formData });
+    mutate({ formData: formData, id: userId });
   };
 
   return (

@@ -1,99 +1,120 @@
-import { DataGrid } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
-import styles from "./History.module.css";
+// const columns = [
+//   {
+//     title: "Duration",
+//     dataIndex: "date",
+//     width: 130,
+//   },
+//   {
+//     title: "Type",
+//     dataIndex: "type",
+//     width: 100,
+//   },
+//   {
+//     title: "Days",
+//     dataIndex: "days",
+//     width: 100,
+//   },
+//   {
+//     title: "Status",
+//     dataIndex: "status",
+//   },
+//   {
+//     title: "action",
+//     dataIndex: "action",
+//   },
+//   {
+//     title: "more",
+//     dataIndex: "more",
+//   },
+// ];
+// if (myData) {
+//   myData.forEach((timeOff) => {
+//     data.push({
+//       key: timeOff._id,
+//       date: "my date",
+//       type: timeOff.type,
+//       days: "my days",
+//       status: timeOff.status,
+//       action: <></>,
+//       more: <>see more</>,
+//     });
+//   });
+// }
+import { Container, Divider, Paper } from "@mui/material";
+import Box from "@mui/material/Box";
+import { useQuery } from "@tanstack/react-query";
+import { Table } from "antd";
+import React from "react";
+import { useSelector } from "react-redux";
+import { fetchTimeOffById } from "../../../utils/http";
 
 const columns = [
-  { field: "duration", sortable: false, headerName: "Duration", width: 130 },
-  { field: "type", headerName: "Type", sortable: false, width: 90 },
   {
-    field: "day",
-    headerName: "Day",
-    type: "number",
-    sortable: false,
-    width: 60,
+    title: "Date",
+    dataIndex: "date",
+    width: 130,
   },
   {
-    field: "status",
-    headerName: "Status",
-    sortable: false,
-    description: "This column shows the state of the time-off request.",
-    width: 120,
-    type: "string",
+    title: "Clock in",
+    dataIndex: "clock-in",
+    width: 100,
   },
   {
-    field: "mutate",
-    headerName: "",
-    description: "You can delete pending request.",
-    // sortable: false,
-    width: 40,
-    type: "button",
+    title: "Clock out",
+    dataIndex: "clock-out",
+    width: 100,
   },
   {
-    field: "view",
-    headerName: "",
-    description: "You can view your request in.",
-    // sortable: false,
-    width: 40,
-    type: "button",
+    title: "Status",
+    dataIndex: "status",
   },
 ];
 
-const rows = [
-  { id: "1", duration: "Snow", type: "casual", status: "pending", day: 5 },
-];
-
+{
+  /* <div>Employee List</div>
+            <Divider style={{ marginTop: "5px", marginBottom: "5px" }} /> */
+}
 
 const History = () => {
-  const [data, setData] = useState([]);
+  const userId = useSelector((state) => state.user.userId);
 
-  useEffect(() => {
-    async function fetchData() {
-      const userId = "654acbf48626cf74c1d45549";
+  const { data: myData, isPending } = useQuery({
+    queryKey: ["leave", { type: "request" }],
+    queryFn: () => fetchTimeOffById({ id: userId }),
+  });
 
-      const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+  const data = [];
 
-      const response = await fetch(
-        `${serverURL}/employee/attendance/${userId}`
-      );
-
-      if (!response.ok) {
-        return;
-      }
-
-      const attendance = await response.json();
-
-      setData(() => {
-        const newData = [];
-
-        for (let i = 0; i <= attendance.length; i++) {
-          newData.push({
-            key: i,
-            name: `Edward King ${i}`,
-            age: 32,
-            address: `London. ${i}`,
-          });
-        }
-
-        return newData;
-      });
-    }
-
-    fetchData();
-  }, []);
+  for (let i = 0; i < 70; i++) {
+    data.push({
+      key: i,
+      date: `20 Jan 2023 `,
+      "clock-in": "8:30 am",
+      "clock-out": "4:30 pm",
+      status: `approved`,
+    });
+  }
 
   return (
-    <div>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
-          },
-        }}
-      />
-    </div>
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <div>Leave Records</div>
+      <Divider style={{ marginTop: "5px", marginBottom: "5px" }} />
+      <Box sx={{ width: "100%" }}>
+        <Table
+          columns={columns}
+          dataSource={data}
+          pagination={{
+            pageSize: 10,
+          }}
+          style={{ tableLayout: "fixed" }}
+          scroll={{
+            y: 240,
+            x: true,
+          }}
+          className={"customTable"}
+        />
+      </Box>
+    </Container>
   );
 };
-
 export default History;

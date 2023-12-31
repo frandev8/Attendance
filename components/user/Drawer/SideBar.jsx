@@ -7,8 +7,8 @@ import Toolbar from "@mui/material/Toolbar";
 import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
 import SearchBox from "../SearchBox";
-import { MainListItems, secondaryListItems } from "./listItems";
-const drawerWidth = 240;
+import { MainListItems } from "./listItems";
+const drawerWidth = 200;
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -30,7 +30,7 @@ const Drawer = styled(MuiDrawer, {
       }),
       width: theme.spacing(7),
       [theme.breakpoints.up("sm")]: {
-        width: theme.spacing(9),
+        width: theme.spacing(7),
       },
     }),
   },
@@ -56,7 +56,6 @@ function SideBar({ toggleDrawer, open }) {
       <List component="nav">
         {<MainListItems />}
         <Divider sx={{ my: 1 }} />
-        {secondaryListItems}
       </List>
     </Drawer>
   );

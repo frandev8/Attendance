@@ -7,6 +7,7 @@ import {
 import { Container } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { Avatar, Card, Spin } from "antd";
+import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { fetchAttendance } from "../../../utils/http";
 import Accept from "./Accept";
@@ -18,16 +19,15 @@ import SortAttendance from "./SortAttendance";
 
 const { Meta } = Card;
 const Attendance = () => {
-  const token = document.cookie.match("(^|;)\\s?adminLogToken=([^;]+)");
-
   const { data, isPending } = useQuery({
     queryKey: ["attendance", { type: "pending" }],
     queryFn: () => fetchAttendance({ pending: true }),
-  }); 
+  });
 
-  if (!token) {
-    return <Navigate to="/" replace />;
-  }
+  const adminId = useSelector((state) => {
+    return state.admin.adminId;
+  });
+
   return (
     <div className={styles.container}>
       <div className={styles.item1}>
@@ -43,8 +43,18 @@ const Attendance = () => {
                 actions={[
                   <ClockIn key={"clockIn"} />,
                   <ClockOut key={"clockOut"} />,
-                  <Accept key="accept" refreshAttendanceList={() => {}} />,
-                  <Reject key="reject" refreshAttendanceList={() => {}} />,
+                  <Accept
+                    key="accept"
+                    attendanceId={items._id}
+                    userId={items.userId}
+                    adminId={adminId}
+                  />,
+                  <Reject
+                    key="reject"
+                    attendanceId={items._id}
+                    userId={items.userId}
+                    adminId={adminId}
+                  />,
                 ]}
                 key={id}
               >

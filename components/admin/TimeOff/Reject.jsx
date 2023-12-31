@@ -1,39 +1,25 @@
 import ClearIcon from "@mui/icons-material/Clear";
+import { useMutation } from "@tanstack/react-query";
 import PropTypes from "prop-types";
 import React from "react";
 import { json, useNavigation, useParams } from "react-router-dom";
+import { endorseTimeOff } from "../../../utils/http";
 
-function Reject({ refreshAttendanceList }) {
+function Reject({ adminId, timeOffId }) {
   const navigate = useNavigation();
 
+  const { mutate, isPending, isError, error } = useMutation({
+    mutationFn: endorseTimeOff,
+    onSuccess: () => {
+      // queryClient.invalidateQueries({queryKey:[""]})
+      navigate("../");
+    },
+  });
+
   const onRejectAttendanceHandler = async () => {
-    const attendanceId = "655c8972a805d2a502144812";
-    const userId = "654acbf48626cf74c1d45549";
-
-    const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
-
-    const loginToken = document.cookie.match("(^|;)\\s?adminLogToken=([^;]+)");
-
-    const response = await fetch(
-      `${serverURL}/admin/confirm-attendance/${userId}/reject`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          attendanceId: attendanceId,
-          loginToken: loginToken[2],
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      throw json({ msg: "Couldn't fetch data" }, { status: 500 });
-    }
-
-    refreshAttendanceList();
+    mutate({ adminId, timeOffId, isValid: false });
   };
+
   return (
     <div className="flex flex-col items-center">
       <div
