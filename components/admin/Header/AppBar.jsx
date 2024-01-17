@@ -1,12 +1,18 @@
 import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MuiAppBar from "@mui/material/AppBar";
-import Badge from "@mui/material/Badge";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
+import { useQuery } from "@tanstack/react-query";
+import { Avatar, Divider, List, Popover } from "antd";
 import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
+import { useLoaderData } from "react-router-dom";
+import { getAdminAvatar } from "../../../utils/http";
+
+import { capitalizeFirstLetter } from "../../../utils/typography";
 
 import React from "react";
 
@@ -31,6 +37,18 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 function TopBar({ toggleDrawer, open }) {
+  const loaderData = useLoaderData();
+
+  const adminId = useSelector((state) => state.admin.adminId);
+
+  const { data: userImage, isPending } = useQuery({
+    queryKey: ["employee", { key: "avatar" }],
+    queryFn: () => getAdminAvatar({ id: adminId }),
+    // staleTime: 0,
+  });
+
+  const userName = capitalizeFirstLetter(loaderData.firstname);
+
   return (
     <AppBar position="absolute" open={open}>
       <Toolbar
@@ -40,7 +58,6 @@ function TopBar({ toggleDrawer, open }) {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          // keep right padding when drawer closed
         }}
       >
         <IconButton
@@ -56,20 +73,33 @@ function TopBar({ toggleDrawer, open }) {
         >
           <MenuIcon />
         </IconButton>
-        <Typography
-          component="h1"
-          variant="h6"
-          color="inherit"
-          noWrap
-          sx={{ flexGrow: 1 }}
-        >
-          Dashboard
-        </Typography>
-        <IconButton color="inherit" sx={{ maxWidth: "50px" }}>
-          <Badge badgeContent={4} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
+        <div className="tw-w-full tw-flex tw-border-2 tw-border-black tw-items-center">
+          <Typography
+            component="h1"
+            variant="h6"
+            color="inherit"
+            noWrap
+            sx={{ flexGrow: 1 }}
+          >
+            Dashboard
+          </Typography>
+
+          <div className="tw-flex tw-items-center">
+            <Divider type="vertical" />
+            <span className="tw-text-ssm">{userName}</span>
+            <Divider type="vertical" />
+            <Avatar
+              style={{
+                backgroundColor: "#87d068",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {userName[0]}
+            </Avatar>
+          </div>
+        </div>
       </Toolbar>
     </AppBar>
   );

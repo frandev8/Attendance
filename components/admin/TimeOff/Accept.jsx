@@ -1,14 +1,19 @@
-import CheckIcon from "@mui/icons-material/Check";
+import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import PropTypes from "prop-types";
 import React from "react";
+import { useSelector } from "react-redux";
 import { json, useNavigate, useParams } from "react-router-dom";
 import { endorseTimeOff } from "../../../utils/http";
 
-function Accept({ adminId, timeOffId }) {
+function AcceptBtn({ timeOffId }) {
   const params = useParams();
   const navigate = useNavigate();
 
+  const adminId = useSelector((state) => {
+    return state.admin.adminId;
+  });
+  
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: endorseTimeOff,
     onSuccess: () => {
@@ -21,23 +26,11 @@ function Accept({ adminId, timeOffId }) {
     mutate({ adminId, timeOffId, isValid: true });
   };
 
-  return (
-    <div
-      className="flex flex-col items-center"
-      onClick={ConfirmAttendanceHandler}
-    >
-      <div className="flex items-center mr-[2px]">
-        <span>Confirm</span>{" "}
-      </div>
-      <div>
-        <CheckIcon />
-      </div>
-    </div>
-  );
+  return <Button onClick={ConfirmAttendanceHandler}>Accept</Button>;
 }
 
-Accept.propTypes = {
+AcceptBtn.propTypes = {
   refreshAttendanceList: PropTypes.func,
 };
 
-export default Accept;
+export default AcceptBtn;

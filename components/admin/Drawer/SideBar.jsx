@@ -47,17 +47,12 @@ function SideBar({ toggleDrawer, open }) {
           px: [1],
         }}
       >
-        {open ? <SearchBox /> : ""}
         <IconButton onClick={toggleDrawer} style={{ maxWidth: "50px" }}>
           <ChevronLeftIcon />
         </IconButton>
       </Toolbar>
       <Divider />
-      <List component="nav">
-        {<MainListItems />}
-        <Divider sx={{ my: 1 }} />
-        {secondaryListItems}
-      </List>
+      <List component="nav">{<MainListItems />}</List>
     </Drawer>
   );
 }

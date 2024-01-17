@@ -20,11 +20,21 @@ const items = [
     children: <PasswordSettings />,
   },
 ];
-const UserSettingsPage = () => (
-  <Container maxWidth="lg" sx={{ mt: 4, mb: 4, backgroundColor: "#F1F2F6" }}>
-    <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
-  </Container>
-);
+const UserSettingsPage = () => {
+  if ("geolocation" in navigator) {
+    console.log("available");
+  } else {
+    /* geolocation IS NOT available */
+    console.log("not available");
+  }
+
+  console.log("hey");
+  return (
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4, backgroundColor: "#F1F2F6" }}>
+      <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+    </Container>
+  );
+};
 
 export async function loader({ id }) {
   const avatar = await fetchEmployeesById({ id });

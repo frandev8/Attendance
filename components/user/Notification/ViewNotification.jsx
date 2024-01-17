@@ -14,7 +14,7 @@ function ViewNotification() {
   let listData = [];
 
   if (data) {
-    console.log(data, typeof data);
+    // console.log(data, typeof data);
     // listData = data;
   }
 

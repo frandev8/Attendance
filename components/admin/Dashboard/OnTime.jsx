@@ -35,11 +35,11 @@ export default function OnTime() {
         </div>
       </div>
       <Title>On Time</Title>
-      <div className={`flex justify-between items-center`}>
+      <div className={`tw-flex tw-justify-between tw-items-center`}>
         <div
-          className={` p-4 w-[15px] h-[15px] rounded-[50%] bg-progress-bg flex justify-center items-center mr-2`}
+          className={` tw-p-4 tw-w-[15px] tw-h-[15px] tw-rounded-[50%] tw-bg-progress-bg tw-flex tw-justify-center tw-items-center tw-mr-2`}
         >
-          <MovingIcon className={`text-progress-color`} />
+          <MovingIcon className={`tw-text-progress-color`} />
         </div>
         <Typography color="text.secondary" sx={{ flex: 1, fontSize: "16px" }}>
           -10% Less than yesterday

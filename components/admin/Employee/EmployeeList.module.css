@@ -1,0 +1,51 @@
+/* .customTable .ant-table-tbody > tr > td,
+.customTable .ant-table-thead > tr > th {
+  border: none;
+} */
+
+.attendance {
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  position: relative;
+  overflow-x: none;
+  /* overflow-y: auto;s */
+}
+
+@media (max-width: 452px) {
+}
+
+@media ((max-width: 768px)) {
+  .wrapper {
+    min-width: 85%;
+  }
+
+  .attendance {
+    min-width: 100%;
+  }
+}
+
+@media ((min-width: 769px)) {
+}
+@media (min-width: 1090px) {
+  .wrapper {
+    min-width: 90%;
+  }
+  .attendance {
+    min-width: 80%;
+  }
+  .birthday {
+    min-width: 20%;
+  }
+}
+
+@media (max-width: 1089px) {
+  .birthday {
+    display: none;
+  }
+  .attendance {
+    min-width: 100%;
+  }
+}

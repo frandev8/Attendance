@@ -7,7 +7,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import * as React from "react";
-
 import { Outlet } from "react-router-dom";
 import SideBar from "../../components/user/Drawer/SideBar";
 import TopBar from "../../components/user/Header/AppBar";
@@ -20,6 +19,7 @@ export default function UserPage() {
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
 
   return (
     <ThemeProvider theme={defaultTheme}>

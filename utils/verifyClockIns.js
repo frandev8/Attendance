@@ -5,9 +5,9 @@ const canClockIn = (today, lastCheckInDate) => {
   const previousCheckIn = new Date(lastCheckInDate);
 
   return (
-    today.getDate() === previousCheckIn.getDate() &&
-    today.getMonth() === previousCheckIn.getMonth() &&
-    today.getFullYear() === previousCheckIn.getFullYear()
+    today.getDate() !== previousCheckIn.getDate() ||
+    today.getMonth() !== previousCheckIn.getMonth() ||
+    today.getFullYear() !== previousCheckIn.getFullYear()
   );
 };
 

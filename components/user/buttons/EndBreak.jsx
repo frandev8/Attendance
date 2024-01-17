@@ -1,30 +1,69 @@
 import { ArrowUpward } from "@mui/icons-material";
+import CancelIcon from "@mui/icons-material/Cancel";
 import { useMutation } from "@tanstack/react-query";
-import { Button } from "antd";
+import { Button, Modal } from "antd";
+import { useState } from "react";
 import { useSelector } from "react-redux";
+import { deleteBreakTokenCookie } from "../../../utils/auth";
 import { mutateBreak } from "../../../utils/http";
-function EndBreak() {
+
+function EndBreak({ setBreakUnActive }) {
   const userId = useSelector((state) => {
     return state.user.userId;
   });
 
+  const [isModalOpen, setOpen] = useState(false);
+
   const { data, isPending, mutate, error, isError } = useMutation({
     mutationFn: mutateBreak,
     onSuccess: (data) => {
-
-      
+      deleteBreakTokenCookie();
+      setBreakUnActive();
+      hideBreakModal();
       console.log("success");
     },
   });
 
   const onEndBreakHandler = () => {
-    mutate({ id: userId, action: "end" });
+    const breakTime = new Date();
+    mutate({ id: userId, action: "end", breakTime });
+  };
+
+  const showBreakModal = () => {
+    setOpen(true);
+  };
+
+  const hideBreakModal = () => {
+    setOpen(false);
   };
 
   return (
-    <Button onClick={onEndBreakHandler}>
-      <ArrowUpward />
-    </Button>
+    <>
+      <Button
+        icon={<CancelIcon sx={{ fontSize: "12px" }} />}
+        type="dashed"
+        danger
+        onClick={showBreakModal}
+        className="tw-max-sm:text-ssm tw-p-2 tw-w-[max-content]"
+      >
+        Break
+      </Button>
+      <Modal
+        title="Break"
+        open={isModalOpen}
+        onCancel={hideBreakModal}
+        footer={(_, { CancelBtn }) => (
+          <div className="tw-flex">
+            <CancelBtn />
+            <Button className="tw-bg-[#0000ff]" onClick={onEndBreakHandler}>
+              Yes{" "}
+            </Button>
+          </div>
+        )}
+      >
+        <p>Are you sure you want to end break?</p>
+      </Modal>
+    </>
   );
 }
 

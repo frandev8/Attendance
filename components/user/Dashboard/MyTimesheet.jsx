@@ -110,11 +110,11 @@ function MyTimeSheet() {
 
   return (
     <div
-      className={`flex flex-col justify-between items-start h-full items-center`}
+      className={`tw-flex tw-flex-col tw-justify-between tw-items-start tw-h-full tw-items-center`}
     >
-      <div className="text-center">
-        <p className="max-sm:text-ssm md:text-sm">Mon, 09 Jan 2023</p>
-        <h3 className="max-sm:text-sbase md:text-base">Hello, James</h3>
+      <div className="tw-text-center">
+        <p className="tw-max-sm:text-ssm tw-md:text-sm">Mon, 09 Jan 2023</p>
+        <h3 className="tw-max-sm:text-sbase tw-md:text-base">Hello, James</h3>
       </div>
       <div>
         <Progress
@@ -123,24 +123,24 @@ function MyTimeSheet() {
           percent={workRate}
           format={(percent) => (
             <>
-              <div className="max-sm:text-ssm md:text-sm">00:00:09</div>
-              <div className="max-sm:text-ssm ">Clocked in</div>
+              <div className="tw-max-sm:text-ssm tw-md:text-sm">00:00:09</div>
+              <div className="tw-max-sm:text-ssm ">Clocked in</div>
             </>
           )}
-          className="mb-[5px]"
+          className="tw-mb-[5px]"
         />
       </div>
-      <div className="max-sm:text-ssm md:text-sm">Potan Office</div>
-      <div className="w-full flex justify-end">
+      <div className="tw-max-sm:text-ssm tw-md:text-sm">Potan Office</div>
+      <div className="tw-w-full tw-flex tw-justify-end">
         <Button
           icon={<AddIcon sx={{ fontSize: "12px" }} />}
           type="dashed"
-          className="max-sm:text-ssm p-2 w-[max-content]"
+          className="tw-max-sm:text-ssm tw-p-2 tw-w-[max-content]"
         >
           Break
         </Button>
       </div>
-      <div className=" w-full flex justify-between shadow-sm">
+      <div className=" tw-w-full tw-flex tw-justify-between tw-shadow-sm">
         <div>
           <ClockInReader />
         </div>
@@ -157,7 +157,7 @@ function MyTimeSheet() {
       <div>
         {!isClockActive ? (
           <Button
-            className=" bg-[#00ff00]"
+            className=" tw-bg-[#00ff00]"
             type="primary"
             size={"medium"}
             onClick={onClockInHandler}
@@ -166,7 +166,7 @@ function MyTimeSheet() {
           </Button>
         ) : (
           <Button
-            className="  bg-[#ff0000]"
+            className="  tw-bg-[#ff0000]"
             onClick={onClockOutHandler}
             type="primary"
             size={"medium"}

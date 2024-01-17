@@ -1,4 +1,5 @@
-import { Button, Tabs } from "antd";
+import { Button } from "@/components/ui/button";
+import { Tabs } from "antd";
 import { useState } from "react";
 import AnnouncementList from "../Announcement/AnnouncementList";
 import { NewAnnouncement } from "../Announcement/NewAnnouncement";
@@ -45,16 +46,26 @@ function Announcement() {
     <div>
       <div>All messages</div>
 
-      <div className="flex w-[40%]">
-        <Button type="primary" danger onClick={openNotificationModal}>
-          New notification
-        </Button>
-        <Button type="primary" onClick={openAnnouncementModal}>
-          New announcement
-        </Button>
+      <div className="tw-flex tw-justify-end ">
+        <div className="tw-flex tw-items-center tw-width-[50%] sm:tw-width-[30%] md:tw-width-[25%] md:tw-width-[20%]">
+          <Button
+            type="primary"
+            className={"tw-bg-[#c72e2e]"}
+            onClick={openNotificationModal}
+          >
+            New notification
+          </Button>
+          <Button
+            type="primary"
+            className={"tw-ml-[5px]"}
+            onClick={openAnnouncementModal}
+          >
+            New announcement
+          </Button>
+        </div>
       </div>
 
-      <div>
+      <div className="tw-mt-[50px]">
         <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
       </div>
       {isNotificationModalOpen && (

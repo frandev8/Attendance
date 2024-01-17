@@ -132,11 +132,11 @@ function SignUp() {
             ...layout.wrapperCol,
           }}
         >
-          <div className="flex flex-col items-center">
+          <div className="tw-flex tw-flex-col tw-items-center">
             <Button
               type="dashed"
               htmlType="submit"
-              className="border-[#0000ff] w-[45%] mb-2"
+              className="tw-border-[#0000ff] tw-w-[45%] tw-mb-2"
             >
               Next {isPending ? <Spin /> : <ArrowForwardIcon color="#0000f" />}
             </Button>

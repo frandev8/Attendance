@@ -4,7 +4,7 @@ import React from "react";
 import TotalLeave from "../TimeOff/TotalLeave";
 import TotalClockIn from "./TotalClockIn";
 import TotalClockOut from "./TotalClockOut";
-import TotalUncheckIn from "./TotalUncheckkIn";
+import TotalUncheckIn from "./TotalUncheckIn";
 const data = [
   {
     title: "Ant Design Title 1",
@@ -16,14 +16,11 @@ const data = [
 
 function AttendanceStats() {
   return (
-    <Space direction="vertical" className="bg-[#F4F6FA]">
+    <Space direction="vertical" className="tw-bg-[#F4F6FA]">
       <div>Attendance</div>
       <Divider style={{ marginTop: "5px", marginBottom: "5px" }} />
       <div>
-        <Space
-          direction="horizontal"
-          className="flex justify-between  "
-        >
+        <Space direction="horizontal" className="tw-flex tw-justify-between  ">
           <div>
             <TotalClockIn />
           </div>

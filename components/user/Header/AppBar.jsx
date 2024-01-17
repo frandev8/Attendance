@@ -7,9 +7,14 @@ import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
+import { useQuery } from "@tanstack/react-query";
 import { Avatar, Badge, Divider, List, Popover } from "antd";
 import PropTypes from "prop-types";
 import React from "react";
+import { useSelector } from "react-redux";
+import { useLoaderData } from "react-router-dom";
+import { getEmployeeAvatar } from "../../../utils/http";
+import { capitalizeFirstLetter } from "../../../utils/typography";
 import ViewNotification from "../Notification/ViewNotification";
 
 const drawerWidth = 240;
@@ -33,6 +38,18 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 function TopBar({ toggleDrawer, open }) {
+  const loaderData = useLoaderData();
+
+  const userId = useSelector((state) => state.user.userId);
+
+  const { data: userImage, isPending } = useQuery({
+    queryKey: ["employee", { key: "avatar" }],
+    queryFn: () => getEmployeeAvatar({ id: userId }),
+    // staleTime: 0,
+  });
+
+  const userName = capitalizeFirstLetter(loaderData.firstname);
+
   return (
     <AppBar position="absolute" open={open}>
       <Toolbar
@@ -42,6 +59,7 @@ function TopBar({ toggleDrawer, open }) {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+
           // keep right padding when drawer closed
         }}
       >
@@ -58,25 +76,35 @@ function TopBar({ toggleDrawer, open }) {
         >
           <MenuIcon />
         </IconButton>
-        <Typography
-          component="h1"
-          variant="h6"
-          color="inherit"
-          noWrap
-          sx={{ flexGrow: 1 }}
-        >
-          Dashboard
-        </Typography>
+        <div className="tw-w-full tw-flex tw-border-2 tw-border-black tw-items-center">
+          <Typography
+            component="h1"
+            variant="h6"
+            color="inherit"
+            noWrap
+            sx={{ flexGrow: 1 }}
+          >
+            Dashboard
+          </Typography>
 
-        <div className="flex items-center">
-          {/* {!open && <SearchOutlined />} */}
-          <Divider type="vertical" />
-          <ViewNotification />
-          <Divider type="vertical" />
-          <Avatar
-            style={{ backgroundColor: "#87d068" }}
-            icon={<UserOutlined />}
-          />
+          <div className="tw-flex tw-items-center">
+            {/* {!open && <SearchOutlined />} */}
+            <Divider type="vertical" />
+            <ViewNotification />
+            <Divider type="vertical" />
+            <span className="tw-text-ssm">{userName}</span>
+            <Divider type="vertical" />
+            <Avatar
+              style={{
+                backgroundColor: "#87d068",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              {userName[0]}
+            </Avatar>
+          </div>
         </div>
       </Toolbar>
     </AppBar>

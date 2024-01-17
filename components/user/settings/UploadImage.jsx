@@ -12,18 +12,75 @@ const getBase64 = (img, callback) => {
   reader.addEventListener("load", () => callback(reader.result));
   reader.readAsDataURL(img);
 };
+// const beforeUpload = (file) => {
+//   console.log(file.type);
+//   const isJpgOrPng =
+//     file.type === "image/jpeg" ||
+//     file.type === "image/png";
+//   if (!isJpgOrPng) {
+//     message.error("You can only upload JPG,JPEG, and PNG file!");
+//   }
+//   const isLt2M = file.size / 1024 / 1024 < 20;
+//   if (!isLt2M) {
+//     message.error("Image must smaller than 2MB!");
+//   }
+//   return isJpgOrPng && isLt2M;
+// };
+
 const beforeUpload = (file) => {
-  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-  if (!isJpgOrPng) {
-    message.error("You can only upload JPG/PNG file!");
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error("Image must smaller than 2MB!");
-  }
-  return isJpgOrPng && isLt2M;
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        // Set the dimensions based on your requirements
+        const maxWidth = 800;
+        const maxHeight = 600;
+
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width *= maxHeight / height;
+            height = maxHeight;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        ctx.drawImage(img, 0, 0, width, height);
+
+        canvas.toBlob((blob) => {
+          // Replace the original file with the resized blob
+          file = new File([blob], file.name, { type: "image/jpeg" });
+
+          resolve(file);
+        }, "image/jpeg");
+      };
+    };
+
+    reader.onerror = (error) => {
+      reject(error);
+    };
+  });
 };
 
+//
 const UploadImage = () => {
   const userId = useSelector((state) => state.user.userId);
 
@@ -46,10 +103,13 @@ const UploadImage = () => {
   });
 
   const handleChange = (info) => {
+    console.log("change works...", info.file.status);
+
     if (info.file.status === "uploading") {
       return;
     }
     if (info.file.status === "done") {
+      console.log("uploading...");
       getBase64(info.file.originFileObj, (url) => {
         mutate({ imgUrl: url, id: userId });
       });

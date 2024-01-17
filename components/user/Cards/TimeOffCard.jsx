@@ -8,11 +8,11 @@ function TimeOffCard({ typeOfLeave, limit, used }) {
 
   return (
     <div
-      className="flex flex-col  items-start py-2  w-[48%] rounded-md mb-2 border-[1px] border-black "
+      className="tw-flex tw-flex-col  tw-items-start tw-py-2  tw-w-[48%] tw-rounded-md tw-mb-2 tw-border-[1px] tw-border-black "
       style={{ background: "white" }}
     >
-      <div className="ml-[5px]">{typeOfLeave} Leave</div>
-      <div className="flex items-center  justify-around w-full">
+      <div className="tw-ml-[5px]">{typeOfLeave} Leave</div>
+      <div className="tw-flex tw-items-center  tw-justify-around tw-w-full">
         <Progress
           type="circle"
           percent={usedPercentage}
@@ -34,11 +34,11 @@ export function TimeOffCard2({ typeOfLeave, limit, used }) {
 
   return (
     <div
-      className="flex flex-col  items-start py-2  w-[48%] rounded-md mb-2 border-[1px] border-black "
+      className="tw-flex tw-flex-col  tw-items-start tw-py-2  tw-w-[48%] tw-rounded-md tw-mb-2 tw-border-[1px] tw-border-black "
       style={{ background: "white" }}
     >
-      <div className="ml-[5px]">{typeOfLeave} Leave</div>
-      <div className="flex items-center  justify-around w-full">
+      <div className="tw-ml-[5px]">{typeOfLeave} Leave</div>
+      <div className="tw-flex tw-items-center  tw-justify-around tw-w-full">
         <Progress
           type="circle"
           percent={usedPercentage}

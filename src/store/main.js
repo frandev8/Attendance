@@ -5,6 +5,7 @@ const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
 const user = { userId: getUserId() ? getUserId() : "" };
 const admin = { adminId: getAdminId() ? getAdminId() : "" };
+const timeOff = { isModalOpen: false, isViewModalOpen: false };
 const register = { personal: JSON.parse(getSignUpPersonal()) };
 
 // server
@@ -48,6 +49,32 @@ const registerSlice = createSlice({
   },
 });
 
+// admin
+const timeOffSlice = createSlice({
+  name: "timeOff",
+  initialState: timeOff,
+  reducers: {
+    closeTimeOffModal(state) {
+      state.isModalOpen = false;
+    },
+    openTimeOffModal(state) {
+      state.isModalOpen = true;
+    },
+    closeViewTimeOffModal(state) {
+      state.isViewModalOpen = false;
+    },
+    openViewTimeOffModal(state) {
+      state.isViewModalOpen = true;
+    },
+  },
+});
+
+export const {
+  closeTimeOffModal,
+  openTimeOffModal,
+  closeViewTimeOffModal,
+  openViewTimeOffModal,
+} = timeOffSlice.actions;
 export const { saveUserId } = userSlice.actions;
 export const { saveAdminId } = adminSlice.actions;
 // export const { saveEmployeePersonalDetails, saveEmployeePrivateDetails } =
@@ -61,6 +88,7 @@ const store = configureStore({
     user: userSlice.reducer,
     admin: adminSlice.reducer,
     register: registerSlice.reducer,
+    timeOff: timeOffSlice.reducer,
   },
 });
 export default store;

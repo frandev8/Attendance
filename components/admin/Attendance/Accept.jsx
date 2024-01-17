@@ -23,10 +23,10 @@ function Accept({ adminId, attendanceId, userId }) {
 
   return (
     <div
-      className="flex flex-col items-center"
+      className="tw-flex tw-flex-col tw-items-center"
       onClick={ConfirmAttendanceHandler}
     >
-      <div className="flex items-center mr-[2px]">
+      <div className="tw-flex tw-items-center tw-mr-[2px]">
         <span>Confirm</span>
       </div>
       <div>

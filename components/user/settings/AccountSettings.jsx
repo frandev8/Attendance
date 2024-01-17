@@ -4,9 +4,10 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 // import { Input, Space } from "antd";
-// import React from "react";
+import { mutateEmployeePersonalDetails } from "@/utils/http";
+import { useMutation } from "@tanstack/react-query";
 import { Button, Form, Input, Select, Space } from "antd";
-import React from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLoaderData } from "react-router-dom";
 import styles from "./AccountSettings.module.css";
@@ -14,13 +15,13 @@ import UploadImage from "./UploadImage";
 
 const { Option } = Select;
 
-const SubmitButton = ({ form }) => {
-  const [submittable, setSubmittable] = React.useState(false);
+const SubmitButton = ({ form, isActive }) => {
+  const [submittable, setSubmittable] = useState(false);
 
   // Watch all values
   const values = Form.useWatch([], form);
 
-  React.useEffect(() => {
+  useEffect(() => {
     form
       .validateFields({
         validateOnly: true,
@@ -36,7 +37,11 @@ const SubmitButton = ({ form }) => {
   }, [values]);
 
   return (
-    <Button type="primary" htmlType="submit" disabled={!submittable}>
+    <Button
+      // type="primary"
+      htmlType="submit"
+      disabled={!submittable || !isActive}
+    >
       Submit
     </Button>
   );
@@ -45,6 +50,7 @@ const SubmitButton = ({ form }) => {
 function AccountSettings() {
   const [form] = Form.useForm();
 
+  const [isFormChanged, setFormMode] = useState(false);
 
   const loaderData = useLoaderData();
 
@@ -55,6 +61,32 @@ function AccountSettings() {
     email: loaderData.email,
     phone: loaderData.phone,
     prefix: "+233",
+  };
+
+  const { data, isPending, mutate, error, isError } = useMutation({
+    mutationFn: mutateEmployeePersonalDetails,
+    onSuccess: (data) => {
+      console.log("successful update");
+    },
+  });
+
+  function onChangeForm(e) {
+    // const name = e.target.name;
+
+    const value = e.target.value;
+
+    console.log(e.target);
+
+    // if (value !== initialValues["firstname"]) {
+    //   setFormMode(true);
+    // } else {
+    //   setFormMode(false);
+    // }
+  }
+
+  const onFinish = (values) => {
+    const formData = { formData: values };
+    mutate({ formData, id: loaderData._id });
   };
 
   const prefixSelector = (
@@ -71,42 +103,49 @@ function AccountSettings() {
 
   return (
     <div>
-      <div>
-        <Box sx={{ my: 3, mx: 2 }}>
-          <div>
+      <div className="">
+        <div className={`${styles.box1} tw-w-full tw-mb-[8px]`}>
+          <div
+            className={`tw-w-[150px] tw-flex tw-flex-col tw-justify-center tw-items-center`}
+          >
             <span>Your Profile Picture</span>
-            <UploadImage />
+            <div>
+              <UploadImage />
+            </div>
             <div>Edit your profile</div>
           </div>
-        </Box>
+        </div>
         <Divider variant="middle" />
 
         <Form
           form={form}
           name="validateOnly"
+          onFinish={onFinish}
+          // onFinishFailed={onFinishFailed}
           layout="vertical"
           autoComplete="off"
           initialValues={initialValues}
+          className={`${styles.form} tw-mt-[15px]`}
         >
-          <Space direction="vertical">
-            <Space direction="horizontal">
+          <div className={styles.wrapper1}>
+            <div className={`${styles.box2} tw-gap-2`}>
               <Form.Item
                 name="firstname"
                 label="First Name"
-                // rules={[{ required: true }]}
+                rules={[{ required: true }]}
               >
                 <Input />
               </Form.Item>
               <Form.Item
                 name="lastname"
                 label="Last Name"
-                // rules={[{ required: true }]}
+                rules={[{ required: true }]}
               >
                 <Input />
               </Form.Item>
-            </Space>
+            </div>
 
-            <Space direction="horizontal">
+            <div className={`${styles.box2} tw-gap-2`}>
               <Form.Item
                 name="username"
                 label="Username"
@@ -121,8 +160,8 @@ function AccountSettings() {
               >
                 <Input />
               </Form.Item>
-            </Space>
-            <Space direction="horizontal">
+            </div>
+            <div className={`${styles.box2} tw-gap-2`}>
               <Form.Item
                 name="phone"
                 label="Phone Number"
@@ -140,13 +179,15 @@ function AccountSettings() {
                   }}
                 />
               </Form.Item>
-            </Space>
-          </Space>
+            </div>
+          </div>
 
           <Form.Item>
             <Space>
-              <SubmitButton form={form} />
-              <Button htmlType="reset">Reset</Button>
+              <SubmitButton form={form} isActive={isFormChanged} />
+              <Button htmlType="reset" to="./">
+                Reset
+              </Button>
             </Space>
           </Form.Item>
         </Form>

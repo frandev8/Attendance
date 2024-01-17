@@ -20,9 +20,9 @@ function Reject({ adminId, attendanceId, userId }) {
     mutate({ adminId, attendanceId, userId, isValid: false });
   };
   return (
-    <div className="flex flex-col items-center">
+    <div className="tw-flex tw-flex-col tw-items-center">
       <div
-        className="flex items-center mr-[2px] "
+        className="tw-flex tw-items-center tw-mr-[2px] "
         onClick={onRejectAttendanceHandler}
       >
         <span>Reject</span>{" "}

@@ -14,7 +14,7 @@ function TotalClockOut() {
 
   return (
     <AttendanceCard>
-      <div className="w-[40px] h-[40px] rounded-[8px] bg-regress-color flex justify-center items-center">
+      <div className="tw-w-[40px] tw-h-[40px] tw-rounded-[8px] tw-bg-regress-color tw-flex tw-justify-center tw-items-center">
         <LogoutIcon />
       </div>
       <span className="">Clock out</span>

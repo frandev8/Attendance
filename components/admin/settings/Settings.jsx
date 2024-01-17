@@ -33,6 +33,14 @@ const AdminSettingsPage = () => (
 );
 
 export async function loader({ id }) {
+  if ("geolocation" in navigator) {
+    // console.log("available");
+  } else {
+    /* geolocation IS NOT available */
+    // console.log("not available");
+  }
+
+  console.log("hey");
   const avatar = await fetchAdminById({ id });
 
   return avatar;

@@ -1,12 +1,17 @@
-import ClearIcon from "@mui/icons-material/Clear";
+import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import PropTypes from "prop-types";
 import React from "react";
+import { useSelector } from "react-redux";
 import { json, useNavigation, useParams } from "react-router-dom";
 import { endorseTimeOff } from "../../../utils/http";
 
-function Reject({ adminId, timeOffId }) {
+function RejectBtn({ timeOffId }) {
   const navigate = useNavigation();
+
+  const adminId = useSelector((state) => {
+    return state.admin.adminId;
+  });
 
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: endorseTimeOff,
@@ -21,22 +26,14 @@ function Reject({ adminId, timeOffId }) {
   };
 
   return (
-    <div className="flex flex-col items-center">
-      <div
-        className="flex items-center mr-[2px] "
-        onClick={onRejectAttendanceHandler}
-      >
-        <span>Reject</span>{" "}
-      </div>
-      <div>
-        <ClearIcon />
-      </div>
-    </div>
+    <Button variant="outline" onClick={onRejectAttendanceHandler}>
+      Reject
+    </Button>
   );
 }
 
-Reject.propTypes = {
+RejectBtn.propTypes = {
   refreshAttendanceList: PropTypes.func,
 };
 
-export default Reject;
+export default RejectBtn;

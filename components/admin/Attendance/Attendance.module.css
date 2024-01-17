@@ -1,50 +1,47 @@
-.container {
-  display: grid;
-  grid-template-columns: repeat(2, auto);
-  grid-template-rows: auto;
-  gap: 5px;
+.attendance {
+  display: flex;
+  flex-direction: column;
 }
 
-.item1 {
-  grid-column: 1;
-
-  border: 1px solid #ccc;
-  margin: 10px;
-  overflow: auto; /* Make this item scrollable */
-  border: 2px solid black;
+.main {
+  position: relative;
+  overflow-x: none;
+  /* overflow-y: auto;s */
 }
 
-.item2 {
-  grid-column: 2;
-  padding: 20px;
-  /* border: 2px solid black; */
-  margin: 10px;
-  /* Adjust background as needed */
-}
-
-.item2Child {
-  position: absolute;
-  top: 40;
-  height: 400px;
-  background-color: #fff;
+@media (max-width: 452px) {
 }
 
 @media ((max-width: 768px)) {
-  .container {
-    grid-template-rows: repeat(2, auto);
-    grid-template-columns: auto;
+  .wrapper {
+    min-width: 85%;
   }
 
-  .item1 {
-    grid-row: 2;
-    position: relative;
-    top: 80px;
+  .attendance {
+    min-width: 100%;
   }
-  .item2 {
-    grid-row: 1;
-    position: absolute;
-    height: 200px;
-    top: 40;
-    grid-column: 1;
+}
+
+@media ((min-width: 769px)) {
+ 
+}
+@media (min-width: 1090px) {
+  .wrapper {
+    min-width: 90%;
+  }
+  .attendance {
+    min-width: 70%;
+  }
+  .birthday {
+    min-width: 30%;
+  }
+}
+
+@media (max-width: 1089px) {
+  .birthday {
+    display: none;
+  }
+  .attendance {
+    min-width: 100%;
   }
 }

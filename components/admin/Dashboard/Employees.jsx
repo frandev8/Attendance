@@ -38,11 +38,11 @@ export default function Employees() {
         </div>
       </div>
       <Title>Total Employee</Title>
-      <div className={`flex  items-center`}>
+      <div className={`tw-flex  tw-items-center`}>
         <div
-          className={` p-4 w-[15px] h-[15px] rounded-[50%] bg-progress-bg flex justify-center items-center mr-2`}
+          className={` tw-p-4 tw-w-[15px] tw-h-[15px] tw-rounded-[50%] tw-bg-progress-bg tw-flex tw-justify-center tw-items-center tw-mr-2`}
         >
-          <AddIcon className={`text-progress-color`} />
+          <AddIcon className={`tw-text-progress-color`} />
         </div>
         <Typography color="text.secondary">2 new employees added</Typography>
       </div>

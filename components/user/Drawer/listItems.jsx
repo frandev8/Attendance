@@ -9,32 +9,23 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import * as React from "react";
-import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { deleteUserId } from "../../../utils/auth";
 import "./listItems.css";
 
 export function MainListItems() {
-  const [linkActive, setLinkActive] = useState({
-    isDashboard: true,
-    isHistory: false,
-    isEmployee: false,
-    isSetting: false,
-    isLogout: false,
-    isTimeOff: false,
-  });
+  const location = useLocation();
+  const pathname = location.pathname.split("/")[2];
 
-  const { isDashboard, isHistory, isSetting, isTimeOff, isLogout } = linkActive;
-
-  const handleLinkActive = (property) => {
-    setLinkActive({
-      isDashboard: property === "dashboard",
-      isHistory: property === "history",
-      isSetting: property === "settings",
-      isLogout: property === "logout",
-      isTimeOff: property === "timeOff",
-    });
+  const linkActive = {
+    isDashboard: !pathname || pathname === "",
+    isHistory: pathname === "history",
+    isSetting: pathname === "settings",
+    isLogout: pathname === "logout",
+    isTimeOff: pathname === "timeOff",
   };
+  const { isDashboard, isHistory, isSetting, isTimeOff, isLogout } = linkActive;
 
   const handleLogOut = () => {
     deleteUserId();
@@ -42,7 +33,6 @@ export function MainListItems() {
   return (
     <React.Fragment>
       <NavLink
-        onClick={() => handleLinkActive("dashboard")}
         to="/user/"
         className={({ isActive }) =>
           isDashboard || isActive ? "active" : undefined
@@ -57,7 +47,6 @@ export function MainListItems() {
       </NavLink>
 
       <NavLink
-        onClick={() => handleLinkActive("history")}
         to="history"
         className={({ isActive }) => (isActive ? "active" : undefined)}
       >
@@ -70,7 +59,6 @@ export function MainListItems() {
       </NavLink>
       <NavLink
         to="timeOff"
-        onClick={() => handleLinkActive("timeOff")}
         className={({ isActive }) => (isActive ? "active" : undefined)}
       >
         <ListItemButton>
@@ -81,7 +69,6 @@ export function MainListItems() {
         </ListItemButton>
       </NavLink>
       <NavLink
-        onClick={() => handleLinkActive("settings")}
         to="settings"
         className={({ isActive }) => (isActive ? "active" : undefined)}
       >

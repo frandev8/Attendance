@@ -4,7 +4,6 @@ import {
   Button,
   DatePicker,
   Divider,
-  Flex,
   Form,
   Input,
   Select,
@@ -14,14 +13,17 @@ import {
 import PropTypes from "prop-types";
 import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { closeTimeOffModal } from "../../../src/store/main";
 import { postTimeOff, queryClient } from "../../../utils/http";
 import { isTimeOffFormValid } from "../../../utils/joiValidation";
 
 const { TextArea } = Input;
 
-const BackDrop = ({ closeModal }) => {
+const BackDrop = () => {
+  const dispatch = useDispatch();
+
   return (
     <div
       style={{
@@ -33,26 +35,24 @@ const BackDrop = ({ closeModal }) => {
         zIndex: "10",
         background: "rgba(0, 0, 0, 0.75)",
       }}
-      onClick={() => closeModal()}
+      onClick={() => dispatch(closeTimeOffModal())}
     ></div>
   );
 };
 
-const ModalOverlay = ({ closeModal }) => {
+const ModalOverlay = () => {
   const textAreaRef = useRef();
   const [timeOffType, setTimeOffType] = useState();
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
+  const dispatch = useDispatch();
 
   const userId = useSelector((state) => state.user.userId);
-
-  const navigate = useNavigate();
-
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: postTimeOff,
     onSuccess: () => {
       // queryClient.invalidateQueries({queryKey:[""]})
-      navigate("../");
+      dispatch(closeTimeOffModal());
     },
   });
 
@@ -68,7 +68,6 @@ const ModalOverlay = ({ closeModal }) => {
   };
 
   const handleNewTimeOffForm = () => {
-    console.log(textAreaRef.current.resizableTextArea.textArea.value);
     const formData = {
       type: timeOffType,
       startDate,
@@ -95,7 +94,7 @@ const ModalOverlay = ({ closeModal }) => {
         zIndex: "100",
       }}
     >
-      <div className={"flex flex-col items-end "}>
+      <div className={"tw-flex tw-flex-col tw-items-end "}>
         <Paper
           sx={{
             p: 2,
@@ -147,8 +146,12 @@ const ModalOverlay = ({ closeModal }) => {
             </Form>
           </Space>
         </Paper>
-        <div className="flex w-[40%]">
-          <Button type="primary" danger onClick={() => closeModal()}>
+        <div className="tw-flex w-[40%]">
+          <Button
+            type="primary"
+            danger
+            onClick={() => dispatch(closeTimeOffModal())}
+          >
             Cancel
           </Button>
           <Button type="primary" onClick={handleNewTimeOffForm}>
@@ -160,29 +163,17 @@ const ModalOverlay = ({ closeModal }) => {
   );
 };
 
-export const NewTimeOff = ({ closeModal }) => {
+export const NewTimeOff = () => {
   return (
     <>
-      {createPortal(
-        <BackDrop closeModal={closeModal} />,
-        document.getElementById("overlay")
-      )}
-      {createPortal(
-        <ModalOverlay closeModal={closeModal} />,
-        document.getElementById("timeOff-modal")
-      )}
+      {createPortal(<BackDrop />, document.getElementById("overlay"))}
+      {createPortal(<ModalOverlay />, document.getElementById("timeOff-modal"))}
     </>
   );
 };
 
-ModalOverlay.propTypes = {
-  closeModal: PropTypes.func,
-};
+ModalOverlay.propTypes = {};
 
-NewTimeOff.propTypes = {
-  closeModal: PropTypes.func,
-};
+NewTimeOff.propTypes = {};
 
-BackDrop.propTypes = {
-  closeModal: PropTypes.func,
-};
+BackDrop.propTypes = {};

@@ -6,7 +6,7 @@ import { redirect } from "react-router-dom";
  */
 
 export const getUserLoginToken = () => {
-  const token = document.cookie.match("(^|;)\\s?userLogToken=([^;]+)");
+  const token = document.cookie.match("(^|;)\\s?userLogToken=([^;]+)")[2];
 
   return token;
 };
@@ -27,7 +27,7 @@ export function deleteUserLoginToken() {
  * @param {*} token
  */
 export const getAdminLoginToken = () => {
-  const token = document.cookie.match("(^|;)\\s?adminLogToken=([^;]+)");
+  const token = document.cookie.match("(^|;)\\s?adminLogToken=([^;]+)")[2];
 
   return token;
 };
@@ -51,11 +51,16 @@ export function deleteAdminLoginToken() {
 export const getClockInTokenCookie = () => {
   const token = document.cookie.match("(^|;)\\s?clockInToken=([^;]+)");
 
-  return token;
+  if (!token) {
+    return "";
+  }
+
+  return token[2];
 };
 
 export const saveClockInTokenCookie = (token) => {
-  const expirationTime = new Date().setHours(17, 0, 0, 0);
+  const expirationTime = new Date();
+  expirationTime.setHours(23, 59, 0, 0);
 
   document.cookie = `clockInToken=${token}; expires=${expirationTime.toUTCString()}`;
 };
@@ -70,7 +75,9 @@ export function deleteClockInTokenCookie() {
  */
 
 export const saveBreakTokenCookie = (token) => {
-  const expirationTime = new Date().setHours(15, 0, 0, 0);
+  const expirationTime = new Date();
+
+  expirationTime.setHours(12, 0, 0, 0);
 
   document.cookie = `breakToken=${token}; expires=${expirationTime.toUTCString()}`;
 };
@@ -78,7 +85,11 @@ export const saveBreakTokenCookie = (token) => {
 export const getBreakTokenCookie = () => {
   const token = document.cookie.match("(^|;)\\s?breakToken=([^;]+)");
 
-  return token;
+  if (!token) {
+    return "";
+  }
+
+  return token[2];
 };
 
 export function deleteBreakTokenCookie() {
@@ -91,19 +102,24 @@ export function deleteBreakTokenCookie() {
  */
 
 export const saveOvertimeTokenCookie = (token) => {
-  const expirationTime = new Date().setHours(20, 0, 0, 0);
+  const expirationTime = new Date();
+
+  expirationTime.setHours(1, 0, 0, 0);
 
   document.cookie = `overtimeToken=${token}; expires=${expirationTime.toUTCString()}`;
 };
 
 export const getOvertimeTokenCookie = () => {
-  const token = document.cookie.match("(^|;)\\s?overtime=([^;]+)");
+  const token = document.cookie.match("(^|;)\\s?overtimeToken=([^;]+)");
+  if (!token) {
+    return "";
+  }
 
-  return token;
+  return token[2];
 };
 
 export function deleteOvertimeTokenCookie() {
-  document.cookie = `overtime=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`; // Delete the cookie named 'token'
+  document.cookie = `overtimeToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`; // Delete the cookie named 'token'
 }
 
 /**

@@ -3,8 +3,8 @@ import React from "react";
 
 function ClockIn() {
   return (
-    <div className="flex flex-col items-center">
-      <div className="flex items-center mr-[2px]">
+    <div className="tw-flex tw-flex-col tw-items-center">
+      <div className="tw-flex tw-items-center tw-mr-[2px]">
         <span>Clock in</span>{" "}
       </div>
       <div>

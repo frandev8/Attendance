@@ -65,10 +65,9 @@ function SignIn() {
         saveUserIdOnBrowser(data.userId);
 
         dispatch(saveUserId({ userId: data.userId }));
-        
+
         navigate("/user");
       } else if (data.role === "admin") {
-     
         // store the token as a cookie
         setAdminLoginToken(data.adminToken);
 
@@ -140,7 +139,7 @@ function SignIn() {
           ]}
           validateTrigger="onBlur"
         >
-          <div className="flex">
+          <div className="tw-flex">
             <Input.Password
               placeholder="input password"
               visibilityToggle={{
@@ -174,7 +173,7 @@ function SignIn() {
         </Form.Item>
 
         <Form.Item>
-          <div className="flex items-center justify-between">
+          <div className="tw-flex tw-items-center tw-justify-between">
             <Form.Item name="remember" valuePropName="checked" noStyle>
               <div>
                 <Checkbox></Checkbox>
@@ -193,11 +192,11 @@ function SignIn() {
             ...layout.wrapperCol,
           }}
         >
-          <div className="flex flex-col items-center ">
+          <div className="tw-flex tw-flex-col tw-items-center ">
             <Button
               type="primary"
               htmlType="submit"
-              className="w-[40%] mb-2 bg-[#0000ff] rounded-md"
+              className="tw-w-[40%] tw-mb-2 tw-bg-[#0000ff] tw-rounded-md"
             >
               {isPending ? <Spin /> : "Sign in "}
             </Button>

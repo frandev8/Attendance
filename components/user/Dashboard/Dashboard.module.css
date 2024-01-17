@@ -3,10 +3,11 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
+  border: 2px solid black;
   /* gap: 8px; */
 }
 
-@media (max-width: 480px) {
+@media (max-width: 540px) {
   .item1 {
     width: 100%;
   }
@@ -39,9 +40,10 @@
 
 /* Adjust styles for viewport width 481px to 768px */
 
-@media (min-width: 481px) and (max-width: 768px) {
+@media (min-width: 541px) and (max-width: 768px) {
   .item1 {
     width: 48%;
+    /* border: 2px solid black; */
   }
 
   .item2 {
@@ -68,9 +70,38 @@
 
 /* Adjust styles for viewport width 481px to 768px */
 
-@media (min-width: 769px) and (max-width: 1090px) {
+@media (min-width: 769px) and (max-width: 840px) {
   .item1 {
-    width: 30%;
+    width: 43%;
+  }
+
+  .item2 {
+    width: 55%;
+    /* display: none; */
+  }
+
+  .item2b {
+    width: 58%;
+    display: none;
+  }
+
+  .item3 {
+    display: none;
+  }
+  .item4 {
+    width: 50%;
+  }
+
+  .item5 {
+    width: 50%;
+  }
+  .item6 {
+    width: 100%;
+  }
+}
+@media (min-width: 841px) and (max-width: 1090px) {
+  .item1 {
+    width: 33%;
   }
 
   .item2 {
@@ -79,7 +110,7 @@
   }
 
   .item2b {
-    width: 68%;
+    width: 65%;
   }
 
   .item3 {
@@ -99,7 +130,7 @@
 
 @media (min-width: 1090px) {
   .item1 {
-    width: 22%;
+    width: 25%;
   }
 
   .item2 {
@@ -110,7 +141,7 @@
   }
 
   .item3 {
-    width: 50%;
+    width: 47%;
   }
   .item4 {
     width: 60%;

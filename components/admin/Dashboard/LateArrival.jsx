@@ -34,11 +34,11 @@ export default function LateArrival() {
         </div>
       </div>
       <Title>Late Arrival</Title>
-      <div className={`flex  items-center`}>
+      <div className={`tw-flex  tw-items-center`}>
         <div
-          className={` p-4 w-[15px] h-[15px] rounded-[50%] bg-regress-bg flex justify-center items-center mr-2`}
+          className={` tw-p-4 tw-w-[15px] tw-h-[15px] tw-rounded-[50%] tw-bg-regress-bg tw-flex tw-justify-center tw-items-center tw-mr-2`}
         >
-          <MovingIcon className={`text-regress-color rotate-180`} />
+          <MovingIcon className={`tw-text-regress-color tw-rotate-180`} />
         </div>
         <Typography color="text.secondary" sx={{ flex: 1, fontSize: "16px" }}>
           +3% Increase than yesterday

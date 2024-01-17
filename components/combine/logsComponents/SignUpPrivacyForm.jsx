@@ -1,14 +1,10 @@
 import { ArrowBack } from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
 import { useMutation } from "@tanstack/react-query";
-import { Button, Form, Input, InputNumber, Select, Spin, Tooltip } from "antd";
+import { Button, Form, Input, Select, Spin, Tooltip } from "antd";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
-import {
-  // Form,
-  Link as RRLink,
-  useNavigate,
-} from "react-router-dom";
+import { Link as RRLink, useNavigate } from "react-router-dom";
 import { register } from "../../../utils/http";
 import { validateSignup } from "../../../utils/signinValidate";
 
@@ -28,10 +24,6 @@ const validateMessages = {
   required: "${label} is required!",
   types: {
     email: "${label} is not a valid email!",
-    number: "${label} is not a valid number!",
-  },
-  number: {
-    range: "${label} must be between ${min} and ${max}",
   },
 };
 /* eslint-enable no-template-curly-in-string */
@@ -81,7 +73,7 @@ function SignUpPrivacy() {
       </Typography>
       <Form
         {...layout}
-        name="nest-messages"
+        name="mutate-personality"
         onFinishFailed={onFinishFailed}
         onFinish={onFinish}
         layout="vertical"
@@ -175,7 +167,7 @@ function SignUpPrivacy() {
           {/* <Button type="primary" htmlType="submit">
             Sign up
           </Button> */}
-          <div className="flex justify-between">
+          <div className="tw-flex tw-justify-between">
             <RRLink to={"./?details=personal"}>
               <ArrowBack color="#0000f" /> {"go back"}
             </RRLink>
@@ -183,7 +175,7 @@ function SignUpPrivacy() {
             <Button
               type="dashed"
               htmlType="submit"
-              className="border-[#0000ff] w-[45%] mb-2"
+              className="tw-border-[#0000ff] tw-w-[45%] tw-mb-2"
             >
               {isPending ? <Spin></Spin> : "Sign up!"}
             </Button>

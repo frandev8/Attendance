@@ -2,12 +2,12 @@ import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import React from "react";
 function OvertimeReader() {
   return (
-    <ul className="sm:text-ssm md:text-sm text-center">
-      <li className="flex items-center">
+    <ul className="tw-sm:text-ssm tw-md:text-sm tw-text-center">
+      <li className="tw-flex tw-items-center">
         <FiberManualRecordIcon
           fontSize="small"
           color="#00ff00"
-          className="border-2 border-black"
+          className="tw-border-2 tw-border-black"
         />{" "}
         <span>clock in</span>
       </li>

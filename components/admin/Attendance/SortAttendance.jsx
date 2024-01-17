@@ -5,14 +5,58 @@ import Paper from "@mui/material/Paper";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import Stack from "@mui/material/Stack";
-import { Select, Space, TimePicker } from "antd";
+import { DatePicker, Select, Space } from "antd";
 import dayjs from "dayjs";
-import React from "react";
+import { useState } from "react";
 
-function SortAttendance() {
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
+function SortAttendance({ hideFilter, filterAttendance, resetFilter }) {
+  const [timeSelectFormat, setTimeSelectFormat] = useState("rg");
+  const [date1Value, setDate1Value] = useState(
+    dayjs().startOf("week").subtract(1, "week")
+  );
+  const [date2Value, setDate2Value] = useState(dayjs());
+
+  const onDate1Change = (date, dateString) => {
+    setDate1Value(dateString);
+    // console.log(date, dateString);
   };
+
+  const onDate2Change = (date, dateString) => {
+    setDate2Value(dateString);
+    // console.log(date, dateString);
+  };
+
+  const handleChange = (value) => {
+    setTimeSelectFormat(value);
+  };
+
+  function onHandleApplyButton() {
+    switch (timeSelectFormat) {
+      case "rg":
+        if (!date1Value || !date2Value) {
+          return;
+        }
+        filterAttendance([date1Value, date2Value]);
+
+        break;
+      case "sp":
+        if (!date1Value) {
+          return;
+        }
+        filterAttendance([date1Value]);
+        break;
+      default:
+        return;
+    }
+  }
+
+  function refetchAttendance() {
+    setDate1Value(dayjs().startOf("week").subtract(1, "week"));
+    setDate2Value(dayjs());
+    setTimeSelectFormat("rg");
+    resetFilter();
+    hideFilter();
+  }
 
   return (
     <Paper
@@ -20,11 +64,13 @@ function SortAttendance() {
         p: 2,
         display: "flex",
         flexDirection: "column",
-        width: "200px",
+        width: "300px",
       }}
     >
       <div>
-        <button>Reset</button>
+        <Button variant="contained" color="primary" onClick={refetchAttendance}>
+          Reset
+        </Button>
       </div>
       <div>
         <FormControl>
@@ -38,44 +84,54 @@ function SortAttendance() {
           </RadioGroup>
         </FormControl>
       </div>
-      <div>
+      <div className="tw-mb-[10px]">
         <Select
-          defaultValue="range"
+          value={timeSelectFormat}
           style={{
             width: 120,
           }}
           onChange={handleChange}
           options={[
             {
-              value: "specific",
+              value: "sp",
               label: "specific",
             },
             {
-              value: "range",
+              value: "rg",
               label: "range",
             },
           ]}
         />
       </div>
-      <div>
-        <Space wrap>
-          <TimePicker
-            defaultValue={dayjs("12:08:23", "HH:mm:ss")}
+     <div className="tw-mb-[10px]">
+        <Space direction="horizontal">
+          <DatePicker
+            defaultValue={date1Value}
             size="large"
+            onChange={onDate1Change}
           />
-          to
-          <TimePicker
-            defaultValue={dayjs("12:08:23", "HH:mm:ss")}
-            size="small"
-          />
+          {timeSelectFormat === "rg" && (
+            <>
+              to
+              <DatePicker
+                defaultValue={date2Value}
+                size="large"
+                onChange={onDate2Change}
+              />
+            </>
+          )}
         </Space>
       </div>
       <div>
         <Stack direction="row" spacing={2}>
-          <Button variant="outlined" color="error">
+          <Button variant="outlined" color="error" onClick={hideFilter}>
             Cancel
           </Button>
-          <Button variant="contained" color="primary">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={onHandleApplyButton}
+          >
             Apply
           </Button>
         </Stack>
@@ -85,3 +141,13 @@ function SortAttendance() {
 }
 
 export default SortAttendance;
+// { hideFilter, filterAttendance, resetFilter }) {
+//   const [timeSelectFormat, setTimeSelectFormat] = useState("rg");
+//   const [date1Value, setDate1Value] = useState(
+//     dayjs().startOf("week").subtract(1, "week")
+//   );
+//   const [date2Value, setDate2Value] = useState(dayjs());
+
+//   const handleChange = (value) => {
+//     console.log(`selected ${value}`);
+//   };

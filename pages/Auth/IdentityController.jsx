@@ -6,12 +6,14 @@ import { useSearchParams } from "react-router-dom";
 
 import Grid from "@mui/material/Grid";
 
+import { getPageBanner } from "@/utils/http";
 import Link from "@mui/material/Link";
-
 import Paper from "@mui/material/Paper";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { useQuery } from "@tanstack/react-query";
 import { Outlet } from "react-router-dom";
+
 // import SignIn from "../../components/combine/logsComponents/SignInForm.jsx";
 // import { saveAdminId, saveUserId } from "../../src/store/main.js";
 // import {
@@ -46,6 +48,16 @@ export function IdentityController() {
 
   const defaultTheme = createTheme();
 
+  const { data, isPending } = useQuery({
+    queryKey: ["employee", { key: "avatar" }],
+    queryFn: () => getPageBanner({ id: "65852eb55f470300be649aaa" }),
+    staleTime: 0,
+  });
+
+  if (data) {
+    console.log(data, "data");
+  }
+
   return (
     <>
       <main className={styles.container}>
@@ -58,7 +70,9 @@ export function IdentityController() {
               sm={4}
               md={6}
               sx={{
-                backgroundImage: `url("../src/assets/images/welcome.jpg")`,
+                backgroundImage: `url("${
+                  data ? data.url : "../src/assets/images/welcome.jpg"
+                }")`,
                 backgroundRepeat: "no-repeat",
                 backgroundColor: (t) =>
                   t.palette.mode === "light"

@@ -47,7 +47,6 @@ function SideBar({ toggleDrawer, open }) {
           px: [1],
         }}
       >
-        {open ? <SearchBox /> : ""}
         <IconButton onClick={toggleDrawer} style={{ maxWidth: "50px" }}>
           <ChevronLeftIcon />
         </IconButton>

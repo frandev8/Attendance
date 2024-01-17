@@ -1,19 +1,38 @@
+import { formatTodayDate } from "@/utils/date";
 import { Settings } from "@mui/icons-material";
-import React from "react";
+import { useState } from "react";
 
 function Today() {
+  const [currentTime, setTime] = useState(null);
+
+  const updateTime = () => {
+    const date = new Date();
+    const seconds = date.getSeconds();
+    const minutes = date.getMinutes();
+    const hours = date.getHours();
+
+    // Format the time string
+    const timeString = `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+
+    setTime(timeString);
+    // Update the element displaying the time
+  };
+
+  setInterval(updateTime, 1000);
   return (
-    <div className="flex flex-col justify-between h-full">
-      <div className="flex items-center">
+    <div className="tw-flex tw-flex-col tw-justify-between tw-h-full">
+      <div className="tw-flex tw-items-center">
         <img src="../../../src/assets/Icons/sunshine.svg" alt="" />
         <div>
-          <p>8:02:09 AM</p>
+          <p>{currentTime}</p>
           <p>Realtime Insight</p>
         </div>
       </div>
       <div>
         <span>Today:</span> <br />
-        <span>2nd August 2023</span>
+        <span>{formatTodayDate()}</span>
       </div>
       <div>
         <button>

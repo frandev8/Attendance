@@ -29,7 +29,6 @@ function Dashboard() {
             }}
           >
             <Today />
-            {/* <Chart /> */}
           </Paper>
         </div>
         <div className={(styles.box, styles.item2)}>
@@ -54,7 +53,7 @@ function Dashboard() {
             }}
           >
             <OnTime />
-          </Paper>{" "}
+          </Paper>
         </div>
         <div className={(styles.box, styles.item4)}>
           <Paper
@@ -62,7 +61,7 @@ function Dashboard() {
               p: 2,
               display: "flex",
               flexDirection: "column",
-              // height: "100%",
+             
             }}
           >
             <Absent />
@@ -74,7 +73,6 @@ function Dashboard() {
               p: 2,
               display: "flex",
               flexDirection: "column",
-              // height: "100%",
             }}
           >
             <LateArrival />

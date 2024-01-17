@@ -35,11 +35,11 @@ export default function TimeOff() {
         </div>
       </div>
       <Title>Time-off</Title>
-      <div className={`flex items-center`}>
+      <div className={`tw-flex tw-items-center`}>
         <div
-          className={` p-4 w-[15px] h-[15px] rounded-[50%] bg-halt-bg flex justify-center items-center mr-2`}
+          className={`tw-p-4 tw-w-[15px] tw-h-[15px] tw-rounded-[50%] tw-bg-halt-bg tw-flex tw-justify-center tw-items-center tw-mr-2`}
         >
-          <MovingIcon className={`text-halt-color`} />
+          <MovingIcon className={`tw-text-halt-color`} />
         </div>
         <Typography color="text.secondary" sx={{ flex: 1 }}>
           2 new employees added

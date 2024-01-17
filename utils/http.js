@@ -1,7 +1,9 @@
 import { QueryClient } from "@tanstack/react-query";
 import {
   getAdminLoginToken,
+  getBreakTokenCookie,
   getClockInTokenCookie,
+  getOvertimeTokenCookie,
   getUserLoginToken,
 } from "./auth";
 import canClockIn from "./verifyClockIns";
@@ -53,7 +55,7 @@ export async function fetchEmployees({ active }) {
   let url = serverURL + "/employee";
 
   if (active) {
-    url += "/" + "?active=true";
+    url += "?active=true";
   }
 
   const response = await fetch(url);
@@ -92,6 +94,8 @@ export async function fetchEmployeesById({ id }) {
 export async function logInEmployee({ formData }) {
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
+  console.log("logging in");
+
   let url = serverURL + "/employee/login";
 
   const response = await fetch(url, {
@@ -110,6 +114,8 @@ export async function logInEmployee({ formData }) {
   }
 
   const results = await response.json();
+
+  console.log(results, "logged in");
 
   return results;
 }
@@ -171,16 +177,45 @@ export async function changeEmployeePassword({ formData, id }) {
 
   let url = serverURL + "/employee/password/" + id;
 
+  console.log();
+
   const response = await fetch(url, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(formData),
+    body: JSON.stringify({ formData }),
   });
 
   if (!response.ok) {
     const error = new Error("An error occurred while changing your password");
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+  console.log("successful pass update");
+  const results = await response.json();
+
+  return results;
+}
+
+export async function mutateEmployeePersonalDetails({ formData, id }) {
+  const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+  let url = serverURL + "/employee/personal/" + id;
+
+  const response = await fetch(url, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ formData }),
+  });
+
+  if (!response.ok) {
+    const error = new Error(
+      "An error occurred while changing your personal details"
+    );
     error.code = response.status;
     error.info = await response.json();
     throw error;
@@ -291,14 +326,14 @@ export async function fetchAdminById({ id }) {
 export async function changeAdminPassword({ formData, id }) {
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
-  let url = serverURL + "/employee/admin/" + id;
+  let url = serverURL + "/admin/password/" + id;
 
   const response = await fetch(url, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(formData),
+    body: JSON.stringify({ formData }),
   });
 
   if (!response.ok) {
@@ -312,6 +347,34 @@ export async function changeAdminPassword({ formData, id }) {
 
   return results;
 }
+
+export async function mutateAdminPersonalDetails({ formData, id }) {
+  const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+  let url = serverURL + "/employee/personal/" + id;
+
+  const response = await fetch(url, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ formData }),
+  });
+
+  if (!response.ok) {
+    const error = new Error(
+      "An error occurred while changing your personal details"
+    );
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+  console.log("successful pass update");
+  const results = await response.json();
+
+  return results;
+}
+
 /**
  * @desc attendance http
  *
@@ -383,17 +446,99 @@ export async function fetchAttendanceById({ approved, id, rejected }) {
   let url = serverURL + "/employee/attendance/" + id;
 
   if (approved) {
-    url += "/" + "?approved=true";
+    url += "?approved=true";
   }
 
   if (rejected) {
-    url += "/" + "?rejected=true";
+    url += "?rejected=true";
   }
+
+  // if (pending) {
+  //   url +=  "?pending=true";
+  // }
 
   const response = await fetch(url);
 
   if (!response.ok) {
     const error = new Error("An error occurred while fetching the employee");
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  const results = await response.json();
+
+  return results;
+}
+
+export async function fetchBreakAttendance({ id, currentDate }) {
+  const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+  let url =
+    serverURL +
+    "/employee/attendance/break/" +
+    id +
+    `?date=${currentDate.toISOString()}`;
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    const error = new Error(
+      "An error occurred while fetching the break attendance"
+    );
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  const results = await response.json();
+
+  return results;
+}
+
+export async function fetchOvertimeAttendance({ id, currentDate }) {
+  const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+  let url =
+    serverURL +
+    "/employee/attendance/overtime/" +
+    id +
+    `?date=${currentDate.toISOString()}`;
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    const error = new Error(
+      "An error occurred while fetching the overtime attendance"
+    );
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  const results = await response.json();
+  // console.log(results);
+
+  return results;
+}
+
+export async function fetchAttendanceByDate({ id, date }) {
+  const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+  let url = serverURL + "/employee/attendance/date/" + id;
+
+  if (date) {
+    url += `?match=${date.toISOString()}`;
+  }
+
+  const response = await fetch(url, {
+    headers: {
+      Authorization: "Bearer " + getClockInTokenCookie(),
+    },
+  });
+
+  if (!response.ok) {
+    const error = new Error("An error occurred while fetching the attendance");
     error.code = response.status;
     error.info = await response.json();
     throw error;
@@ -486,7 +631,7 @@ export async function clockIn({ id }) {
 
   const employee = await res.json();
 
-  if (!canClockIn(today, employee.lastCheckInDate)) {
+  if (canClockIn(today, employee.lastCheckInDate)) {
     const loginToken = getUserLoginToken();
 
     const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
@@ -514,8 +659,6 @@ export async function clockIn({ id }) {
 
     const results = await res.json();
 
-    console.log("results", results);
-
     return results;
   }
 
@@ -525,13 +668,12 @@ export async function clockIn({ id }) {
 export async function clockOut({ id }) {
   const now = new Date();
 
-  const clockInToken = document.cookie.match("(^|;)\\s?clockInToken=([^;]+)");
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
   const res = await fetch(`${serverURL}/employee/attendance/clock-out/${id}`, {
     method: "PATCH",
     headers: {
-      Authorization: "Bearer " + clockInToken[2],
+      Authorization: "Bearer " + getClockInTokenCookie(),
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -545,6 +687,8 @@ export async function clockOut({ id }) {
     error.info = await res.json();
     throw error;
   }
+
+  console.log("successful clockout");
   const results = await res.json();
 
   return results;
@@ -707,7 +851,6 @@ export async function fetchTimeOff({ approved, pending }) {
 
   const results = await response.json();
 
-  console.log(results);
   return results;
 }
 
@@ -736,6 +879,27 @@ export async function fetchTimeOffById({ id, approved }) {
   return results;
 }
 
+export async function deleteTimeOff({ id }) {
+  const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+  let url = serverURL + "/employee/timeOff/" + id;
+
+  const response = await fetch(url, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    const error = new Error("An error occurred while deleting leave");
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  const results = await response.json();
+
+  return results;
+}
+
 export async function endorseTimeOff({ isValid, timeOffId, adminId }) {
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
@@ -748,8 +912,6 @@ export async function endorseTimeOff({ isValid, timeOffId, adminId }) {
   } else {
     url += "?action=decline";
   }
-
-  console.log(url);
 
   const response = await fetch(url, {
     method: "POST",
@@ -852,6 +1014,7 @@ export async function getAdminAvatar({ id }) {
   const results = await res.json();
   return results;
 }
+
 export async function upLoadAdminAvatar({ id, imgUrl }) {
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
@@ -882,11 +1045,8 @@ export async function upLoadAdminAvatar({ id, imgUrl }) {
  * @desc user break http
  *
  */
-
-export async function mutateBreak({ id, action }) {
+export async function mutateBreak({ id, action, breakTime }) {
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
-
-  const breakTime = new Date();
 
   let url = serverURL + "/employee/attendance/break/" + id;
 
@@ -896,10 +1056,12 @@ export async function mutateBreak({ id, action }) {
     url += "?mode=end";
   }
 
+  const token = getClockInTokenCookie() + "/" + getBreakTokenCookie();
+
   const response = await fetch(url, {
     method: "POST",
     headers: {
-      Authorization: "Bearer " + getClockInTokenCookie(),
+      Authorization: "Bearer " + token,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ breakTime }),
@@ -915,18 +1077,18 @@ export async function mutateBreak({ id, action }) {
 
   const results = await response.json();
 
+  console.log(results, "results");
+
   return results;
 }
 
 /**
- * @desc user break http
+ * @desc user overtime http
  *
  */
 
-export async function mutateOvertime({ id, action }) {
+export async function mutateOvertime({ id, action, overtimeTime }) {
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
-
-  const overtimeTime = new Date();
 
   let url = serverURL + "/employee/attendance/overtime/" + id;
 
@@ -936,10 +1098,12 @@ export async function mutateOvertime({ id, action }) {
     url += "?mode=end";
   }
 
+  const token = getClockInTokenCookie() + "/" + getOvertimeTokenCookie();
+
   const response = await fetch(url, {
     method: "POST",
     headers: {
-      Authorization: "Bearer " + getClockInTokenCookie(),
+      Authorization: "Bearer " + token,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ overtimeTime }),
@@ -957,5 +1121,25 @@ export async function mutateOvertime({ id, action }) {
 
   const results = await response.json();
 
+  return results;
+}
+
+export async function getPageBanner({ id }) {
+  const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+  let url = serverURL + "/banner/" + id;
+
+  const res = await fetch(url);
+
+  if (!res.ok) {
+    const error = new Error(
+      "An error occurred while getting page banner. Try again"
+    );
+    error.code = res.status;
+    error.info = await res.json();
+    throw error;
+  }
+
+  const results = await res.json();
   return results;
 }

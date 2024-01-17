@@ -63,8 +63,8 @@ function LogInErrPage() {
   }
 
   return (
-    <div className="relative">
-      <div className="absolute top-[50%] left-[50%] translate-x-[50%] text-center">
+    <div className="tw-relative">
+      <div className="tw-absolute tw-top-[50%] tw-left-[50%] tw-translate-x-[50%] tw-text-center">
         <h2>{title}</h2>
         <div>{message}</div>
       </div>

@@ -5,40 +5,29 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import PeopleIcon from "@mui/icons-material/People";
 import ScheduleSendIcon from "@mui/icons-material/ScheduleSend";
 import SettingsIcon from "@mui/icons-material/Settings";
-import ThumbsUpDownIcon from "@mui/icons-material/ThumbsUpDown";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import * as React from "react";
-import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { deleteAdminId } from "../../../utils/auth";
+
 import "./listItems.css";
 
 export function MainListItems() {
-  const [linkActive, setLinkActive] = useState({
-    isDashboard: true,
-    isConfirm: false,
-    isEmployee: false,
-    isSetting: false,
-    isLogout: false,
-    isTimeOff: false,
-  });
+  const location = useLocation();
+  const pathname = location.pathname.split("/")[2];
 
+  const linkActive = {
+    isDashboard: !pathname || pathname === "",
+    isConfirm: pathname === "attendance",
+    isSetting: pathname === "settings",
+    isTimeOff: pathname === "timeOff",
+    isLogout: pathname === "logout",
+  };
   const { isDashboard, isConfirm, isEmployee, isSetting, isTimeOff, isLogout } =
     linkActive;
-
-  const handleLinkActive = (property) => {
-    setLinkActive({
-      isDashboard: property === "dashboard",
-      isConfirm: property === "confirm",
-      isEmployee: property === "employees",
-      isSetting: property === "settings",
-      isLogout: property === "logout",
-      isTimeOff: property === "timeOff",
-    });
-  };
 
   const handleLogOut = () => {
     deleteAdminId();
@@ -47,7 +36,6 @@ export function MainListItems() {
   return (
     <React.Fragment>
       <NavLink
-        onClick={() => handleLinkActive("dashboard")}
         to="/admin/"
         className={({ isActive }) =>
           isDashboard || isActive ? "active" : undefined
@@ -61,8 +49,7 @@ export function MainListItems() {
         </ListItemButton>
       </NavLink>
       <NavLink
-        to="confirm-attendance"
-        onClick={() => handleLinkActive("confirm")}
+        to="attendance"
         className={({ isActive }) => (isActive ? "active" : undefined)}
       >
         <ListItemButton>
@@ -74,7 +61,6 @@ export function MainListItems() {
       </NavLink>
       <NavLink
         to="timeOff"
-        onClick={() => handleLinkActive("timeOff")}
         className={({ isActive }) => (isActive ? "active" : undefined)}
       >
         <ListItemButton>
@@ -85,7 +71,6 @@ export function MainListItems() {
         </ListItemButton>
       </NavLink>
       <NavLink
-        onClick={() => handleLinkActive("employees")}
         to="employee-list"
         className={({ isActive }) => (isActive ? "active" : undefined)}
       >
@@ -97,7 +82,6 @@ export function MainListItems() {
         </ListItemButton>
       </NavLink>
       <NavLink
-        onClick={() => handleLinkActive("settings")}
         to="settings"
         className={({ isActive }) => (isActive ? "active" : undefined)}
       >

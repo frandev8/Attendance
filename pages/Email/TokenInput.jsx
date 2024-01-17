@@ -34,7 +34,7 @@ const TokenInput = () => {
   }, [token]);
 
   return (
-    <div className="flex">
+    <div className="tw-flex">
       {token.map((value, index) => (
         <TextField
           key={index}

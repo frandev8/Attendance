@@ -25,6 +25,7 @@ import { IdentityController } from "../pages/Auth/IdentityController.jsx";
 import SignUpController from "../pages/Auth/SignUpController.jsx";
 import AdminEmailVerification from "../pages/Email/AdminEmailVerifyPage.jsx";
 import UserEmailVerification from "../pages/Email/UserEmailVerifyPage.jsx";
+
 import UserPage from "../pages/User/UserPage.jsx";
 import {
   checkAdminLoginTokenLoader,
@@ -72,12 +73,15 @@ function App() {
     {
       path: "user",
       element: <UserPage />,
-      loader: checkUserLoginTokenLoader,
+      loader: () => {
+        checkUserLoginTokenLoader();
+        return userSettingLoader({ id: userId });
+      },
       children: [
         {
           index: true,
           element: <UserDashboard />,
-          loader: checkUserLoginTokenLoader,
+          // loader: checkUserLoginTokenLoader,
         },
         {
           path: "history",
@@ -88,52 +92,56 @@ function App() {
           path: "settings",
           element: <UserSettingsPage />,
           loader: () => {
-            checkUserLoginTokenLoader();
+            // checkUserLoginTokenLoader();
             return userSettingLoader({ id: userId });
           },
         },
         {
           path: "timeOff",
           element: <TimeOffPage />,
-          loader: checkUserLoginTokenLoader,
+          // loader: checkUserLoginTokenLoader,
         },
       ],
     },
     {
       path: "admin",
       element: <AdminPage />,
-      // loader: checkAdminLoginTokenLoader,
+      loader: () => {
+        checkAdminLoginTokenLoader();
+        return adminSettingLoader({ id: adminId });
+      },
+
       children: [
         {
           index: true,
           element: <Dashboard />,
-          loader: checkAdminLoginTokenLoader,
+          // loader: checkAdminLoginTokenLoader,
         },
         {
-          path: "confirm-attendance",
+          path: "attendance",
           element: <Attendance />,
-          loader: checkAdminLoginTokenLoader,
+          // loader: checkAdminLoginTokenLoader,
         },
         {
           path: "timeOff",
           element: <TimeOff />,
-          loader: checkAdminLoginTokenLoader,
+          // loader: checkAdminLoginTokenLoader,
         },
         {
           path: "tracker",
           element: <TrackerPage />,
-          loader: checkAdminLoginTokenLoader,
+          // loader: checkAdminLoginTokenLoader,
         },
         {
           path: "employee-list",
           element: <EmployeeListPage />,
-          loader: checkAdminLoginTokenLoader,
+          // loader: checkAdminLoginTokenLoader,
         },
         {
           path: "settings",
           element: <AdminSettingsPage />,
           loader: () => {
-            checkAdminLoginTokenLoader();
+            // checkAdminLoginTokenLoader();
             return adminSettingLoader({ id: adminId });
           },
         },

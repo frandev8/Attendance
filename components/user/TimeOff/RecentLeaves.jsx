@@ -1,45 +1,60 @@
 import { useQuery } from "@tanstack/react-query";
 import { Avatar, DatePicker, Divider, List, Space, Spin } from "antd";
-import React from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { getDateDuration } from "../../../utils/date";
+import { filterDateByRange, getDateDuration } from "../../../utils/date";
 import { fetchEmployeesById, fetchTimeOff } from "../../../utils/http";
 import styles from "./RecentLeaves.module.css";
 
-function RecentLeaves() {
+function RecentLeaves({ enableMore }) {
+  const filteredLeavesRef = useRef([]);
+  const [searchDate, setSearchDate] = useState("");
+  const [triggerRerender, setTriggerRerender] = useState(false);
+
   const { data: myData, isPending } = useQuery({
     queryKey: ["leave", { type: "recent" }],
     queryFn: () => fetchTimeOff({ approved: true }),
   });
 
-  // let employee;
+  useEffect(() => {
+    if (myData) {
+      filteredLeavesRef.current = filterDateByRange(
+        myData,
+        new Date(),
+        "startDate",
+        "endDate"
+      );
+    }
+  }, [myData]);
 
-  // if (myData) {
-  //   employee = fetchEmployeesById({ id: myData.userId });
-  // }
+  useEffect(() => {
+    if (myData && searchDate) {
+      filteredLeavesRef.current = filterDateByRange(
+        myData,
+        searchDate,
+        "startDate",
+        "endDate"
+      );
 
-  let data = [];
-
-  if (myData) {
-    data = myData;
-    // console.log(myData);
-  }
+      setTriggerRerender((prevRerender) => !prevRerender);
+    }
+  }, [myData, searchDate]);
 
   const onChange = (date, dateString) => {
-    console.log(date, dateString);
+    setSearchDate(dateString);
   };
 
   return (
     <Space direction="vertical">
-      <div className="flex justify-between items-center">
+      <div className="tw-flex tw-justify-between tw-items-center">
         <span>Who's on leave</span>
-        <button className="w-[180px]">
+        <button className="tw-w-[180px]">
           {" "}
           <Link to="timeOff"> See More</Link>
         </button>
       </div>
       <Divider style={{ marginTop: "5px", marginBottom: "5px" }} />
-      <div className="flex justify-between items-center">
+      <div className="tw-flex tw-justify-between tw-items-center">
         <div>
           On Leave: <span> 2</span>
         </div>
@@ -52,7 +67,7 @@ function RecentLeaves() {
         <List
           itemLayout="horizontal"
           className={`${styles["main"]}  `}
-          dataSource={data}
+          dataSource={filteredLeavesRef.current}
           renderItem={(item, index) => (
             <List.Item>
               <List.Item.Meta

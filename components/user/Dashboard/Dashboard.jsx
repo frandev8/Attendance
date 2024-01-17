@@ -4,6 +4,7 @@ import Paper from "@mui/material/Paper";
 import { Navigate } from "react-router-dom";
 import Copyright from "../../combine/logsComponents/CopyRight";
 import Announcement from "../Announcement/Announcement";
+import AttendanceList from "../Attendance/AttendanceList";
 import DashboardTimeline from "../Attendance/AttendanceRecordsDashboard";
 import AttendanceStats, {
   AttendanceStats2,
@@ -11,21 +12,22 @@ import AttendanceStats, {
 import AttendanceCard from "../Cards/AttendanceCard";
 import RecentLeaves from "../TimeOff/RecentLeaves";
 import TimeOffStats from "../TimeOff/TimeOffStats";
+import MyTimeSheet from "../Timesheet/MyTimesheet";
 import Clockin from "./Clockin";
 import styles from "./Dashboard.module.css";
-import MyTimeSheet from "./MyTimesheet";
 // import Today from "./Today";
 
 function UserDashboard() {
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <div className={`${styles.container}  h-full w-full`} id="container">
+      <div
+        className={`${styles.container}  tw-h-full tw-w-full`}
+        id="container"
+      >
         <div
-          className={`w-full h-[20%]  flex justify-between  ${styles.block1} `}
+          className={`tw-w-full tw-h-[20%]  tw-flex tw-justify-between  ${styles.block1} `}
         >
-          <div
-            className={`${styles.box} ${styles.item1} h-inherit border-2 border-black`}
-          >
+          <div className={`${styles.box} ${styles.item1} tw-h-inherit `}>
             <Paper
               sx={{
                 p: 1,
@@ -34,7 +36,7 @@ function UserDashboard() {
                 justifyContent: "space-between",
                 height: "100%",
               }}
-              className=" bg-[#0000ff]"
+              // className=" tw-bg-[#0000ff]"
             >
               <MyTimeSheet />
             </Paper>
@@ -73,7 +75,7 @@ function UserDashboard() {
             </Paper>
           </div>
         </div>
-        <div className="w-full flex gap-3 mt-[25px] mb-[25px] justify-between">
+        <div className="tw-w-full tw-flex tw-gap-3 tw-mt-[25px] tw-mb-[25px] tw-justify-between">
           <div className={`${styles.box} ${styles.item4} `}>
             {" "}
             <Paper
@@ -99,13 +101,13 @@ function UserDashboard() {
                 overflow: "hidden",
               }}
             >
-              <RecentLeaves />
+              <RecentLeaves enableMore={true} />
             </Paper>
           </div>
         </div>
 
         <div className={`${styles.box} ${styles.item6}`}>
-          {" "}
+    
           <Paper
             sx={{
               p: 2,
@@ -115,7 +117,7 @@ function UserDashboard() {
               background: "#F4F6FA",
             }}
           >
-            <DashboardTimeline />
+            <AttendanceList />
           </Paper>
         </div>
       </div>

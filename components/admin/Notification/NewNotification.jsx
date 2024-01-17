@@ -69,7 +69,7 @@ const ModalOverlay = ({ closeModal }) => {
         zIndex: "100",
       }}
     >
-      <div className={"flex flex-col items-end "}>
+      <div className={"tw-flex tw-flex-col tw-items-end "}>
         <Paper
           sx={{
             p: 2,
@@ -107,7 +107,7 @@ const ModalOverlay = ({ closeModal }) => {
             </Form>
           </Space>
         </Paper>
-        <div className="flex w-[40%]">
+        <div className="tw-flex tw-w-[40%]">
           <Button type="primary" danger onClick={() => closeModal()}>
             Cancel
           </Button>
