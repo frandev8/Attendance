@@ -9,12 +9,9 @@ import { useQuery } from "@tanstack/react-query";
 import { Avatar, Divider, List, Popover } from "antd";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
-import { useLoaderData } from "react-router-dom";
-import { getAdminAvatar } from "../../../utils/http";
+import { fetchAdminById, getAdminAvatar } from "../../../utils/http";
 
 import { capitalizeFirstLetter } from "../../../utils/typography";
-
-import React from "react";
 
 const drawerWidth = 240;
 
@@ -37,17 +34,20 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 function TopBar({ toggleDrawer, open }) {
-  const loaderData = useLoaderData();
-
   const adminId = useSelector((state) => state.admin.adminId);
 
-  const { data: userImage, isPending } = useQuery({
-    queryKey: ["employee", { key: "avatar" }],
-    queryFn: () => getAdminAvatar({ id: adminId }),
-    // staleTime: 0,
+  const { data: personalData } = useQuery({
+    queryKey: ["admin", { details: "personal" }],
+    queryFn: () => fetchAdminById({ id: adminId }),
   });
 
-  const userName = capitalizeFirstLetter(loaderData.firstname);
+  const { data: adminImage, isPending } = useQuery({
+    queryKey: ["admin", { key: "avatar" }],
+    queryFn: () => getAdminAvatar({ id: adminId }),
+  });
+
+  const adminName = capitalizeFirstLetter(personalData.firstname);
+
 
   return (
     <AppBar position="absolute" open={open}>
@@ -86,18 +86,22 @@ function TopBar({ toggleDrawer, open }) {
 
           <div className="tw-flex tw-items-center">
             <Divider type="vertical" />
-            <span className="tw-text-ssm">{userName}</span>
+            <span className="tw-text-ssm">{adminName}</span>
             <Divider type="vertical" />
-            <Avatar
-              style={{
-                backgroundColor: "#87d068",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              {userName[0]}
-            </Avatar>
+            {adminImage?.url ? (
+              <Avatar src={<img src={adminImage.url} alt="avatar" />} />
+            ) : (
+              <Avatar
+                style={{
+                  backgroundColor: "#87d068",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {adminName[0]}
+              </Avatar>
+            )}
           </div>
         </div>
       </Toolbar>

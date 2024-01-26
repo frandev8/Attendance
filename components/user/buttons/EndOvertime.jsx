@@ -41,7 +41,7 @@ function EndOvertime({ setOvertimeUnActive }) {
         icon={<CancelIcon sx={{ fontSize: "12px" }} />}
         type="dashed"
         danger
-        classNametw-="tw-max-sm:text-ssm tw-p-2 tw-w-[max-content]"
+        className="tw-max-sm:text-ssm tw-p-2 tw-w-[max-content] tw-bg-white"
         onClick={showOvertimeModal}
       >
         overtime

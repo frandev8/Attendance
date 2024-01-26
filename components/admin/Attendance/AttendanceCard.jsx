@@ -14,8 +14,10 @@ import {
   formatAttendanceDate,
   formatAttendanceTime,
 } from "@/utils/date";
+import Accept from "./Accept";
+import Reject from "./Reject";
 
-export default function AttendanceCard({ data }) {
+export default function AttendanceCard({ data, adminId }) {
   return (
     <Card className="tw-w-full tw-max-w-md">
       <CardHeader className="tw-flex tw-items-center tw-gap-4">
@@ -57,8 +59,16 @@ export default function AttendanceCard({ data }) {
         </div>
       </CardContent>
       <CardFooter className="tw-flex tw-justify-between">
-        <Button variant="outline">Reject</Button>
-        <Button>Accept</Button>
+        <Reject
+          adminId={adminId}
+          attendanceId={data._id}
+          userId={data.userId}
+        />
+        <Accept
+          adminId={adminId}
+          attendanceId={data._id}
+          userId={data.userId}
+        />
       </CardFooter>
     </Card>
   );

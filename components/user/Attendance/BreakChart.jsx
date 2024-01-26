@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { Divider } from "antd";
 import { useSelector } from "react-redux";
 import {
   Bar,
@@ -60,29 +61,32 @@ export default function BreakChart() {
 
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <BarChart
-        width={500}
-        height={300}
-        data={data}
-        margin={{
-          top: 5,
-          right: 5,
-          left: 5,
-          bottom: 5,
-        }}
-      >
-        <CartesianGrid strokeDasharray="2 3" />
-        <XAxis dataKey="name" />
-        <YAxis domain={[0, 1]} />
-        <Tooltip />
-        <Legend />
+      <div className="tw-flex tw-flex-col">
+        <span>Weekly Break Chart</span>
+        <Divider className="tw-my-[8px]" />
+        <BarChart
+          width={500}
+          height={300}
+          data={data}
+          margin={{
+            top: 5,
+            right: 5,
+            bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray="2 3" />
+          <XAxis dataKey="name" />
+          <YAxis domain={[0, 1]} />
+          <Tooltip />
+          <Legend />
 
-        <Bar
-          dataKey="hours"
-          fill="#82ca9d"
-          activeBar={<Rectangle fill="gold" stroke="purple" />}
-        />
-      </BarChart>
+          <Bar
+            dataKey="hours"
+            fill="#82ca9d"
+            activeBar={<Rectangle fill="gold" stroke="purple" />}
+          />
+        </BarChart>
+      </div>
     </ResponsiveContainer>
   );
 }

@@ -2,10 +2,23 @@ import joi from "joi";
 
 import passwordComplexity from "joi-password-complexity";
 
+const passwordComplexityOptions = {
+  min: 8,
+  max: 20,
+  lowerCase: 1,
+  upperCase: 1,
+  numeric: 1,
+  symbols: undefined,
+  requirementCount: 2,
+};
+
 function validateLogin(data) {
   const schema = joi.object({
     username: joi.string().min(3).max(30).required().label("username"),
-    password: passwordComplexity(undefined, "password").required(),
+    password: passwordComplexity(
+      passwordComplexityOptions,
+      "password"
+    ).required(),
     role: joi.string().required().label("role"),
   });
 
@@ -23,8 +36,14 @@ function validateSignup(data) {
       })
       .required()
       .label("email"),
-    password: passwordComplexity(undefined, "password").required(),
-    confirmPass: passwordComplexity(undefined, "confirmPass").required(),
+    password: passwordComplexity(
+      passwordComplexityOptions,
+      "password"
+    ).required(),
+    confirmPass: passwordComplexity(
+      passwordComplexityOptions,
+      "confirmPass"
+    ).required(),
     role: joi.string().required().label("role"),
   });
 

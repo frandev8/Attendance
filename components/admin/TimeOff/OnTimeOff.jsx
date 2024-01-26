@@ -10,8 +10,10 @@ import {
 } from "@/utils/date";
 import { fetchTimeOff } from "@/utils/http";
 import { useQuery } from "@tanstack/react-query";
-import { DatePicker, Spin } from "antd";
+import { DatePicker, Divider, Empty, Spin } from "antd";
 import { useEffect, useRef, useState } from "react";
+import styles from "./OnTimeOff.module.css";
+
 export default function OnLeave() {
   return (
     <div className="tw-sticky tw-top-[90px] tw-z-[1000]">
@@ -59,21 +61,31 @@ export function OnTimeOff() {
     setSearchDate(dateString);
   };
 
-  console.log(filteredLeavesRef.current);
+  let rows = [];
+
+  for (let i = 0; i < 70; i++) {
+    rows.push({
+      key: i,
+      date: "20 Jan 2023",
+      message: "my message",
+      title: "my title",
+    });
+  }
 
   return (
-    <Card className="tw-bg-white tw-rounded-lg tw-shadow-lg tw-p-6">
+    <Card className="tw-bg-white tw-rounded-lg tw-shadow-lg ">
       <CardHeader>
         <CardTitle className="tw-text-2xl tw-font-bold">
           Time Off Requests
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-2">
+        <div className="space-y-2 tw-flex tw-items-center tw-justify-between">
           <Label htmlFor="filter-date">Filter by Date</Label>
           <DatePicker onChange={onChange} />
         </div>
-        <div className="tw-mt-4 tw-divide-y">
+        <Divider></Divider>
+        <div className={`tw-mt-4 tw-divide-y ${styles["leaveList"]}`}>
           {isPending && <Spin />}
           {myData &&
             filteredLeavesRef.current.map((timeOff) => {
@@ -103,6 +115,11 @@ export function OnTimeOff() {
                 </div>
               );
             })}
+          {!filteredLeavesRef?.current.length && (
+            <div className="tw-flex tw-justify-center tw-items-center tw-h-full ">
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
@@ -111,7 +128,7 @@ export function OnTimeOff() {
 
 function Birthday() {
   return (
-    <Card className="tw-bg-yellow-200 tw-rounded-lg tw-shadow-lg tw-p-6 tw-mb-8">
+    <Card className="tw-bg-yellow-200 tw-rounded-lg tw-shadow-lg  tw-mb-8">
       <CardHeader>
         <CardTitle className="tw-text-2xl tw-font-bold">
           Employee's Birthday
@@ -130,7 +147,9 @@ function Birthday() {
             </p>
           </div>
         </div>
-        <Button className="tw-bg-red-500 tw-text-white">Send Wish</Button>
+        <Button className="tw-bg-red-500 tw-text-white tw-w-max">
+          Send Wish
+        </Button>
       </CardContent>
     </Card>
   );

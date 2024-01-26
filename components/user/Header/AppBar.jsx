@@ -1,4 +1,3 @@
-import { SearchOutlined, UserOutlined } from "@ant-design/icons";
 import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MuiAppBar from "@mui/material/AppBar";
@@ -12,8 +11,8 @@ import { Avatar, Badge, Divider, List, Popover } from "antd";
 import PropTypes from "prop-types";
 import React from "react";
 import { useSelector } from "react-redux";
-import { useLoaderData } from "react-router-dom";
-import { getEmployeeAvatar } from "../../../utils/http";
+import { useLocation } from "react-router-dom";
+import { fetchEmployeesById, getEmployeeAvatar } from "../../../utils/http";
 import { capitalizeFirstLetter } from "../../../utils/typography";
 import ViewNotification from "../Notification/ViewNotification";
 
@@ -38,9 +37,15 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 function TopBar({ toggleDrawer, open }) {
-  const loaderData = useLoaderData();
-
   const userId = useSelector((state) => state.user.userId);
+
+  const location = useLocation();
+  let pathname = location.pathname.split("/")[2];
+
+  const { data: personalData } = useQuery({
+    queryKey: ["employee", { details: "personal" }],
+    queryFn: () => fetchEmployeesById({ id: userId }),
+  });
 
   const { data: userImage, isPending } = useQuery({
     queryKey: ["employee", { key: "avatar" }],
@@ -48,7 +53,13 @@ function TopBar({ toggleDrawer, open }) {
     // staleTime: 0,
   });
 
-  const userName = capitalizeFirstLetter(loaderData.firstname);
+  const userName = capitalizeFirstLetter(personalData.firstname);
+
+  if (pathname === "history") {
+    pathname = "attendance";
+  } else if (pathname === "" || !pathname) {
+    pathname = "dashboard";
+  }
 
   return (
     <AppBar position="absolute" open={open}>
@@ -84,7 +95,7 @@ function TopBar({ toggleDrawer, open }) {
             noWrap
             sx={{ flexGrow: 1 }}
           >
-            Dashboard
+            {capitalizeFirstLetter(pathname)}
           </Typography>
 
           <div className="tw-flex tw-items-center">
@@ -94,16 +105,20 @@ function TopBar({ toggleDrawer, open }) {
             <Divider type="vertical" />
             <span className="tw-text-ssm">{userName}</span>
             <Divider type="vertical" />
-            <Avatar
-              style={{
-                backgroundColor: "#87d068",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              {userName[0]}
-            </Avatar>
+            {userImage?.url ? (
+              <Avatar src={<img src={userImage.url} alt="avatar" />} />
+            ) : (
+              <Avatar
+                style={{
+                  backgroundColor: "#87d068",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {userName[0]}
+              </Avatar>
+            )}
           </div>
         </div>
       </Toolbar>

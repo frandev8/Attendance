@@ -15,7 +15,7 @@ const data = [
 
 function AttendanceStats() {
   return (
-    <Space direction="vertical" className=" tw-w-full ">
+    <Space direction="vertical" className=" tw-w-full tw-mb-[15px] ">
       <div>Attendance</div>
       <Divider style={{ marginTop: "5px", marginBottom: "5px" }} />
       <div>
@@ -39,7 +39,7 @@ function AttendanceStats() {
 
 export function AttendanceStats3() {
   return (
-    <Space direction="vertical" className=" tw-w-full ">
+    <Space direction="vertical" className=" tw-w-full tw-mb-[15px] ">
       <div>Attendance</div>
       <Divider style={{ marginTop: "5px", marginBottom: "5px" }} />
       <div>
@@ -53,7 +53,7 @@ export function AttendanceStats3() {
           <div className="tw-flex tw-justify-around ">
             <TotalLeave />
 
-            <TotalLeave />
+            <TotalUncheckIn />
           </div>
         </div>
       </div>
@@ -62,10 +62,7 @@ export function AttendanceStats3() {
 }
 export function AttendanceStats2() {
   return (
-    <Space
-      direction="vertical"
-      className=" tw-w-full tw-border-2 tw-border-black "
-    >
+    <Space direction="vertical" className=" tw-w-full tw-mb-[15px] ">
       <div>Attendance</div>
       <Divider style={{ marginTop: "5px", marginBottom: "5px" }} />
       <div className="tw-flex tw-justify-around">
@@ -75,7 +72,7 @@ export function AttendanceStats2() {
 
         <TotalLeave />
 
-        <TotalLeave />
+        <TotalUncheckIn />
       </div>
     </Space>
   );

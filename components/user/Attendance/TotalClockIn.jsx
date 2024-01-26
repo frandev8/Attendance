@@ -16,11 +16,11 @@ function TotalClockIn() {
 
   return (
     <AttendanceCard>
-      <div className="tw-w-[40px] tw-h-[40px] tw-rounded-[8px] tw-bg-regress-color tw-flex tw-justify-center tw-items-center">
-        <CheckIcon />
+      <div className="tw-w-[35px] tw-h-[35px] tw-rounded-[8px] tw-bg-[#DBE9F9] tw-flex tw-justify-center tw-items-center">
+        <CheckIcon style={{ color: "#5295E3" }} />
       </div>
-      <span className="">Clock in</span>
-      <h3>{data?.length}</h3>
+      <span>Clock in</span>
+      <h3 className="tw-text-[#5295E3]">{data?.length || 0}</h3>
     </AttendanceCard>
   );
 }

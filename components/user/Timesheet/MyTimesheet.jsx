@@ -13,7 +13,9 @@ import {
   getBreakTokenCookie,
   getClockInTokenCookie,
   getOvertimeTokenCookie,
+  saveClockInTime,
   saveClockInTokenCookie,
+  saveClockOutTime,
 } from "../../../utils/auth";
 import { clockIn, clockOut } from "../../../utils/http";
 import EndBreak from "../buttons/EndBreak";
@@ -109,7 +111,6 @@ function MyTimeSheet() {
   const { data, isPending, mutate, error, isError } = useMutation({
     mutationFn: clockIn,
     onSuccess: (data) => {
-      console.log(data);
       const { clockInToken, attendance } = data;
 
       setButtonActive((prev) => {
@@ -125,6 +126,7 @@ function MyTimeSheet() {
       }, 1000);
 
       saveClockInTokenCookie(clockInToken);
+      saveClockInTime(attendance.clockInTime);
     },
   });
 
@@ -140,7 +142,13 @@ function MyTimeSheet() {
       setButtonActive((prev) => {
         return { ...prev, clockIn: false, clockOut: true };
       });
+
+      if (intervalIdRef.current) {
+        clearInterval(intervalIdRef.current); // Clear existing timer if any
+      }
+
       deleteClockInTokenCookie();
+      saveClockOutTime(data.clockOutTime);
     },
   });
 
@@ -194,6 +202,16 @@ function MyTimeSheet() {
     hideClockOutModal();
   };
 
+  function setClockInTimer(attendance) {
+    if (intervalIdRef.current) {
+      clearInterval(intervalIdRef.current); // Clear existing timer if any
+    }
+
+    intervalIdRef.current = setInterval(() => {
+      updateTime(attendance.clockInTime);
+    }, 1000);
+  }
+
   // console.log(street, city, "hmm");
 
   return (
@@ -210,7 +228,10 @@ function MyTimeSheet() {
           size={100}
           percent={workRate}
           format={(percent) => (
-            <ClockinTimer clockInTimeElapse={clockInTimeElapse} />
+            <ClockinTimer
+              clockInTimeElapse={clockInTimeElapse}
+              setClockInTimer={setClockInTimer}
+            />
           )}
           className="tw-mb-[5px]"
         />
@@ -230,7 +251,7 @@ function MyTimeSheet() {
           <EndBreak setBreakUnActive={setBreakUnActive} />
         )}
       </div>
-      <div className=" tw-w-full tw-flex tw-justify-between tw-shadow-sm">
+      <div className=" tw-w-full tw-flex tw-justify-between ">
         <div>
           <ClockInReader />
         </div>

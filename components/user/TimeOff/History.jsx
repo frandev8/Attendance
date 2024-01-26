@@ -1,18 +1,24 @@
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import FilterListIcon from "@mui/icons-material/FilterList";
 import { Container, Divider, Paper } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, Modal, Table } from "antd";
-import { useState } from "react";
+import { Button, Modal, Popover, Table } from "antd";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { openViewTimeOffModal } from "../../../src/store/main";
-import { calculateDaysBetween, formatLeaveDates } from "../../../utils/date";
+import {
+  calculateDaysBetween,
+  filterByDate,
+  formatLeaveDates,
+} from "../../../utils/date";
 import {
   deleteTimeOff,
   fetchTimeOffById,
   queryClient,
 } from "../../../utils/http";
 import styles from "./History.module.css";
+import SortTimeOff from "./SortTimeOff";
 import { ViewTimeOff } from "./ViewTimeOff";
 
 const columns = [
@@ -39,7 +45,7 @@ const columns = [
   {
     title: "Del",
     dataIndex: "delete",
-    width: 20,
+    width: 60,
   },
   {
     title: "View",
@@ -47,12 +53,8 @@ const columns = [
   },
 ];
 
-{
-  /* <div>Employee List</div>
-            <Divider style={{ marginTop: "5px", marginBottom: "5px" }} /> */
-}
-
 const History = () => {
+  const timeOffRequestData = useRef([]);
   const userId = useSelector((state) => state.user.userId);
 
   const isViewModalOpen = useSelector((state) => state.timeOff.isViewModalOpen);
@@ -82,12 +84,15 @@ const History = () => {
     queryFn: () => fetchTimeOffById({ id: userId }),
   });
 
-  const data = [];
+  // const [searchTerm, setSearchTerm] = useState("");
+  const [triggerRerender, setTriggerRerender] = useState(false);
 
-  if (myData) {
-    myData.forEach((leave) => {
-      data.push({
-        key: leave.userId,
+  const [isFilterOpen, setFilterOpen] = useState(false);
+
+  useEffect(() => {
+    if (myData) {
+      timeOffRequestData.current = myData.map((leave) => ({
+        key: leave._id,
         duration: formatLeaveDates(leave.startDate, leave.endDate),
         type: leave.type,
         days: calculateDaysBetween(leave.startDate, leave.endDate),
@@ -99,24 +104,27 @@ const History = () => {
                 setLeaveId(leave._id);
                 showBreakModal();
               }}
+              className="hover:tw-cursor-pointer"
             />
           ) : (
             ""
           ),
         "see-more": (
           <button
+            className="tw-w-max tw-text-emerald-300"
             href="#"
             onClick={() => {
-              dispatch(openViewTimeOffModal);
-              setViewLeaveId(leave.id);
+              dispatch(openViewTimeOffModal());
+              setViewLeaveId(leave._id);
             }}
           >
             see more
           </button>
         ),
-      });
-    });
-  }
+      }));
+      setTriggerRerender((prevRerender) => !prevRerender);
+    }
+  }, [myData, dispatch]);
 
   const showBreakModal = () => {
     setOpen(true);
@@ -131,15 +139,56 @@ const History = () => {
     hideBreakModal();
   }
 
+  const handleOpenChange = (newOpen) => {
+    setFilterOpen(newOpen);
+  };
+
+  function resetTimeOffFilter() {
+    timeOffRequestData.current = myData;
+    setTriggerRerender((prevRerender) => !prevRerender);
+  }
+
+  const hideFilter = () => {
+    setFilterOpen(false);
+  };
+
+  function onFilterTimeOffHandler(filterDates) {
+    timeOffRequestData.current = filterByDate(myData, filterDates, "startDate");
+
+    setTriggerRerender((prevRerender) => !prevRerender);
+  }
+
+  const content = (
+    <SortTimeOff
+      hideFilter={hideFilter}
+      filterTimeOff={onFilterTimeOffHandler}
+      resetFilter={resetTimeOffFilter}
+    />
+  );
+
   return (
     <>
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-        <div>Leave Records</div>
+        <div className="tw-flex tw-items-center tw-justify-between">
+          <div>Leave Records</div>
+          <Popover
+            placement="bottomLeft"
+            open={isFilterOpen}
+            title={""}
+            trigger="hover"
+            onOpenChange={handleOpenChange}
+            content={content}
+          >
+            <Button className="tw-w-max " variant="outlined">
+              <FilterListIcon /> Filter
+            </Button>
+          </Popover>
+        </div>
         <Divider style={{ marginTop: "5px", marginBottom: "5px" }} />
         <Box sx={{ width: "100%" }}>
           <Table
             columns={columns}
-            dataSource={data}
+            dataSource={timeOffRequestData.current}
             pagination={{
               pageSize: 10,
             }}

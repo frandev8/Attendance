@@ -1,8 +1,8 @@
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import { Empty } from "antd";
-import { useState } from "react";
+import { Divider, Empty } from "antd";
+import { useRef, useState } from "react";
 import AttendanceTrend from "../../admin/Dashboard/Deposits";
 import Copyright from "../../combine/logsComponents/CopyRight";
 import DashboardTimeline from "../Dashboard/DashboardTimeline";
@@ -15,8 +15,10 @@ import styles from "./History.module.css";
 import OvertimeChart from "./OvertimeChart";
 
 function AttendanceHistory() {
-  const [dateData, setDateData] = useState(null);
+  const attendanceData = useRef([]);
+  const [triggerRerender, setTriggerRerender] = useState(false);
 
+  console.log(attendanceData.current, "current");
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <div className={`${styles.container} tw-h-full tw-w-full`} id="container">
@@ -31,20 +33,20 @@ function AttendanceHistory() {
               <Paper
                 sx={{
                   width: "100%",
+                  backgroundColor: "#F4F6FA",
                 }}
-                // className=" bg-[#0000ff] border-2 border-black"
+                elevation={0}
               >
                 <AttendanceStats3 />
               </Paper>
             </div>
-            <div
-              className={`${styles.box} ${styles.item1b} tw-h-inherit tw-border-2 tw-border-black`}
-            >
+            <div className={`${styles.box} ${styles.item1b} tw-h-inherit `}>
               <Paper
                 sx={{
                   width: "100%",
+                  backgroundColor: "#F4F6FA",
                 }}
-                // className=" bg-[#0000ff] border-2 border-black"
+                elevation={0}
               >
                 <AttendanceStats2 />
               </Paper>
@@ -56,14 +58,25 @@ function AttendanceHistory() {
                   display: "flex",
                   flexDirection: "column",
                   height: "100%",
+                  backgroundColor: "#F4F6FA",
                 }}
+                elevation={0}
               >
-                <div className="tw-flex tw-items-center tw-flex-col tw-justify-between ">
-                  <AttendanceCalendar setDateData={setDateData} />
-                  {!dateData ? (
-                    <Empty className="flex-grow" />
+                <div className="tw-flex tw-items-center tw-flex-col tw-justify-between tw-h-full ">
+                  <AttendanceCalendar
+                    // setDateData={setDateData}
+                    attendanceData={attendanceData}
+                    triggerRerender={setTriggerRerender}
+                  />
+                  <Divider style={{ marginTop: "15px", marginBottom: "0px" }} />
+                  {!attendanceData?.current.length ? (
+                    <div className="tw-flex tw-justify-center tw-items-center tw-h-[70%] ">
+                      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                    </div>
                   ) : (
-                    <CalendarAttendanceTimeline />
+                    <CalendarAttendanceTimeline
+                      attendanceData={attendanceData}
+                    />
                   )}
                 </div>
               </Paper>
@@ -77,11 +90,13 @@ function AttendanceHistory() {
               {" "}
               <Paper
                 sx={{
-                  p: 2,
+                  paddingY: 2,
                   display: "flex",
                   flexDirection: "column",
                   height: 350.23,
+                  backgroundColor: "#F4F6FA",
                 }}
+                elevation={0}
               >
                 <BreakChart />
               </Paper>
@@ -91,12 +106,14 @@ function AttendanceHistory() {
               {" "}
               <Paper
                 sx={{
-                  p: 2,
+                  paddingY: 2,
                   display: "flex",
                   flexDirection: "column",
                   height: 350.23,
                   overflow: "hidden",
+                  backgroundColor: "#F4F6FA",
                 }}
+                elevation={0}
               >
                 <OvertimeChart />
               </Paper>
@@ -112,8 +129,9 @@ function AttendanceHistory() {
               display: "flex",
               flexDirection: "column",
               height: "100%",
-              background: "#F4F6FA",
+              backgroundColor: "#F4F6FA",
             }}
+            elevation={0}
           >
             <AttendanceList />
           </Paper>

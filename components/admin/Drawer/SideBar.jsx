@@ -7,7 +7,9 @@ import Toolbar from "@mui/material/Toolbar";
 import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
 import SearchBox from "../SearchBox";
+import styles from "./SideBar.module.css";
 import { MainListItems, secondaryListItems } from "./listItems";
+
 const drawerWidth = 240;
 
 const Drawer = styled(MuiDrawer, {
@@ -38,7 +40,7 @@ const Drawer = styled(MuiDrawer, {
 
 function SideBar({ toggleDrawer, open }) {
   return (
-    <Drawer variant="permanent" open={open}>
+    <Drawer variant="permanent" open={open} className="tw-bg-[#ff0000]">
       <Toolbar
         sx={{
           display: "flex",

@@ -47,7 +47,7 @@ function App() {
       errorElement: <ErrorPage />,
     },
     {
-      path: "/auth",
+      path: "/auth/",
       element: <IdentityController />,
       // action: ({ request }) => loginAction({ request, dispatch }),
       children: [
@@ -81,7 +81,7 @@ function App() {
         {
           index: true,
           element: <UserDashboard />,
-          // loader: checkUserLoginTokenLoader,
+          loader: checkUserLoginTokenLoader,
         },
         {
           path: "history",
@@ -92,14 +92,14 @@ function App() {
           path: "settings",
           element: <UserSettingsPage />,
           loader: () => {
-            // checkUserLoginTokenLoader();
+            checkUserLoginTokenLoader();
             return userSettingLoader({ id: userId });
           },
         },
         {
           path: "timeOff",
           element: <TimeOffPage />,
-          // loader: checkUserLoginTokenLoader,
+          loader: checkUserLoginTokenLoader,
         },
       ],
     },
@@ -115,33 +115,33 @@ function App() {
         {
           index: true,
           element: <Dashboard />,
-          // loader: checkAdminLoginTokenLoader,
+          loader: checkAdminLoginTokenLoader,
         },
         {
           path: "attendance",
           element: <Attendance />,
-          // loader: checkAdminLoginTokenLoader,
+          loader: checkAdminLoginTokenLoader,
         },
         {
           path: "timeOff",
           element: <TimeOff />,
-          // loader: checkAdminLoginTokenLoader,
+          loader: checkAdminLoginTokenLoader,
         },
         {
           path: "tracker",
           element: <TrackerPage />,
-          // loader: checkAdminLoginTokenLoader,
+          loader: checkAdminLoginTokenLoader,
         },
         {
           path: "employee-list",
           element: <EmployeeListPage />,
-          // loader: checkAdminLoginTokenLoader,
+          loader: checkAdminLoginTokenLoader,
         },
         {
           path: "settings",
           element: <AdminSettingsPage />,
           loader: () => {
-            // checkAdminLoginTokenLoader();
+            checkAdminLoginTokenLoader();
             return adminSettingLoader({ id: adminId });
           },
         },

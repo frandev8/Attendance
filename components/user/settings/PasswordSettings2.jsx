@@ -1,46 +1,43 @@
-import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { useMutation } from "@tanstack/react-query";
-import { Form, Input, Space } from "antd";
-import React from "react";
+import { Form, Input, Select, Space } from "antd";
 import { useSelector } from "react-redux";
-import { useNavigation } from "react-router-dom";
-import { changeAdminPassword } from "../../../utils/http";
+import { changeEmployeePassword } from "../../../utils/http";
 import ErrorPasswordDetails from "./ErrorPasswordDetails";
+const { Option } = Select;
 
 const validateMessages = {
   required: "${label} is required!",
 };
 
-const onFinishFailed = (errorInfo) => {
-  console.log("Failed:", errorInfo);
-};
-
 const PasswordSettings = () => {
-  const navigate = useNavigation();
+  const [form] = Form.useForm();
+
+  const onReset = () => {
+    form.resetFields();
+  };
 
   const { data, isPending, mutate, error, isError } = useMutation({
-    mutationFn: changeAdminPassword,
+    mutationFn: changeEmployeePassword,
     onSuccess: (data) => {
-      navigate("./");
+      onReset();
     },
   });
 
-  const adminId = useSelector((state) => state.admin.adminId);
+  const userId = useSelector((state) => state.user.userId);
 
   const onFinish = (values) => {
     const formData = { ...values };
 
-    mutate({ formData, id: adminId });
+    mutate({ formData, id: userId });
   };
   return (
     <>
       <h1>Password</h1>
-
       <Form
-        name="mutate-password"
-        onFinishFailed={onFinishFailed}
-        onFinish={onFinish}
         layout="vertical"
+        form={form}
+        name="control-hooks"
+        onFinish={onFinish}
         style={{
           maxWidth: 600,
         }}
@@ -116,13 +113,16 @@ const PasswordSettings = () => {
         >
           <Input.Password className="tw-max-w-[200px]" />
         </Form.Item>
-        <Space direction="vertical">
-          <div>
-            <button type="submit" className="tw-border-2 tw-border-black">
-              Change Password
-            </button>
-          </div>
-        </Space>
+
+        <Form.Item>
+          <Space direction="vertical">
+            <div>
+              <button type="submit" className="tw-border-2 tw-border-black">
+                Change Password
+              </button>
+            </div>
+          </Space>
+        </Form.Item>
       </Form>
     </>
   );

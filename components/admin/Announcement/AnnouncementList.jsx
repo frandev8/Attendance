@@ -1,10 +1,17 @@
 import { DataGrid } from "@mui/x-data-grid";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Spin, Table } from "antd";
 import { useEffect, useState } from "react";
-import { fetchAnnouncement } from "../../../utils/http";
+import {
+  deleteAnnouncement,
+  fetchAnnouncement,
+  queryClient,
+} from "../../../utils/http";
+import { AnnouncementAction } from "./AnnouncementAction";
 import "./AnnouncementList.css";
+import { EditAnnouncement } from "./EditAnnouncement";
 
+import { formatTimeOffDate } from "@/utils/date";
 const columns = [
   {
     title: "Date",
@@ -20,6 +27,10 @@ const columns = [
     title: "Message",
     dataIndex: "message",
   },
+  {
+    title: ".",
+    dataIndex: "action",
+  },
 ];
 
 const AnnouncementList = () => {
@@ -29,26 +40,45 @@ const AnnouncementList = () => {
     // staleTime: 5000,
   });
 
-  let rows = [];
+  const { isPending: isDeletePending, mutate: delNotification } = useMutation({
+    queryFn: deleteAnnouncement,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["announcement"] });
+    },
+  });
 
-  for (let i = 0; i < 70; i++) {
-    rows.push({
-      key: i,
-      date: "20 Jan 2023",
-      message: "my message",
-      title: "my title",
-    });
+  const [isEditAnnounceOpen, setEditAnnounceStatus] = useState(false);
+  const [editAnnounceDetails, setEditAnnounceDetails] = useState(null);
+
+
+
+  function openEditAnnounceModal() {
+    setEditAnnounceStatus(true);
+  }
+
+  function closeEditAnnouncementModal() {
+    setEditAnnounceStatus(false);
   }
 
   let original = [];
 
   if (data) {
-    console.log(data);
     original = data.map((list) => {
-      return { ...list, key: list._id };
+      return {
+        ...list,
+        key: list._id,
+        date: formatTimeOffDate(list._date),
+        action: (
+          <AnnouncementAction
+            openModal={openEditAnnounceModal}
+            setModalDetails={setEditAnnounceDetails}
+            data={list}
+            isPending={isDeletePending}
+            deleteAnnouncement={delNotification}
+          ></AnnouncementAction>
+        ),
+      };
     });
-
-    console.log(original);
   }
 
   return (
@@ -57,7 +87,7 @@ const AnnouncementList = () => {
       {data && (
         <Table
           columns={columns}
-          dataSource={rows}
+          dataSource={original}
           pagination={{
             pageSize: 10,
           }}
@@ -67,6 +97,12 @@ const AnnouncementList = () => {
             x: true,
           }}
           className={"customTable"}
+        />
+      )}{" "}
+      {isEditAnnounceOpen && (
+        <EditAnnouncement
+          closeModal={closeEditAnnouncementModal}
+          announcementDetails={editAnnounceDetails}
         />
       )}
     </div>

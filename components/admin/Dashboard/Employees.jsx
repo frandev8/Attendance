@@ -2,9 +2,9 @@ import AddIcon from "@mui/icons-material/Add";
 import PeopleIcon from "@mui/icons-material/People";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
+import { useQuery } from "@tanstack/react-query";
 import { Spin } from "antd";
 import * as React from "react";
-import { useQuery } from "@tanstack/react-query";
 import { fetchEmployees } from "../../../utils/http";
 import styles from "./Employees.module.css";
 import Title from "./Title";
@@ -26,11 +26,15 @@ export default function Employees() {
   return (
     <React.Fragment>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        {isPending && <Spin />}
-
-        {data && (
+        {isPending ? (
+          <Spin />
+        ) : data ? (
           <Typography component="p" variant="h4">
-            {data.length}
+            {data?.length}
+          </Typography>
+        ) : (
+          <Typography component="p" variant="h4">
+            0
           </Typography>
         )}
         <div className={styles.iconAvatar}>

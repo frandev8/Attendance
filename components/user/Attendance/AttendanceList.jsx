@@ -34,6 +34,11 @@ const columns = [
     width: 100,
   },
   {
+    title: "Overtime",
+    dataIndex: "overtime",
+    width: 100,
+  },
+  {
     title: "Status",
     dataIndex: "status",
   },
@@ -51,22 +56,22 @@ const AttendanceList = () => {
 
   if (myData) {
     myData.forEach((attendance) => {
-      // data.push({
-      //   key: attendance._id,
-      //   date: formatAttendanceDates(attendance.clockInTime),
-      //   "clock-in": formatAttendanceTime(attendance.clockInTime),
-      //   "clock-out": formatAttendanceTime(attendance.clockInTime),
-      //   break: calculateTimeBetween(
-      //     attendance.breakStartTime,
-      //     attendance.breakEndTime
-      //   ),
-      //   // overtime: calculateTimeBetween(
-      //   //   attendance.overtimeStartTime,
-      //   //   attendance.overtimeEndTime
-      //   // ),
-      //   status:
-      //     attendance.status === "confirmed" ? "approved" : attendance.status,
-      // });
+      data.push({
+        key: attendance._id,
+        date: formatAttendanceDates(attendance.clockInTime),
+        "clock-in": formatAttendanceTime(attendance.clockInTime),
+        "clock-out": formatAttendanceTime(attendance.clockInTime),
+        break: calculateTimeBetween(
+          attendance.breakStartTime,
+          attendance.breakEndTime
+        ),
+        overtime: calculateTimeBetween(
+          attendance.overtimeStartTime,
+          attendance.overtimeEndTime
+        ),
+        status:
+          attendance.status === "confirmed" ? "approved" : attendance.status,
+      });
     });
   }
 

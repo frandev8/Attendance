@@ -12,8 +12,6 @@ function Announcement() {
     queryFn: fetchNotification,
   });
 
-  const myData = [{}, {}, {}, {}, {}, {}, {}, {}, {}];
-
   return (
     <Space direction="vertical">
       <div>
@@ -26,7 +24,7 @@ function Announcement() {
         {data && (
           <List
             itemLayout="horizontal"
-            dataSource={myData}
+            dataSource={data}
             className={`${styles["main"]}  `}
             renderItem={(item, index) => (
               <List.Item>

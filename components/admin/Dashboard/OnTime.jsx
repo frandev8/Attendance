@@ -23,10 +23,15 @@ export default function OnTime() {
   return (
     <React.Fragment>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        {isPending && <Spin />}
-        {data && (
+        {isPending ? (
+          <Spin />
+        ) : data ? (
           <Typography component="p" variant="h4">
-            {data.length}
+            {data?.length}
+          </Typography>
+        ) : (
+          <Typography component="p" variant="h4">
+            0
           </Typography>
         )}
 

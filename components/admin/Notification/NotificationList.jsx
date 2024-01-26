@@ -1,9 +1,15 @@
+import { formatTimeOffDate } from "@/utils/date";
 import { DataGrid } from "@mui/x-data-grid";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Spin, Table } from "antd";
 import { useEffect, useState } from "react";
-import { fetchNotification } from "../../../utils/http";
-
+import {
+  deleteNotification,
+  fetchNotification,
+  queryClient,
+} from "../../../utils/http";
+import { EditNotification } from "./EditNotification";
+import { NotificationAction } from "./NotificationAction";
 const columns = [
   {
     title: "Date",
@@ -11,18 +17,19 @@ const columns = [
     width: 130,
   },
   {
-    title: "Title",
-    dataIndex: "title",
-    width: 100,
-  },
-  {
     title: "Message",
     dataIndex: "message",
+    maxWidth: 250,
+  },
+  {
+    title: ".",
+    dataIndex: "action",
   },
 ];
 
 const NotificationList = () => {
-  // const [data, setData] = useState([]);
+  const [isEditNotifiOpen, setEditNotifiStatus] = useState(false);
+  const [editNotifiDetails, setEditNotifiDetails] = useState(null);
 
   const { data, isPending } = useQuery({
     queryKey: ["notification"],
@@ -30,26 +37,40 @@ const NotificationList = () => {
     // staleTime: 5000,
   });
 
-  let rows = [];
+  const { isPending: isDeletePending, mutate: delNotification } = useMutation({
+    queryFn: deleteNotification,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notification"] });
+    },
+  });
 
-  for (let i = 0; i < 70; i++) {
-    rows.push({
-      key: i,
-      date: "20 Jan 2023",
-      message: "my message",
-      title: "my title",
-    });
+  function openEditNotificationModal() {
+    setEditNotifiStatus(true);
+  }
+
+  function closeEditNotificationModal() {
+    setEditNotifiStatus(false);
   }
 
   let original = [];
 
   if (data) {
-    console.log(data);
     original = data.map((list) => {
-      return { ...list, key: list._id };
+      return {
+        ...list,
+        key: list._id,
+        date: formatTimeOffDate(list._date),
+        action: (
+          <NotificationAction
+            openModal={openEditNotificationModal}
+            setModalDetails={setEditNotifiDetails}
+            data={list}
+            isPending={isDeletePending}
+            deleteNotification={delNotification}
+          ></NotificationAction>
+        ),
+      };
     });
-
-    console.log(original);
   }
 
   return (
@@ -58,7 +79,7 @@ const NotificationList = () => {
       {data && (
         <Table
           columns={columns}
-          dataSource={rows}
+          dataSource={original}
           pagination={{
             pageSize: 10,
           }}
@@ -68,6 +89,12 @@ const NotificationList = () => {
             x: true,
           }}
           className={"customTable"}
+        />
+      )}
+      {isEditNotifiOpen && (
+        <EditNotification
+          closeModal={closeEditNotificationModal}
+          notificationDetails={editNotifiDetails}
         />
       )}
     </div>

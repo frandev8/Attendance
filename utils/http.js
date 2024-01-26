@@ -58,6 +58,10 @@ export async function fetchEmployees({ active }) {
     url += "?active=true";
   }
 
+  console.log(url);
+
+  console.log("fetching for employees");
+
   const response = await fetch(url);
 
   if (!response.ok) {
@@ -68,6 +72,8 @@ export async function fetchEmployees({ active }) {
   }
 
   const results = await response.json();
+
+  console.log(results, "results");
 
   return results;
 }
@@ -177,8 +183,6 @@ export async function changeEmployeePassword({ formData, id }) {
 
   let url = serverURL + "/employee/password/" + id;
 
-  console.log();
-
   const response = await fetch(url, {
     method: "PATCH",
     headers: {
@@ -193,7 +197,7 @@ export async function changeEmployeePassword({ formData, id }) {
     error.info = await response.json();
     throw error;
   }
-  console.log("successful pass update");
+
   const results = await response.json();
 
   return results;
@@ -220,7 +224,7 @@ export async function mutateEmployeePersonalDetails({ formData, id }) {
     error.info = await response.json();
     throw error;
   }
-  console.log("successful pass update");
+
   const results = await response.json();
 
   return results;
@@ -369,7 +373,7 @@ export async function mutateAdminPersonalDetails({ formData, id }) {
     error.info = await response.json();
     throw error;
   }
-  console.log("successful pass update");
+
   const results = await response.json();
 
   return results;
@@ -549,6 +553,33 @@ export async function fetchAttendanceByDate({ id, date }) {
   return results;
 }
 
+export async function fetchClockInAttendance({ id }) {
+  const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+  let url = serverURL + "/employee/attendance/clock-in/" + id;
+
+  const response = await fetch(url, {
+    headers: {
+      Authorization: "Bearer " + getClockInTokenCookie(),
+    },
+  });
+
+  if (!response.ok) {
+    const error = new Error(
+      "An error occurred while fetching the clock-in attendance"
+    );
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  const results = await response.json();
+
+  return results;
+}
+
+
+
 export async function fetchClockOutAttendance({ id }) {
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
@@ -641,7 +672,7 @@ export async function clockIn({ id }) {
     const res = await fetch(url, {
       method: "POST",
       headers: {
-        Authorization: "Bearer " + loginToken[2],
+        Authorization: "Bearer " + loginToken,
         "Content-Type": "application/json",
       },
       // credentials: "include",
@@ -698,17 +729,17 @@ export async function clockOut({ id }) {
  * @desc Notification http
  *
  */
-export async function postNotification({ formData }) {
+export async function postNotification({ formData, adminId }) {
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
-  let url = serverURL + "/admin/notification/new";
+  let url = serverURL + "/admin/notification";
 
   const response = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(formData),
+    body: JSON.stringify({ formData, adminId }),
   });
 
   if (!response.ok) {
@@ -734,6 +765,51 @@ export async function fetchNotification() {
     const error = new Error(
       "An error occurred while fetching the notifications"
     );
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  const results = await response.json();
+
+  return results;
+}
+
+export async function mutateNotification({ formData, id, adminId }) {
+  const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+  let url = serverURL + "/admin/notification/" + id;
+
+  const response = await fetch(url, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ formData, adminId }),
+  });
+
+  if (!response.ok) {
+    const error = new Error("An error occurred while editing notification");
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  const results = await response.json();
+
+  return results;
+}
+export async function deleteNotification({ id }) {
+  const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+  let url = serverURL + "/admin/notification/" + id;
+
+  const response = await fetch(url, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    const error = new Error("An error occurred while deleting notification");
     error.code = response.status;
     error.info = await response.json();
     throw error;
@@ -795,6 +871,52 @@ export async function postAnnouncement({ formData }) {
   return results;
 }
 
+export async function mutateAnnouncement({ formData, id, adminId }) {
+  const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+  let url = serverURL + "/admin/announcement/" + id;
+
+  const response = await fetch(url, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ formData, adminId }),
+  });
+
+  if (!response.ok) {
+    const error = new Error("An error occurred while editing announcement");
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  const results = await response.json();
+
+  return results;
+}
+
+export async function deleteAnnouncement({ id }) {
+  const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+  let url = serverURL + "/admin/announcement/" + id;
+
+  const response = await fetch(url, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    const error = new Error("An error occurred while deleting announcement");
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  const results = await response.json();
+
+  return results;
+}
+
 /**
  * @desc TimeOff http
  *
@@ -831,7 +953,7 @@ export async function fetchTimeOff({ approved, pending }) {
   let url = serverURL + "/employee/timeOff";
 
   if (approved) {
-    url += "/" + "?accepted=true";
+    url +=  "?accepted=true";
   }
 
   if (pending) {
@@ -1076,8 +1198,6 @@ export async function mutateBreak({ id, action, breakTime }) {
   }
 
   const results = await response.json();
-
-  console.log(results, "results");
 
   return results;
 }

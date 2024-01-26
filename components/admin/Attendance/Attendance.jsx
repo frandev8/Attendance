@@ -6,10 +6,10 @@ import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Unstable_Grid2";
 import { experimentalStyled as styled } from "@mui/material/styles";
 import { useQuery } from "@tanstack/react-query";
-import { Card, Popover, Spin } from "antd";
+import { Card, Empty, Popover, Spin } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { fetchAttendance } from "../../../utils/http";
+import { fetchAttendance, queryClient } from "../../../utils/http";
 import SearchBox from "../SearchBox";
 import OnLeave from "../TimeOff/OnTimeOff";
 import Accept from "./Accept";
@@ -33,11 +33,14 @@ const Attendance = () => {
   const { data, isPending } = useQuery({
     queryKey: ["attendance", { type: "pending" }],
     queryFn: () => fetchAttendance({ pending: true }),
+    gcTime: 0,
   });
 
   const attendanceRequestData = useRef([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [triggerRerender, setTriggerRerender] = useState(false);
+
+  const adminId = useSelector((state)=> state.admin.adminId)
 
   const [isFilterOpen, setFilterOpen] = useState(false);
 
@@ -73,6 +76,11 @@ const Attendance = () => {
 
   const hideFilter = () => {
     setFilterOpen(false);
+  };
+
+  const onClearSearchBox = () => {
+    attendanceRequestData.current = data;
+    setTriggerRerender((prevRerender) => !prevRerender);
   };
 
   function onFilterAttendanceHandler(filterDates) {
@@ -124,7 +132,10 @@ const Attendance = () => {
               Attendance
             </h2>
             <div className="tw-flex tw-justify-end  ">
-              <SearchBox filterBySearchBox={setSearchTerm} />
+              <SearchBox
+                clearSearchBox={onClearSearchBox}
+                filterBySearchBox={setSearchTerm}
+              />
               <Popover
                 placement="bottomLeft"
                 open={isFilterOpen}
@@ -140,20 +151,30 @@ const Attendance = () => {
             </div>
           </div>
           <Container maxWidth="lg" sx={{ mb: 4, border: "2px solid blue" }}>
-            {isPending && <Spin />}
-            <Grid
-              container
-              spacing={{ xs: 2, md: 3 }}
-              columns={{ xs: 2, sm: 8, md: 12 }}
-              className={`${styles["main"]}`}
-            >
-              {data &&
-                attendanceRequestData.current.map((attendance, index) => (
-                  <Grid xs={2} sm={4} md={4} key={index}>
-                    <AttendanceCard data={attendance} />
-                  </Grid>
-                ))}
-            </Grid>
+            {isPending ? (
+              <Spin />
+            ) : (
+              <>
+                <Grid
+                  container
+                  spacing={{ xs: 2, md: 3 }}
+                  columns={{ xs: 2, sm: 8, md: 12 }}
+                  className={`${styles["main"]}`}
+                >
+                  {data &&
+                    attendanceRequestData.current.map((attendance, index) => (
+                      <Grid xs={2} sm={4} md={4} key={index}>
+                        <AttendanceCard adminId={adminId} data={attendance} />
+                      </Grid>
+                    ))}
+                </Grid>
+                {!attendanceRequestData?.current.length && (
+                  <div className="tw-flex tw-justify-center tw-items-center tw-h-[200px] ">
+                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                  </div>
+                )}
+              </>
+            )}
           </Container>
         </div>
         <div className={`${styles.birthday} tw-border-2 tw-border-black`}>

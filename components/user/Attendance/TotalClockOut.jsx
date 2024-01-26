@@ -14,11 +14,11 @@ function TotalClockOut() {
 
   return (
     <AttendanceCard>
-      <div className="tw-w-[40px] tw-h-[40px] tw-rounded-[8px] tw-bg-regress-color tw-flex tw-justify-center tw-items-center">
-        <LogoutIcon />
+      <div className="tw-w-[35px] tw-h-[35px] tw-rounded-[8px] tw-bg-[#FFF5E0] tw-flex tw-justify-center tw-items-center ">
+        <LogoutIcon style={{ color: "#FFB62E" }}  />
       </div>
       <span className="">Clock out</span>
-      <h3>{data?.length}</h3>
+      <h3 className="tw-text-[#FFB62E]">{data?.length || 0}</h3>
     </AttendanceCard>
   );
 }

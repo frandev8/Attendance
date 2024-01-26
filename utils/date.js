@@ -28,6 +28,15 @@ export const calculateDaysBetween = function (startDate, endDate) {
   return daysDifference;
 };
 
+export const formatTime = function (date) {
+  const parsedDate = moment(date);
+
+  // Format dates with month names using 'MMM' format
+  const formattedDate = parsedDate.format("h:mm A");
+
+  return formattedDate;
+};
+
 export const formatLeaveDates = function (startDate, endDate) {
   const parsedStartDate = moment(startDate);
   const parsedEndDate = moment(endDate);
@@ -109,6 +118,12 @@ export const formatAttendanceTime = function (dateTime) {
 
 export const calculateTimeBetween = function (startDate, endDate) {
   const duration = moment.duration(moment(endDate).diff(moment(startDate)));
+
+  const formatedDuration = duration.asSeconds();
+
+  if (!formatedDuration || isNaN(formatedDuration)) {
+    return "0 hrs";
+  }
 
   if (duration.asSeconds() < 60) {
     return `${Math.floor(duration.asSeconds())} sec`;
@@ -198,7 +213,6 @@ export const filterDateByRange = function (
   });
 };
 
-
 export const filterByDate = function (
   data,
   targetDates, // Array of target dates
@@ -213,7 +227,12 @@ export const filterByDate = function (
     } else if (targetDates.length === 2) {
       const startDateMoment = moment(targetDates[0]);
       const endDateMoment = moment(targetDates[1]);
-      return itemStartDateMoment.isBetween(startDateMoment, endDateMoment, null, "[]"); // Range match for two target dates
+      return itemStartDateMoment.isBetween(
+        startDateMoment,
+        endDateMoment,
+        null,
+        "[]"
+      ); // Range match for two target dates
     } else {
       return false; // Handle invalid targetDates length
     }

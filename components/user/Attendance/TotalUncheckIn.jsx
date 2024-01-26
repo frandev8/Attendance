@@ -15,11 +15,11 @@ function TotalUncheckIn() {
 
   return (
     <AttendanceCard>
-      <div className="tw-w-[40px] tw-h-[40px] tw-rounded-[8px] tw-bg-regress-color tw-flex tw-justify-center tw-items-center">
-        <Warning />
+      <div className="tw-w-[35px] tw-h-[35px] tw-rounded-[8px] tw-bg-[#FFE1E0] tw-flex tw-justify-center tw-items-center">
+        <Warning style={{ color: "#FF6867" }}/>
       </div>
-      <span className="">Not Check in</span>
-      <h3>{data?.length}</h3>
+      <span>Not Check in</span>
+      <h3 className="tw-text-[#FF6867]">{data?.length || 0}</h3>
     </AttendanceCard>
   );
 }

@@ -3,22 +3,25 @@ import Box from "@mui/material/Box";
 // import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
-import { useLoaderData } from "react-router-dom";
 // import { Input, Space } from "antd";
+import PropTypes from "prop-types";
+
 import { mutateAdminPersonalDetails } from "@/utils/http";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Form, Input, Select, Space } from "antd";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { fetchAdminById } from "../../../utils/http";
+import { fetchAdminById, queryClient } from "../../../utils/http";
 import styles from "./AccountSettings.module.css";
 import ErrorPasswordDetails from "./ErrorPasswordDetails";
 import UploadImage from "./UploadImage";
 
 const { Option } = Select;
 
-const SubmitButton = ({ form, isActive }) => {
+const SubmitButton = ({ form, hasFormChanged }) => {
   const [submittable, setSubmittable] = useState(false);
+
+  const { firstname, lastname, email, username, phone } = hasFormChanged;
 
   // Watch all values
   const values = Form.useWatch([], form);
@@ -30,21 +33,26 @@ const SubmitButton = ({ form, isActive }) => {
       })
       .then(
         () => {
-          setSubmittable(true);
+          if (firstname || lastname || email || username || phone) {
+            setSubmittable(true);
+          } else {
+            setSubmittable(false);
+          }
         },
         () => {
           setSubmittable(false);
         }
       );
-  }, [values]);
+  }, [values, lastname, firstname, email, username, phone, form]);
 
+  function onUpdateEmployeeInfoHandler() {}
   return (
     <Button
-      type="primary"
       htmlType="submit"
-      disabled={!submittable || !isActive}
+      disabled={!submittable}
+      onClick={onUpdateEmployeeInfoHandler}
     >
-      Submit
+      Update
     </Button>
   );
 };
@@ -54,41 +62,80 @@ function AccountSettings() {
 
   const [isFormChanged, setFormMode] = useState(false);
 
-  const loaderData = useLoaderData();
+  const adminId = useSelector((state) => state.admin.adminId);
+
+  const { data: personalData } = useQuery({
+    queryKey: ["admin", { details: "personal" }],
+    queryFn: () => fetchAdminById({ id: adminId }),
+    // staleTime: 5000,
+  });
 
   let initialValues = {
-    firstname: loaderData.firstname,
-    lastname: loaderData.lastname,
-    username: loaderData.username,
-    email: loaderData.email,
-    phone: loaderData.phone,
+    firstname: personalData.firstname,
+    lastname: personalData.lastname,
+    username: personalData.username,
+    email: personalData.email,
+    phone: personalData.phone,
     prefix: "+233",
   };
 
   const { data, isPending, mutate, error, isError } = useMutation({
     mutationFn: mutateAdminPersonalDetails,
     onSuccess: (data) => {
-      console.log("successful update");
+      queryClient.invalidateQueries({
+        queryKey: ["employee", { details: "personal" }],
+      });
     },
   });
 
   function onChangeForm(e) {
-    // const name = e.target.name;
-
+    const name = e.target.name;
     const value = e.target.value;
 
-    console.log(e.target);
-
-    // if (value !== initialValues["firstname"]) {
-    //   setFormMode(true);
-    // } else {
-    //   setFormMode(false);
-    // }
+    switch (name) {
+      case "firstname":
+        if (value.trim() !== initialValues.firstname) {
+          setFormMode((prev) => ({ ...prev, firstname: true }));
+        } else {
+          setFormMode((prev) => ({ ...prev, firstname: false }));
+        }
+        break;
+      case "lastname":
+        if (value.trim() !== initialValues.lastname) {
+          setFormMode((prev) => ({ ...prev, lastname: true }));
+        } else {
+          setFormMode((prev) => ({ ...prev, lastname: false }));
+        }
+        break;
+      case "username":
+        if (value.trim() !== initialValues.username) {
+          setFormMode((prev) => ({ ...prev, username: true }));
+        } else {
+          setFormMode((prev) => ({ ...prev, username: false }));
+        }
+        break;
+      case "email":
+        if (value.trim() !== initialValues.email) {
+          setFormMode((prev) => ({ ...prev, email: true }));
+        } else {
+          setFormMode((prev) => ({ ...prev, email: false }));
+        }
+        break;
+      case "phone":
+        if (value.trim() !== initialValues.phone) {
+          setFormMode((prev) => ({ ...prev, phone: true }));
+        } else {
+          setFormMode((prev) => ({ ...prev, phone: false }));
+        }
+        break;
+      default:
+        break;
+    }
   }
 
   const onFinish = (values) => {
     const formData = { formData: values };
-    mutate({ formData, id: loaderData._id });
+    mutate({ formData, id: personalData._id });
   };
 
   const prefixSelector = (
@@ -135,15 +182,17 @@ function AccountSettings() {
                 name="firstname"
                 label="First Name"
                 rules={[{ required: true }]}
+                onChange={onChangeForm}
               >
-                <Input />
+                <Input name="firstname" />
               </Form.Item>
               <Form.Item
                 name="lastname"
                 label="Last Name"
                 rules={[{ required: true }]}
+                onChange={onChangeForm}
               >
-                <Input />
+                <Input name="lastname" />
               </Form.Item>
             </div>
 
@@ -152,15 +201,17 @@ function AccountSettings() {
                 name="username"
                 label="Username"
                 rules={[{ required: true }]}
+                onChange={onChangeForm}
               >
-                <Input />
+                <Input name="username" />
               </Form.Item>
               <Form.Item
                 name="email"
                 label="Email"
                 rules={[{ type: "email", required: true }]}
+                onChange={onChangeForm}
               >
-                <Input />
+                <Input name="email" />
               </Form.Item>
             </div>
             <div className={`${styles.box2} tw-gap-2`}>
@@ -173,12 +224,14 @@ function AccountSettings() {
                     message: "Please input your phone number!",
                   },
                 ]}
+                onChange={onChangeForm}
               >
                 <Input
                   addonBefore={prefixSelector}
                   style={{
                     width: "100%",
                   }}
+                  name="phone"
                 />
               </Form.Item>
             </div>
@@ -186,7 +239,7 @@ function AccountSettings() {
 
           <Form.Item>
             <Space>
-              <SubmitButton form={form} isActive={isFormChanged} />
+              <SubmitButton form={form} hasFormChanged={isFormChanged} />
               <Button htmlType="reset" to="./">
                 Reset
               </Button>
@@ -199,3 +252,7 @@ function AccountSettings() {
 }
 
 export default AccountSettings;
+
+SubmitButton.propTypes = {
+  hasFormChanged: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
+};

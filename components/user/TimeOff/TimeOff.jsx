@@ -19,10 +19,11 @@ import styles from "./TimeOff.module.css";
 function TimeOffPage() {
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <div className={`${styles.container}  tw-h-full tw-w-full`} id="container">
-        <div
-          className={`${styles.box} ${styles.item1} tw-h-inherit tw-border-2 tw-border-black`}
-        >
+      <div
+        className={`${styles.container}  tw-h-full tw-w-full`}
+        id="container"
+      >
+        <div className={`${styles.box} ${styles.item1} tw-h-inherit`}>
           <Paper
             sx={{
               p: 1,
@@ -30,8 +31,9 @@ function TimeOffPage() {
               flexDirection: "column",
               justifyContent: "space-between",
               height: "100%",
+              backgroundColor: "#F4F6FA",
             }}
-            className=" tw-bg-[#0000ff]"
+            elevation={0}
           >
             <TimeOffStats2 />
           </Paper>
@@ -48,7 +50,9 @@ function TimeOffPage() {
                 display: "flex",
                 flexDirection: "column",
                 height: 370.23,
+                backgroundColor: "#F4F6FA",
               }}
+              elevation={0}
             >
               <Announcement />
             </Paper>
@@ -63,9 +67,11 @@ function TimeOffPage() {
                 flexDirection: "column",
                 height: 370.23,
                 overflow: "hidden",
+                backgroundColor: "#F4F6FA",
               }}
+              elevation={0}
             >
-              <RecentLeaves />
+              <RecentLeaves enableMore={false} />
             </Paper>
           </div>
         </div>
@@ -78,8 +84,9 @@ function TimeOffPage() {
               display: "flex",
               flexDirection: "column",
               height: "100%",
-              background: "#F4F6FA",
+              backgroundColor: "#F4F6FA",
             }}
+            elevation={0}
           >
             <History />
           </Paper>

@@ -1,11 +1,11 @@
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { useMutation } from "@tanstack/react-query";
 import { Form, Input, Space } from "antd";
-import React from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { changeEmployeePassword } from "../../../utils/http";
 import ErrorPasswordDetails from "./ErrorPasswordDetails";
-
 const validateMessages = {
   required: "${label} is required!",
 };
@@ -15,11 +15,13 @@ const onFinishFailed = (errorInfo) => {
 };
 
 const PasswordSettings = () => {
+  const navigate = useNavigate();
+
+  const [form] = Form.useForm();
+
   const { data, isPending, mutate, error, isError } = useMutation({
     mutationFn: changeEmployeePassword,
-    onSuccess: (data) => {
-      console.log("successful update");
-    },
+    onSuccess: (data) => {},
   });
 
   const userId = useSelector((state) => state.user.userId);
@@ -42,6 +44,7 @@ const PasswordSettings = () => {
         style={{
           maxWidth: 600,
         }}
+        form={form}
         initialValues={{ prefix: "+233" }}
         validateMessages={validateMessages}
       >

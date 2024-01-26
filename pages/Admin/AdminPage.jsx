@@ -1,12 +1,9 @@
-// import { Dashboard } from "@mui/icons-material";
-// import Dashboard from "../components/admin/Dashboard/Dashboard";
-import "./AdminPage.css";
-
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import * as React from "react";
+import { useEffect, useState } from "react";
+import "./AdminPage.css";
 
 import { Outlet } from "react-router-dom";
 import SideBar from "../../components/admin/Drawer/SideBar";
@@ -16,17 +13,57 @@ import TopBar from "../../components/admin/Header/AppBar";
 const defaultTheme = createTheme();
 
 export default function AdminPage() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [isSideBarVisible, setIsSideBarVisible] = useState(false);
+
   const toggleDrawer = () => {
-    setOpen(!open);
+    if (window.innerWidth <= 600) {
+      setIsSideBarVisible(true);
+    }
+
+    if (isSideBarVisible && window.innerWidth > 600) {
+      setOpen((prev) => !prev);
+    }
+    if (isSideBarVisible && window.innerWidth < 600) {
+      setIsSideBarVisible(false);
+    }
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 600) {
+        console.log("called");
+        setIsSideBarVisible(true);
+      } else {
+        setIsSideBarVisible(false);
+      }
+    };
+
+    // Add event listener for window resize
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (window.innerWidth > 600) {
+      setIsSideBarVisible(true);
+    } else {
+      setIsSideBarVisible(false);
+    }
+  }, []);
 
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <TopBar toggleDrawer={toggleDrawer} open={open} />
-        <SideBar toggleDrawer={toggleDrawer} open={open} />
+        {isSideBarVisible && (
+          <SideBar toggleDrawer={toggleDrawer} open={open} />
+        )}
 
         <Box
           component="main"
@@ -42,7 +79,6 @@ export default function AdminPage() {
         >
           <Toolbar />
           <Outlet />
-          {/* <Dashboard /> */}
         </Box>
       </Box>
     </ThemeProvider>

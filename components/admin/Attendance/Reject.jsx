@@ -1,9 +1,10 @@
+import { Button } from "@/components/ui/button";
 import ClearIcon from "@mui/icons-material/Clear";
 import { useMutation } from "@tanstack/react-query";
 import PropTypes from "prop-types";
 import React from "react";
 import { json, useNavigation, useParams } from "react-router-dom";
-import { endorseAttendance } from "../../../utils/http";
+import { endorseAttendance, queryClient } from "../../../utils/http";
 
 function Reject({ adminId, attendanceId, userId }) {
   const navigate = useNavigation();
@@ -11,7 +12,9 @@ function Reject({ adminId, attendanceId, userId }) {
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: endorseAttendance,
     onSuccess: () => {
-      // queryClient.invalidateQueries({queryKey:[""]})
+      queryClient.invalidateQueries({
+        queryKey: ["attendance", { type: "pending" }],
+      });
       navigate("../");
     },
   });
@@ -20,17 +23,9 @@ function Reject({ adminId, attendanceId, userId }) {
     mutate({ adminId, attendanceId, userId, isValid: false });
   };
   return (
-    <div className="tw-flex tw-flex-col tw-items-center">
-      <div
-        className="tw-flex tw-items-center tw-mr-[2px] "
-        onClick={onRejectAttendanceHandler}
-      >
-        <span>Reject</span>{" "}
-      </div>
-      <div>
-        <ClearIcon />
-      </div>
-    </div>
+    <Button variant="outline" onClick={onRejectAttendanceHandler}>
+      Reject
+    </Button>
   );
 }
 

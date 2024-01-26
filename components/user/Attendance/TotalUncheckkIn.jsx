@@ -19,7 +19,7 @@ function TotalUncheckIn() {
         <Warning />
       </div>
       <span className="">Not Check in</span>
-      <h3>{data?.length}</h3>
+      <h3>{data?.length|| 0}</h3>
     </AttendanceCard>
   );
 }

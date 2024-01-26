@@ -1,9 +1,10 @@
+import { Button } from "@/components/ui/button";
 import CheckIcon from "@mui/icons-material/Check";
 import { useMutation } from "@tanstack/react-query";
 import PropTypes from "prop-types";
 import React from "react";
 import { json, useNavigate, useParams } from "react-router-dom";
-import { endorseAttendance } from "../../../utils/http";
+import { endorseAttendance, queryClient } from "../../../utils/http";
 
 function Accept({ adminId, attendanceId, userId }) {
   const params = useParams();
@@ -12,7 +13,9 @@ function Accept({ adminId, attendanceId, userId }) {
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: endorseAttendance,
     onSuccess: () => {
-      // queryClient.invalidateQueries({queryKey:[""]})
+      queryClient.invalidateQueries({
+        queryKey: ["attendance", { type: "pending" }],
+      });
       // navigate("../");
     },
   });
@@ -21,19 +24,7 @@ function Accept({ adminId, attendanceId, userId }) {
     mutate({ adminId, attendanceId, userId, isValid: true });
   };
 
-  return (
-    <div
-      className="tw-flex tw-flex-col tw-items-center"
-      onClick={ConfirmAttendanceHandler}
-    >
-      <div className="tw-flex tw-items-center tw-mr-[2px]">
-        <span>Confirm</span>
-      </div>
-      <div>
-        <CheckIcon />
-      </div>
-    </div>
-  );
+  return <Button onClick={ConfirmAttendanceHandler}>Accept</Button>;
 }
 
 Accept.propTypes = {

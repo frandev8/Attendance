@@ -15,11 +15,11 @@ function TotalLeave() {
 
   return (
     <AttendanceCard>
-      <div className="tw-w-[40px] tw-h-[40px] tw-rounded-[8px] tw-bg-regress-color tw-flex tw-justify-center tw-items-center">
-        <BeachAccessIcon />
+      <div className="tw-w-[35px] tw-h-[35px] tw-rounded-[8px] tw-bg-[#E6F8EB] tw-flex tw-justify-center tw-items-center">
+        <BeachAccessIcon style={{ color: "#42CB65" }} />
       </div>
       <span className="">On Leave</span>
-      <h3>{data?.length}</h3>
+      <h3 className="tw-text-[#42CB65]">{data?.length || 0}</h3>
     </AttendanceCard>
   );
 }

@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Button, Modal, Progress, Spin } from "antd";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { saveBreakTokenCookie } from "../../../utils/auth";
+import { saveBreakTime, saveBreakTokenCookie } from "../../../utils/auth";
 import { mutateBreak } from "../../../utils/http";
 
 function StartBreak({ setBreakActive }) {
@@ -17,11 +17,11 @@ function StartBreak({ setBreakActive }) {
   const { data, isPending, mutate, error, isError } = useMutation({
     mutationFn: mutateBreak,
     onSuccess: (data) => {
-      const { breakToken } = data;
-      saveBreakTokenCookie(breakToken);
+      const { breakToken, breakTime } = data;
       setBreakActive();
       hideBreakModal();
-      console.log("successful break start");
+      saveBreakTokenCookie(breakToken);
+      saveBreakTime(breakTime);
     },
   });
 
@@ -45,7 +45,7 @@ function StartBreak({ setBreakActive }) {
         icon={<AddIcon sx={{ fontSize: "12px" }} />}
         type="dashed"
         onClick={showBreakModal}
-        className="tw-max-sm:text-ssm tw-p-2 tw-w-[max-content]"
+        className="tw-max-sm:text-ssm tw-p-2 tw-w-[max-content] tw-bg-white  "
       >
         Break
       </Button>
@@ -56,7 +56,7 @@ function StartBreak({ setBreakActive }) {
         footer={(_, { CancelBtn }) => (
           <div className="tw-flex">
             <CancelBtn />
-            <Button className="tw-bg-[#0000ff]" onClick={onStartBreakHandler}>
+            <Button className="tw-bg-[#DBE9F9]" onClick={onStartBreakHandler}>
               {isPending ? <Spin /> : "Yes"}
             </Button>
           </div>

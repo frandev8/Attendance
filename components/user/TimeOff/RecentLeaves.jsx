@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { Avatar, DatePicker, Divider, List, Space, Spin } from "antd";
+import { Avatar, Button, DatePicker, Divider, List, Space, Spin } from "antd";
+import PropTypes from "prop-types";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { filterDateByRange, getDateDuration } from "../../../utils/date";
@@ -48,22 +49,27 @@ function RecentLeaves({ enableMore }) {
     <Space direction="vertical">
       <div className="tw-flex tw-justify-between tw-items-center">
         <span>Who's on leave</span>
-        <button className="tw-w-[180px]">
-          {" "}
+
+        <Button
+          htmlType="submit"
+          className="tw-w-[100px]"
+          disabled={!enableMore}
+        >
           <Link to="timeOff"> See More</Link>
-        </button>
+        </Button>
       </div>
       <Divider style={{ marginTop: "5px", marginBottom: "5px" }} />
       <div className="tw-flex tw-justify-between tw-items-center">
         <div>
-          On Leave: <span> 2</span>
+          On Leave: <span> {filteredLeavesRef.current.length}</span>
         </div>
-        <div>
+        <div className="max-[540px]-tw-w-[45%]">
           <DatePicker onChange={onChange} />
         </div>
       </div>
       <div>
         {isPending && <Spin />}
+
         <List
           itemLayout="horizontal"
           className={`${styles["main"]}  `}
@@ -93,3 +99,7 @@ function RecentLeaves({ enableMore }) {
 }
 
 export default RecentLeaves;
+
+RecentLeaves.propTypes = {
+  enableMore: PropTypes.bool,
+};

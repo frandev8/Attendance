@@ -4,10 +4,10 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Unstable_Grid2";
 import { useQuery } from "@tanstack/react-query";
-import { Divider, Popover, Spin } from "antd";
+import { Divider, Empty, Popover, Spin } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { fetchEmployees } from "../../../utils/http";
+import { fetchEmployees, queryClient } from "../../../utils/http";
 import SearchBox from "../SearchBox";
 // import OnLeave from "../TimeOff/OnTimeOff";
 import { filterByDate } from "@/utils/date";
@@ -19,6 +19,7 @@ export default function EmployeeList() {
   const { data, isPending } = useQuery({
     queryKey: ["employee", { type: "active" }],
     queryFn: () => fetchEmployees({ active: true }),
+    gcTime: 0,
   });
 
   const adminId = useSelector((state) => {
@@ -65,6 +66,11 @@ export default function EmployeeList() {
     setFilterOpen(false);
   };
 
+  const onClearSearchBox = () => {
+    employeeRequestData.current = data;
+    setTriggerRerender((prevRerender) => !prevRerender);
+  };
+
   function onFilterEmployeeHandler(filterDates) {
     if (data && searchTerm) {
       employeeRequestData.current = filterByDate(
@@ -80,7 +86,7 @@ export default function EmployeeList() {
         filterDates,
         "createdAt"
       );
-      
+
       setTriggerRerender((prevRerender) => !prevRerender);
     }
   }
@@ -114,7 +120,10 @@ export default function EmployeeList() {
               Employee List
             </h2>
             <div className="tw-flex tw-justify-end  ">
-              <SearchBox filterBySearchBox={setSearchTerm} />
+              <SearchBox
+                clearSearchBox={onClearSearchBox}
+                filterBySearchBox={setSearchTerm}
+              />
               <Popover
                 placement="bottomLeft"
                 open={isFilterOpen}
@@ -144,6 +153,12 @@ export default function EmployeeList() {
                   </Grid>
                 ))}
             </Grid>
+
+            {!employeeRequestData?.current.length && (
+              <div className="tw-flex tw-justify-center tw-items-center tw-h-[200px] ">
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+              </div>
+            )}
           </Container>
         </div>
         <div className={`${styles.birthday} tw-border-2 tw-border-black`}>

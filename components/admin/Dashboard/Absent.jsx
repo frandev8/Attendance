@@ -22,11 +22,15 @@ export default function Absent() {
   return (
     <React.Fragment>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        {isPending && <Spin />}
-
-        {data && (
+        {isPending ? (
+          <Spin />
+        ) : data ? (
           <Typography component="p" variant="h4">
-            {data.length}
+            {data?.length}
+          </Typography>
+        ) : (
+          <Typography component="p" variant="h4">
+            0
           </Typography>
         )}
         <div className={styles.iconAvatar}>
@@ -36,7 +40,7 @@ export default function Absent() {
       <Title>Absent</Title>
       <div className={`tw-flex  tw-items-center`}>
         <div
-          className={` tw-p-4 tw-w-[15px] tw-h-[15px] tw-rounded-[50%] tw-bg-regress-bg tw-flex tw-justify-center items-center tw-mr-2`}
+          className={` tw-p-4 tw-w-[15px] tw-h-[15px] tw-rounded-[50%] tw-bg-regress-bg tw-flex tw-justify-center tw-items-center tw-mr-2`}
         >
           <MovingIcon className={`tw-text-regress-color tw-rotate-180`} />
         </div>

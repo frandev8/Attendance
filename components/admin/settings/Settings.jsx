@@ -1,14 +1,12 @@
 import { Container } from "@mui/material";
 import { Tabs } from "antd";
 import React from "react";
-import { fetchAdminById } from "../../../utils/http";
+import { fetchAdminById, queryClient } from "../../../utils/http";
 import AccountSettings from "./AccountSettings";
-import Announcement from "./AnnouncementSettings";
+import Messages from "./MessagesSettings";
 import PasswordSettings from "./PasswordSettings";
 
-const onChange = (key) => {
-  console.log(key);
-};
+const onChange = (key) => {};
 const items = [
   {
     key: "1",
@@ -22,8 +20,8 @@ const items = [
   },
   {
     key: "3",
-    label: "Notification",
-    children: <Announcement />,
+    label: "Messages",
+    children: <Messages />,
   },
 ];
 const AdminSettingsPage = () => (
@@ -40,9 +38,9 @@ export async function loader({ id }) {
     // console.log("not available");
   }
 
-  console.log("hey");
-  const avatar = await fetchAdminById({ id });
-
-  return avatar;
+  return queryClient.fetchQuery({
+    queryKey: ["admin", { details: "personal" }],
+    queryFn: () => fetchAdminById({ id }),
+  });
 }
 export default AdminSettingsPage;

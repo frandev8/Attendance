@@ -44,7 +44,7 @@ function EndBreak({ setBreakUnActive }) {
         type="dashed"
         danger
         onClick={showBreakModal}
-        className="tw-max-sm:text-ssm tw-p-2 tw-w-[max-content]"
+        className="tw-max-sm:text-ssm tw-p-2 tw-w-[max-content] tw-bg-white"
       >
         Break
       </Button>

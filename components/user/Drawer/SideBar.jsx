@@ -6,7 +6,6 @@ import List from "@mui/material/List";
 import Toolbar from "@mui/material/Toolbar";
 import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
-import SearchBox from "../SearchBox";
 import { MainListItems } from "./listItems";
 const drawerWidth = 200;
 

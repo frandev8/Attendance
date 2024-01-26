@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import AddIcon from "@mui/icons-material/Add";
 import { Tabs } from "antd";
 import { useState } from "react";
 import AnnouncementList from "../Announcement/AnnouncementList";
@@ -6,7 +7,7 @@ import { NewAnnouncement } from "../Announcement/NewAnnouncement";
 import { NewNotification } from "../Notification/NewNotification";
 import NotificationList from "../Notification/NotificationList";
 
-function Announcement() {
+function Messages() {
   const [isNotificationModalOpen, setNotificationModalStatus] = useState(false);
   const [isAnnounceModalOpen, setAnnounceModalStatus] = useState(false);
 
@@ -53,14 +54,22 @@ function Announcement() {
             className={"tw-bg-[#c72e2e]"}
             onClick={openNotificationModal}
           >
-            New notification
+            <span className="min-[481px]:tw-hidden">
+              <AddIcon />{" "}
+            </span>{" "}
+            <span className="max-[480px]:tw-hidden tw-mr-[2px]"> New </span>{" "}
+            notification
           </Button>
           <Button
             type="primary"
             className={"tw-ml-[5px]"}
             onClick={openAnnouncementModal}
           >
-            New announcement
+            <span className="min-[481px]:tw-hidden">
+              <AddIcon />{" "}
+            </span>
+            <span className="max-[480px]:tw-hidden tw-mr-[2px]"> New </span>{" "}
+            announcement
           </Button>
         </div>
       </div>
@@ -78,4 +87,4 @@ function Announcement() {
   );
 }
 
-export default Announcement;
+export default Messages;

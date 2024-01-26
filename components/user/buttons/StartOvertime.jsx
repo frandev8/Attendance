@@ -43,7 +43,7 @@ function StartOvertime({ setOvertimeActive }) {
       <Button
         icon={<AddIcon sx={{ fontSize: "12px" }} />}
         type="dashed"
-        className="tw-max-sm:text-ssm tw-p-2 tw-w-[max-content]"
+        className="tw-max-sm:text-ssm tw-p-2 tw-w-[max-content] tw-bg-white"
         onClick={showOvertimeModal}
       >
         overtime
@@ -57,7 +57,7 @@ function StartOvertime({ setOvertimeActive }) {
           <div className="tw-flex">
             <CancelBtn />
             <Button
-              className="tw-bg-[#0000ff]"
+              className="tw-bg-[#DBE9F9]"
               onClick={onStartOvertimeHandler}
             >
               Yes{" "}

@@ -21,7 +21,7 @@ function UserDashboard() {
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <div
-        className={`${styles.container}  tw-h-full tw-w-full`}
+        className={`${styles.container}  tw-h-full tw-w-full `}
         id="container"
       >
         <div
@@ -30,13 +30,14 @@ function UserDashboard() {
           <div className={`${styles.box} ${styles.item1} tw-h-inherit `}>
             <Paper
               sx={{
-                p: 1,
+                p: 2,
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
                 height: "100%",
+                backgroundColor: "#F4F6FA",
               }}
-              // className=" tw-bg-[#0000ff]"
+              elevation={0}
             >
               <MyTimeSheet />
             </Paper>
@@ -46,7 +47,9 @@ function UserDashboard() {
             <Paper
               sx={{
                 width: "100%",
+                backgroundColor: "#F4F6FA",
               }}
+              elevation={0}
             >
               <AttendanceStats />
             </Paper>
@@ -56,7 +59,9 @@ function UserDashboard() {
             <Paper
               sx={{
                 width: "100%",
+                backgroundColor: "#F4F6FA",
               }}
+              elevation={0}
             >
               <AttendanceStats2 />
             </Paper>
@@ -69,7 +74,9 @@ function UserDashboard() {
                 display: "flex",
                 flexDirection: "column",
                 height: "100%",
+                backgroundColor: "#F4F6FA",
               }}
+              elevation={0}
             >
               <TimeOffStats />
             </Paper>
@@ -84,7 +91,9 @@ function UserDashboard() {
                 display: "flex",
                 flexDirection: "column",
                 height: 370.23,
+                backgroundColor: "#F4F6FA",
               }}
+              elevation={0}
             >
               <Announcement />
             </Paper>
@@ -99,7 +108,9 @@ function UserDashboard() {
                 flexDirection: "column",
                 height: 370.23,
                 overflow: "hidden",
+                backgroundColor: "#F4F6FA",
               }}
+              elevation={0}
             >
               <RecentLeaves enableMore={true} />
             </Paper>
@@ -107,10 +118,8 @@ function UserDashboard() {
         </div>
 
         <div className={`${styles.box} ${styles.item6}`}>
-    
           <Paper
             sx={{
-              p: 2,
               display: "flex",
               flexDirection: "column",
               height: "100%",

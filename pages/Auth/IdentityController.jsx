@@ -49,14 +49,10 @@ export function IdentityController() {
   const defaultTheme = createTheme();
 
   const { data, isPending } = useQuery({
-    queryKey: ["employee", { key: "avatar" }],
+    queryKey: ["photo", { key: "cover" }],
     queryFn: () => getPageBanner({ id: "65852eb55f470300be649aaa" }),
     staleTime: 0,
   });
-
-  if (data) {
-    console.log(data, "data");
-  }
 
   return (
     <>

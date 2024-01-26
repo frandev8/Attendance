@@ -1,13 +1,17 @@
 import { addDays, format } from "date-fns";
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { areDatesEqual, setDateOnly } from "../../../utils/date";
 import styles from "./CalenderDate.module.css";
 
-function CalenderDate({ currentDate, index, mutateDate }) {
-  const [isDateActive, setDateActive] = useState({});
-
+function CalenderDate({
+  currentDate,
+  index,
+  mutateDate,
+  selectDate,
+  selectedDate,
+}) {
   const userId = useSelector((state) => {
     return state.user.userId;
   });
@@ -25,16 +29,26 @@ function CalenderDate({ currentDate, index, mutateDate }) {
 
   const match = areDatesEqual(modifiedCalenderDate, todayDate);
 
-  const isToday = match ? "today" : "";
+  const selected =
+    selectedDate ===
+    (currentDate.getDay() === 0
+      ? addDays(currentDate, index - 6).getDate()
+      : addDays(currentDate, index - currentDate.getDay() + 1).getDate());
 
-  const onHandleDateClick = () => {
+  const isToday = match ? "today" : "";
+  const isSelected = selected ? "select" : "";
+
+  const onHandleDateClick = (e) => {
     mutateDate({ id: userId, date: modifiedCalenderDate });
+
+    selectDate(parseInt(e.target.innerHTML));
+    // console.dir(parseInt(e.target.innerHTML));
   };
 
   return (
     <li>
       <div
-        className={`${styles[isToday]} tw-w-max tw-h-max tw-text-center tw-p-1`}
+        className={`${styles[isSelected]} ${styles[isToday]}   tw-w-[30px] tw-h-[30px] tw-text-center tw-p-1 hover:tw-cursor-pointer`}
         onClick={onHandleDateClick}
       >
         {currentDate.getDay() === 0
@@ -51,4 +65,6 @@ CalenderDate.propTypes = {
   currentDate: PropTypes.object,
   index: PropTypes.number,
   mutateDate: PropTypes.func,
+  selectedDate: PropTypes.number,
+  selectDate: PropTypes.func,
 };

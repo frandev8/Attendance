@@ -29,7 +29,7 @@ const beforeUpload = (file) => {
 const UploadImage = () => {
   const adminId = useSelector((state) => state.admin.adminId);
 
-  const { data: userImage, isPending: onHold } = useQuery({
+  const { data: adminImage, isPending: onHold } = useQuery({
     queryKey: ["admin", { key: "avatar" }],
     queryFn: () => getAdminAvatar({ id: adminId }),
     staleTime: 0,
@@ -82,9 +82,9 @@ const UploadImage = () => {
         beforeUpload={beforeUpload}
         onChange={handleChange}
       >
-        {userImage ? (
+        {adminImage?.url ? (
           <img
-            src={userImage.url}
+            src={adminImage.url}
             alt="avatar"
             style={{
               width: "100%",

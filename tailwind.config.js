@@ -16,6 +16,9 @@ export default {
         "2xl": "1400px",
       },
     },
+    screens: {
+      ssm: "480px",
+    },
     extend: {
       fontSize: {
         sm: "0.8rem",

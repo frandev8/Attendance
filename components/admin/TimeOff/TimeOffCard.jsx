@@ -1,4 +1,3 @@
-
 import {
   Card,
   CardContent,
@@ -8,9 +7,9 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { formatTimeOffDate } from "@/utils/date";
+import PropTypes from "prop-types";
 import AcceptBtn from "./Accept";
 import RejectBtn from "./Reject";
-
 
 export default function TimeOffCard({ data }) {
   return (
@@ -56,10 +55,13 @@ export default function TimeOffCard({ data }) {
         </div>
       </CardContent>
       <CardFooter className="tw-flex tw-justify-between">
-        <RejectBtn  timeOffId={data._id}/>
-        <AcceptBtn  timeOffId={data._id}/>
-        
+        <RejectBtn timeOffId={data._id} />
+        <AcceptBtn timeOffId={data._id} />
       </CardFooter>
     </Card>
   );
 }
+
+TimeOffCard.propTypes = {
+  data: PropTypes.object.isRequired,
+};
