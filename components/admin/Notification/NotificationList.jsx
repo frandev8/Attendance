@@ -10,6 +10,7 @@ import {
 } from "../../../utils/http";
 import { EditNotification } from "./EditNotification";
 import { NotificationAction } from "./NotificationAction";
+
 const columns = [
   {
     title: "Date",
@@ -22,7 +23,7 @@ const columns = [
     maxWidth: 250,
   },
   {
-    title: ".",
+    title: <div className="tw-text-white">action</div>,
     dataIndex: "action",
   },
 ];
@@ -37,10 +38,17 @@ const NotificationList = () => {
     // staleTime: 5000,
   });
 
-  const { isPending: isDeletePending, mutate: delNotification } = useMutation({
-    queryFn: deleteNotification,
+  const {
+    mutate,
+    isPending: isDeletePending,
+    isError,
+    error,
+  } = useMutation({
+    mutationFn: deleteNotification,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["notification"] });
+      queryClient.invalidateQueries({
+        queryKey: ["notification"],
+      });
     },
   });
 
@@ -51,6 +59,11 @@ const NotificationList = () => {
   function closeEditNotificationModal() {
     setEditNotifiStatus(false);
   }
+
+  const confirmDeletion = (id) => {
+    console.log(id);
+    mutate({ id });
+  };
 
   let original = [];
 
@@ -66,7 +79,7 @@ const NotificationList = () => {
             setModalDetails={setEditNotifiDetails}
             data={list}
             isPending={isDeletePending}
-            deleteNotification={delNotification}
+            delNotification={confirmDeletion}
           ></NotificationAction>
         ),
       };
@@ -75,8 +88,9 @@ const NotificationList = () => {
 
   return (
     <div>
-      {isPending && <Spin />}
-      {data && (
+      {isPending ? (
+        <Spin />
+      ) : (
         <Table
           columns={columns}
           dataSource={original}
@@ -101,38 +115,3 @@ const NotificationList = () => {
   );
 };
 export default NotificationList;
-
-// useEffect(() => {
-//   async function fetchData() {
-//     const userId = "654acbf48626cf74c1d45549";
-
-//     const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
-
-//     const response = await fetch(
-//       `${serverURL}/employee/attendance/${userId}`
-//     );
-
-//     if (!response.ok) {
-//       return;
-//     }
-
-//     const attendance = await response.json();
-
-//     setData(() => {
-//       const newData = [];
-
-//       for (let i = 0; i <= attendance.length; i++) {
-//         newData.push({
-//           key: i,
-//           name: `Edward King ${i}`,
-//           age: 32,
-//           address: `London, Park Lane no. ${i}`,
-//         });
-//       }
-
-//       return newData;
-//     });
-//   }
-
-//   fetchData();
-// }, []);

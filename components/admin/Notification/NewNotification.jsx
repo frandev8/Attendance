@@ -36,8 +36,7 @@ const ModalOverlay = ({ closeModal }) => {
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: postNotification,
     onSuccess: () => {
-      // queryClient.invalidateQueries({queryKey:[""]})
-      navigate("./");
+      queryClient.invalidateQueries({ queryKey: ["notification"] });
     },
   });
 
@@ -111,7 +110,11 @@ const ModalOverlay = ({ closeModal }) => {
           <Button type="primary" danger onClick={() => closeModal()}>
             Cancel
           </Button>
-          <Button type="primary" onClick={handleNewNotificationForm}>
+          <Button
+            type="primary"
+            onClick={handleNewNotificationForm}
+            className="tw-bg-[#5295E3]"
+          >
             {isPending ? <Spin /> : "Done"}
           </Button>
         </div>

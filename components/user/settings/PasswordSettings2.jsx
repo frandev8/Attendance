@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { Form, Input, Select, Space } from "antd";
+import { Button, Form, Input, Select, Space } from "antd";
 import { useSelector } from "react-redux";
 import { changeEmployeePassword } from "../../../utils/http";
 import ErrorPasswordDetails from "./ErrorPasswordDetails";
@@ -32,7 +32,9 @@ const PasswordSettings = () => {
   };
   return (
     <>
-      <h1>Password</h1>
+      <div className={"tw-mb-[10px]"}>
+        <h1 className={"tw-text-left"}>Password</h1>
+      </div>
       <Form
         layout="vertical"
         form={form}
@@ -117,9 +119,9 @@ const PasswordSettings = () => {
         <Form.Item>
           <Space direction="vertical">
             <div>
-              <button type="submit" className="tw-border-2 tw-border-black">
+              <Button htmlType="submit" to="./">
                 Change Password
-              </button>
+              </Button>
             </div>
           </Space>
         </Form.Item>

@@ -57,8 +57,6 @@ export default function OvertimeChart() {
 
   if (myData) {
     data = toDayOvertimeHourPair(myData);
-
-    console.log(data);
   }
 
   return (

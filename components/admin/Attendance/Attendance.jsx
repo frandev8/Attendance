@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { fetchAttendance, queryClient } from "../../../utils/http";
 import SearchBox from "../SearchBox";
-import OnLeave from "../TimeOff/OnTimeOff";
+import { Birthday, RecentLeaves } from "../TimeOff/OnTimeOff";
 import Accept from "./Accept";
 import styles from "./Attendance.module.css";
 import AttendanceCard from "./AttendanceCard";
@@ -40,7 +40,7 @@ const Attendance = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [triggerRerender, setTriggerRerender] = useState(false);
 
-  const adminId = useSelector((state)=> state.admin.adminId)
+  const adminId = useSelector((state) => state.admin.adminId);
 
   const [isFilterOpen, setFilterOpen] = useState(false);
 
@@ -177,9 +177,11 @@ const Attendance = () => {
             )}
           </Container>
         </div>
-        <div className={`${styles.birthday} tw-border-2 tw-border-black`}>
+        <div className={`${styles.birthday} `}>
           {" "}
-          <OnLeave />
+          <Birthday />
+          <RecentLeaves />
+          {/* <OnLeave /> */}
         </div>
       </Container>
     </>

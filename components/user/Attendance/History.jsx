@@ -1,13 +1,18 @@
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import { Divider, Empty } from "antd";
+import { Divider, Empty, Spin } from "antd";
 import { useRef, useState } from "react";
+import { fetchAttendanceByDate } from "../../../utils/http";
 import AttendanceTrend from "../../admin/Dashboard/Deposits";
 import Copyright from "../../combine/logsComponents/CopyRight";
+
+import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 import DashboardTimeline from "../Dashboard/DashboardTimeline";
 import AttendanceList from "./AttendanceList";
 import { AttendanceStats2, AttendanceStats3 } from "./AttendanceStats";
+
 import AttendanceStats from "./AttendanceStatsHistory";
 import BreakChart from "./BreakChart";
 import { AttendanceCalendar, CalendarAttendanceTimeline } from "./Calender";
@@ -15,10 +20,25 @@ import styles from "./History.module.css";
 import OvertimeChart from "./OvertimeChart";
 
 function AttendanceHistory() {
-  const attendanceData = useRef([]);
+  const attendanceData = useRef(null);
   const [triggerRerender, setTriggerRerender] = useState(false);
+  const [currentDate, setCurrentDate] = useState(new Date());
 
-  console.log(attendanceData.current, "current");
+  const userId = useSelector((state) => {
+    return state.user.userId;
+  });
+
+  const {
+    data,
+    isPending,
+    error: todayError,
+    isError: isTodayError,
+  } = useQuery({
+    queryKey: ["attendance", { type: "today" }],
+    queryFn: () => fetchAttendanceByDate({ id: userId, date: currentDate }),
+    gcTime: 0,
+  });
+
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <div className={`${styles.container} tw-h-full tw-w-full`} id="container">
@@ -27,9 +47,7 @@ function AttendanceHistory() {
           <div
             className={`tw-flex tw-gap-3 ${styles.block1} tw-mt-[25px] tw-mb-[25px] tw-justify-between`}
           >
-            <div
-              className={`${styles.box} ${styles.item1} tw-h-inherit tw-border-2 tw-border-black`}
-            >
+            <div className={`${styles.box} ${styles.item1} tw-h-inherit `}>
               <Paper
                 sx={{
                   width: "100%",
@@ -44,7 +62,7 @@ function AttendanceHistory() {
               <Paper
                 sx={{
                   width: "100%",
-                  backgroundColor: "#F4F6FA",
+                  // backgroundColor: "#F4F6FA",
                 }}
                 elevation={0}
               >
@@ -58,7 +76,6 @@ function AttendanceHistory() {
                   display: "flex",
                   flexDirection: "column",
                   height: "100%",
-                  backgroundColor: "#F4F6FA",
                 }}
                 elevation={0}
               >
@@ -67,9 +84,18 @@ function AttendanceHistory() {
                     // setDateData={setDateData}
                     attendanceData={attendanceData}
                     triggerRerender={setTriggerRerender}
+                    currentDate={currentDate}
+                    setCurrentDate={setCurrentDate}
+                    todayData={data}
                   />
                   <Divider style={{ marginTop: "15px", marginBottom: "0px" }} />
-                  {!attendanceData?.current.length ? (
+
+                  {isPending ? (
+                    <div className="tw-flex tw-justify-center tw-items-center tw-h-[70%] ">
+                      {" "}
+                      <Spin />
+                    </div>
+                  ) : !attendanceData?.current ? (
                     <div className="tw-flex tw-justify-center tw-items-center tw-h-[70%] ">
                       <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
                     </div>
@@ -84,9 +110,9 @@ function AttendanceHistory() {
           </div>
           {/* block 2 */}
           <div
-            className={` tw-flex tw-gap-3 ${styles.block2} tw-mt-[25px] tw-mb-[25px] tw-justify-between`}
+            className={` tw-flex tw-gap-3 ${styles.block2} tw-mt-[25px] tw-mb-[25px] tw-justify-between tw-bg-[#F4F6FA] tw-p-4 `}
           >
-            <div className={`${styles.box} ${styles.item4} `}>
+            <div className={`${styles.box} ${styles.item4}  `}>
               {" "}
               <Paper
                 sx={{
@@ -94,7 +120,6 @@ function AttendanceHistory() {
                   display: "flex",
                   flexDirection: "column",
                   height: 350.23,
-                  backgroundColor: "#F4F6FA",
                 }}
                 elevation={0}
               >
@@ -111,7 +136,6 @@ function AttendanceHistory() {
                   flexDirection: "column",
                   height: 350.23,
                   overflow: "hidden",
-                  backgroundColor: "#F4F6FA",
                 }}
                 elevation={0}
               >
@@ -121,7 +145,7 @@ function AttendanceHistory() {
           </div>
         </div>
 
-        <div className={`${styles.box} ${styles.item6}`}>
+        <div className={`${styles.box} ${styles.item6} tw-bg-[#F4F6FA] tw-p-4`}>
           {" "}
           <Paper
             sx={{
@@ -129,7 +153,6 @@ function AttendanceHistory() {
               display: "flex",
               flexDirection: "column",
               height: "100%",
-              backgroundColor: "#F4F6FA",
             }}
             elevation={0}
           >

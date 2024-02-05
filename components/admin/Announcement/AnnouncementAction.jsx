@@ -9,13 +9,12 @@ export const AnnouncementAction = ({
   setModalDetails,
   data,
   isPending,
-  deleteAnnouncement,
+  delNotification,
 }) => {
   const [isModalOpen, setOpen] = useState(false);
 
   function onEditAnnouncementHandler() {
     openModal(true);
-
     // console.log(data, "mydata");
     setModalDetails(data);
   }
@@ -28,8 +27,8 @@ export const AnnouncementAction = ({
     setOpen(false);
   };
 
-  const confirmClockIn = () => {
-    deleteAnnouncement({ id: data._id });
+  const confirmDeletion = () => {
+    delNotification(data._id);
     hideModal();
   };
 
@@ -49,19 +48,23 @@ export const AnnouncementAction = ({
       </ul>
 
       <Modal
-        title="Clock in"
+        title="Announcement"
         open={isModalOpen}
         onCancel={hideModal}
         footer={(_, { CancelBtn }) => (
           <div className="tw-flex">
             <CancelBtn />
-            <Button className="tw-bg-[#0000ff]" onClick={confirmClockIn}>
+            <Button
+              className="tw-h-8 tw-text-white"
+              style={{ backgroundColor: "#5295E3" }}
+              onClick={confirmDeletion}
+            >
               {isPending ? <Spin /> : "Yes"}
             </Button>
           </div>
         )}
       >
-        <p>Are you sure you want to clock in?</p>
+        <p>Are you sure you want to delete announcement?</p>
       </Modal>
     </>
   );

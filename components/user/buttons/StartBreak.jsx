@@ -2,12 +2,16 @@ import { ArrowDownward, ArrowUpward } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
 import { useMutation } from "@tanstack/react-query";
 import { Button, Modal, Progress, Spin } from "antd";
-import React, { useState } from "react";
+import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { saveBreakTime, saveBreakTokenCookie } from "../../../utils/auth";
-import { mutateBreak } from "../../../utils/http";
+import { fetchAutoEndBreakAttendance, mutateBreak } from "../../../utils/http";
 
-function StartBreak({ setBreakActive }) {
+function StartBreak({
+  setBreakActive,
+  autoEndBreakRef,
+  autoEndBreakIntervalRef,
+}) {
   const userId = useSelector((state) => {
     return state.user.userId;
   });
@@ -22,6 +26,14 @@ function StartBreak({ setBreakActive }) {
       hideBreakModal();
       saveBreakTokenCookie(breakToken);
       saveBreakTime(breakTime);
+
+      if (autoEndBreakIntervalRef.current) {
+        clearInterval(autoEndBreakIntervalRef.current);
+      }
+
+      autoEndBreakIntervalRef.current = setInterval(() => {
+        autoEndBreakRef.current = fetchAutoEndBreakAttendance({ id: userId });
+      }, 2 * 1000);
     },
   });
 
@@ -56,7 +68,7 @@ function StartBreak({ setBreakActive }) {
         footer={(_, { CancelBtn }) => (
           <div className="tw-flex">
             <CancelBtn />
-            <Button className="tw-bg-[#DBE9F9]" onClick={onStartBreakHandler}>
+            <Button className="tw-bg-[#5295E3]" onClick={onStartBreakHandler}>
               {isPending ? <Spin /> : "Yes"}
             </Button>
           </div>

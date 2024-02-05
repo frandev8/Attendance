@@ -21,10 +21,8 @@ function CalenderDate({
   const modifiedCalenderDate = setDateOnly(
     currentDate,
     currentDate.getDay() === 0
-      ? parseInt(format(addDays(currentDate, index - 6), "d"))
-      : parseInt(
-          format(addDays(currentDate, index - currentDate.getDay() + 1), "d")
-        )
+      ? addDays(currentDate, index - 6).getDate()
+      : addDays(currentDate, index - currentDate.getDay() + 1).getDate()
   );
 
   const match = areDatesEqual(modifiedCalenderDate, todayDate);
@@ -39,6 +37,7 @@ function CalenderDate({
   const isSelected = selected ? "select" : "";
 
   const onHandleDateClick = (e) => {
+
     mutateDate({ id: userId, date: modifiedCalenderDate });
 
     selectDate(parseInt(e.target.innerHTML));

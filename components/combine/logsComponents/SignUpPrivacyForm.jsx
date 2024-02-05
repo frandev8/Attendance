@@ -108,7 +108,7 @@ function SignUpPrivacy() {
               message: "Please input your password!",
             },
             {
-              pattern: /^(?=.*[0-9])(?=.*[A-Z]).*$/,
+              pattern: /^(?=.{8,})(?=.*[0-9])(?=.*[A-Z]).*$/,
               message:
                 "Password must contain at least one number and one capital letter.",
             },

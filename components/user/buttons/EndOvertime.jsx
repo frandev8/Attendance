@@ -54,7 +54,7 @@ function EndOvertime({ setOvertimeUnActive }) {
         footer={(_, { CancelBtn }) => (
           <div className="tw-flex">
             <CancelBtn />
-            <Button className="tw-bg-[#0000ff]" onClick={onEndOvertimeHandler}>
+            <Button className="tw-bg-[#5295E3]" onClick={onEndOvertimeHandler}>
               Yes{" "}
             </Button>
           </div>

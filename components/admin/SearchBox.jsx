@@ -43,18 +43,17 @@ function SearchBox({
         // allowClear
         onSearch={onSearch}
         enterButton={
-          <Button style={{ background: "blue", color: "white" }}>
+          <Button style={{ background: "#5295E3", color: "white" }}>
             <SearchOutlined />
           </Button>
         }
         value={userInput}
         style={{
           width: "200px",
-          borderColor: "white", // White outline color
         }}
         onChange={onChangeHandler}
         onKeyUp={onPressHandler}
-        className="tw-md:hidden"
+        className="tw-h-full"
         addonBefore={
           userInput.trim() ? <CloseCircleOutlined onClick={onClear} /> : ""
         }

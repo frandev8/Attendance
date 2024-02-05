@@ -9,7 +9,7 @@ function ClockInReader() {
   return (
     <ul className="tw-max-sm:text-ssm tw-md:text-sm tw-text-center">
       <li className="tw-flex tw-items-center">
-        <FiberManualRecordIcon fontSize="15px" color="#ff00ff" />{" "}
+        <FiberManualRecordIcon fontSize="15px" color="#5295E3" />{" "}
         <span className="max-[540px]:tw-text-ssm  min-[541px]:tw-text-sm min-[1090px]:tw-text-[15px]">
           clock in
         </span>

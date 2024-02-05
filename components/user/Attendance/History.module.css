@@ -10,12 +10,13 @@
 }
 
 .block1 {
-  border: 2px solid black;
+  /* border: 2px solid black; */
   flex-direction: column;
+  padding: 16px;
+  background: #f4f6fa;
 }
 
 .block2 {
-  border: 2px solid blue;
   flex-direction: column;
 }
 
@@ -173,7 +174,6 @@
 @media (min-width: 1090px) {
   .wrapper {
     flex-direction: row-reverse;
-    border: 2px solid rgb(181, 48, 48);
   }
 
   .block1 {

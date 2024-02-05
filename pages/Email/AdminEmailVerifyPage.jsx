@@ -6,64 +6,14 @@ import {
   useSubmit,
 } from "react-router-dom";
 
+import { adminRegisterVerify } from "@/utils/http";
 import EmailIcon from "@mui/icons-material/Email";
-import { Button, Result } from "antd";
-import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Button, Result, Spin } from "antd";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import styles from "./AdminEmailVerifyPage.module.css";
 import TokenInput from "./TokenInput";
-
-export function AdminEmailVerifyPage() {
-  const submit = useSubmit();
-  const params = useParams();
-  const navigate = useNavigate();
-
-  async function confirmEmailHandler() {
-    const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
-
-    const response = await fetch(
-      `${serverURL}/admin/verify/${params.id}/${params.token}`
-    );
-
-    if (!response.ok) {
-      throw json({ msg: "Couldn't fetch data" }, { status: 500 });
-    }
-
-    alert(await response.json());
-
-    navigate("/");
-  }
-
-  function resendEmailHandler() {
-    submit({ key: true }, { method: "get" });
-  }
-
-  return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h1>Email Confirmation</h1>
-      </div>
-
-      <div className={styles.body}>
-        <p>
-          Thank you for signing up for our newsletter! Please click the button
-          below to confirm your email address.
-        </p>
-
-        <a href="#" className={styles.btn} onClick={confirmEmailHandler}>
-          Confirm Email
-        </a>
-
-        <a href="#" className={styles.btn} onClick={resendEmailHandler}>
-          Resend Email
-        </a>
-      </div>
-
-      <div className={styles.footer}>
-        <p>If you have any questions, please don't hesitate to contact us.</p>
-      </div>
-    </div>
-  );
-}
 
 export async function action({ request, params }) {
   const data = await request.formData();
@@ -87,23 +37,75 @@ export async function action({ request, params }) {
   }
 }
 
-const AdminEmailVerification = () => (
-  <Result
-    icon={<EmailIcon />}
-    title="Email Verification"
-    subTitle="Please check your inbox and enter the verification code below to verify your email address. It will expire in the future."
-    extra={
-      <>
-        <TokenInput />
-        <Button type="primary" key="console">
-          Verify
-        </Button>
-        <div>
-          <Button type="link">Resend Code</Button>
-          <Button type="link">Change email</Button>
-        </div>
-      </>
+const AdminEmailVerification = () => {
+  const [enteredPin, setPin] = useState(["", "", "", "", ""]);
+  const [isVerifyBtnActive, setVerifyBtn] = useState(false);
+  const [isQueryEnabled, setQueryActiveness] = useState(false);
+
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const { id, token } = useParams();
+
+  const formValue = enteredPin.join("");
+
+  const { data, isPending } = useQuery({
+    queryKey: ["admin", { type: "email" }],
+    queryFn: () => adminRegisterVerify({ id, token, pin: formValue }),
+    enabled: isQueryEnabled,
+  });
+
+  useEffect(() => {
+    const mode = searchParams.get("mode");
+    const pin = searchParams.get("pin");
+
+    if (mode === "auto" && pin) {
+      try {
+        const results = adminRegisterVerify({ id, token, pin });
+
+        if (results) {
+          navigate(`../register/admin/verify/success/${id}/${token}`);
+        }
+      } catch (e) {
+        // navigate(`../../error/${id}`);
+      }
     }
-  />
-);
+    if (data) {
+      navigate(`../register/admin/verify/success/${id}/${token}`);
+    }
+  }, [searchParams, navigate, id, token, data]);
+
+  function onVerifyHandler() {
+    setQueryActiveness(true);
+  }
+
+  return (
+    <Result
+      icon={<EmailIcon />}
+      title="Email Verification"
+      className={styles.results}
+      subTitle="Please check your inbox and enter the verification code below to verify your email address. It will expire in the future."
+      extra={
+        <>
+          <TokenInput
+            token={enteredPin}
+            setToken={setPin}
+            setVerifyBtn={setVerifyBtn}
+          />
+          <Button
+            key="console"
+            className="tw-w-[80px] tw-my-[10px]"
+            disabled={!isVerifyBtnActive}
+            onClick={onVerifyHandler}
+          >
+            {isPending && isQueryEnabled ? <Spin size="small" /> : "Verify"}
+          </Button>
+          <div className="tw-flex tw-w-full tw-justify-between">
+            <Button type="link">Resend Code</Button>
+            <Button type="link">Change email</Button>
+          </div>
+        </>
+      }
+    />
+  );
+};
 export default AdminEmailVerification;

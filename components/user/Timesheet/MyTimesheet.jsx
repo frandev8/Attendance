@@ -1,23 +1,34 @@
 import { getDurationBetweenDates } from "@/utils/date";
 import { getUserClockinLoc } from "@/utils/location";
+import { capitalizeFirstLetter } from "@/utils/typography";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import PlaceIcon from "@mui/icons-material/Place";
 import Alert from "@mui/material/Alert";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Modal, Progress, Spin, message } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import {
+  deleteBreakTokenCookie,
   deleteClockInTokenCookie,
+  deleteClockOutTokenCookie,
+  deleteOvertimeTokenCookie,
   getBreakTokenCookie,
   getClockInTokenCookie,
   getOvertimeTokenCookie,
   saveClockInTime,
   saveClockInTokenCookie,
   saveClockOutTime,
+  saveClockOutTokenCookie,
 } from "../../../utils/auth";
-import { clockIn, clockOut } from "../../../utils/http";
+import {
+  clockIn,
+  clockOut,
+  fetchAutoClockOutAttendance,
+  fetchEmployeesById,
+  queryClient,
+} from "../../../utils/http";
 import EndBreak from "../buttons/EndBreak";
 import EndOvertime from "../buttons/EndOvertime";
 import StartBreak from "../buttons/StartBreak";
@@ -31,16 +42,57 @@ import OvertimeReader from "./OvertimeReader";
 function MyTimeSheet() {
   const [clockInTimeElapse, setClockInElapse] = useState(null);
 
+  const autoClockOutIntervalRef = useRef(null);
   const intervalIdRef = useRef(null);
+  const autoClockOutRef = useRef(null);
+  const autoEndOvertimeRef = useRef(null);
+  const autoEndBreakRef = useRef(null);
+  const autoEndBreakIntervalRef = useRef(null);
+  const autoEndOvertimeIntervalRef = useRef(null);
 
-  const updateTime = (clockInTime) => {
+  const userId = useSelector((state) => state.user.userId);
+
+  const { data: personalData } = useQuery({
+    queryKey: ["employee", { details: "personal" }],
+    queryFn: () => fetchEmployeesById({ id: userId }),
+  });
+
+  const updateTime = async (clockInTime) => {
     const now = new Date();
 
     const timeString = getDurationBetweenDates(clockInTime, now);
-    // console.log("called!", timeString);
 
     setClockInElapse(timeString);
     // Update the element displaying the time
+
+    if (autoEndBreakRef.current) {
+      await autoEndBreakRef.current.then(() => {
+        deleteBreakTokenCookie();
+        clearInterval(autoEndBreakIntervalRef.current);
+        autoEndBreakRef.current = null;
+      });
+    }
+
+    if (autoClockOutRef.current) {
+      await autoClockOutRef.current.then((result) => {
+        saveClockOutTokenCookie(result.clockOutToken);
+        deleteClockInTokenCookie();
+        clearInterval(intervalIdRef.current);
+        clearInterval(autoClockOutIntervalRef.current);
+
+        saveClockOutTime(result.clockOutTime);
+        autoClockOutRef.current = null;
+      });
+    }
+
+    if (autoEndOvertimeRef.current) {
+      await autoEndOvertimeRef.current.then((result) => {
+        deleteOvertimeTokenCookie();
+        deleteClockOutTokenCookie();
+        clearInterval(autoEndOvertimeIntervalRef.current);
+        autoEndOvertimeRef.current = null;
+      });
+    }
   };
 
   const [isButtonActive, setButtonActive] = useState({
@@ -127,6 +179,10 @@ function MyTimeSheet() {
 
       saveClockInTokenCookie(clockInToken);
       saveClockInTime(attendance.clockInTime);
+
+      autoClockOutIntervalRef.current = setInterval(() => {
+        autoClockOutRef.current = fetchAutoClockOutAttendance({ id });
+      }, 10 * 1000);
     },
   });
 
@@ -147,7 +203,9 @@ function MyTimeSheet() {
         clearInterval(intervalIdRef.current); // Clear existing timer if any
       }
 
+      saveClockOutTokenCookie(data.clockOutToken);
       deleteClockInTokenCookie();
+      deleteBreakTokenCookie();
       saveClockOutTime(data.clockOutTime);
     },
   });
@@ -220,7 +278,9 @@ function MyTimeSheet() {
     >
       <div className="tw-text-center">
         <p className="max-sm:tw-text-ssm md:tw-text-sm">Mon, 09 Jan 2023</p>
-        <h3 className="max-sm:tw-text-sbase md:tw-text-base">Hello, James</h3>
+        <h3 className="max-sm:tw-text-sbase md:tw-text-base">
+          Hello, {capitalizeFirstLetter(personalData.firstname)}
+        </h3>
       </div>
       <div>
         <Progress
@@ -241,12 +301,20 @@ function MyTimeSheet() {
       </div> */}
       <div className="tw-w-full tw-flex tw-justify-between">
         {!isButtonActive.overtime ? (
-          <StartOvertime setOvertimeActive={setOvertimeActive} />
+          <StartOvertime
+            setOvertimeActive={setOvertimeActive}
+            autoEndOvertimeRef={autoEndOvertimeRef}
+            autoEndOvertimeIntervalRef={autoEndOvertimeIntervalRef}
+          />
         ) : (
           <EndOvertime setOvertimeUnActive={setOvertimeUnActive} />
         )}
         {!isButtonActive.break ? (
-          <StartBreak setBreakActive={setBreakActive} />
+          <StartBreak
+            setBreakActive={setBreakActive}
+            autoEndBreakRef={autoEndBreakRef}
+            autoEndBreakIntervalRef={autoEndBreakIntervalRef}
+          />
         ) : (
           <EndBreak setBreakUnActive={setBreakUnActive} />
         )}
@@ -268,7 +336,7 @@ function MyTimeSheet() {
       <div>
         {!isButtonActive.clockIn ? (
           <Button
-            className=" tw-bg-[#0000ff]"
+            className=" tw-bg-[#5295E3]"
             type="primary"
             size={"medium"}
             onClick={showClockInModal}
@@ -293,7 +361,7 @@ function MyTimeSheet() {
           footer={(_, { CancelBtn }) => (
             <div className="tw-flex">
               <CancelBtn />
-              <Button className="tw-bg-[#0000ff]" onClick={confirmClockIn}>
+              <Button className="tw-bg-[#5295E3]" onClick={confirmClockIn}>
                 Yes{" "}
               </Button>
             </div>
@@ -308,7 +376,7 @@ function MyTimeSheet() {
           footer={(_, { CancelBtn }) => (
             <div className="tw-flex">
               <CancelBtn />
-              <Button className="tw-bg-[#0000ff]" onClick={confirmClockOut}>
+              <Button className="tw-bg-[#5295E3]" onClick={confirmClockOut}>
                 Yes{" "}
               </Button>
             </div>
@@ -320,67 +388,5 @@ function MyTimeSheet() {
     </div>
   );
 }
-
-// <span>Timesheet</span>
-// <div className="mb-[5px] text-center">
-//   <span>{now}</span>
-// </div>
-// <div>
-//   {(data || isError) && (
-//     <Alert
-//       variant="outlined"
-//       severity={isError || isClockOutError ? "error" : "success"}
-//       className="mb-[5px]"
-//     >
-//       {content}
-//     </Alert>
-//   )}
-// </div>
-// <div className="w-full flex flex-col items-center justify-around border-2 border-black mb-[5px]">
-//   <Progress
-//     type="circle"
-//     size={80}
-//     percent={workRate}
-//     format={(percent) => ` 3.4 hrs`}
-//     className="mb-[5px]"
-//   />
-
-//   {!isClockActive ? (
-//     <Button
-//       className="w-[40%] bg-[#00ff00]"
-//       type="primary"
-//       size={"medium"}
-//       onClick={onClockInHandler}
-//     >
-//       {isPending ? <Spin /> : "Clock in"}
-//     </Button>
-//   ) : (
-//     <Button
-//       className="w-[40%]  bg-[#ff0000]"
-//       onClick={onClockOutHandler}
-//       type="primary"
-//       size={"medium"}
-//     >
-//       {isClockOutPending ? <Spin /> : "Clock out"}
-//     </Button>
-//   )}
-// </div>
-
-// <div className="w-full flex justify-between items-center">
-//   <div>
-//     Break
-//     <div className="flex">
-//       <StartBreak />
-//       <EndBreak />
-//     </div>
-//   </div>
-//   <div>
-//     Overtime
-//     <div className="flex">
-//       <StartOvertime />
-//       <EndOvertime />
-//     </div>
-//   </div>
-// </div>
 
 export default MyTimeSheet;

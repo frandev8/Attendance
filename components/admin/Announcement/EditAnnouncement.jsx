@@ -39,7 +39,6 @@ const ModalOverlay = ({ closeModal, announcementDetails }) => {
     mutationFn: mutateAnnouncement,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["announcement"] });
-      navigate("./");
     },
   });
 
@@ -209,9 +208,15 @@ const SubmitButton = ({ form, hasFormChanged, isPending }) => {
   }, [values, message, title, form]);
 
   return (
-    <Button htmlType="submit" disabled={!submittable}>
-      {isPending ? <Spin /> : "Update"}
-    </Button>
+    <div className="tw-bg-[#f5f3f3] tw-w-full tw-rounded-lg">
+      <Button
+        htmlType="submit"
+        className="tw-bg-[#5295E3]"
+        disabled={!submittable}
+      >
+        {isPending ? <Spin /> : "Update"}
+      </Button>
+    </div>
   );
 };
 

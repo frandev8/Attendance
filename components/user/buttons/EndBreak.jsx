@@ -55,7 +55,7 @@ function EndBreak({ setBreakUnActive }) {
         footer={(_, { CancelBtn }) => (
           <div className="tw-flex">
             <CancelBtn />
-            <Button className="tw-bg-[#0000ff]" onClick={onEndBreakHandler}>
+            <Button className="tw-bg-[#5295E3]" onClick={onEndBreakHandler}>
               Yes{" "}
             </Button>
           </div>

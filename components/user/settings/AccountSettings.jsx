@@ -1,16 +1,11 @@
-import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import Box from "@mui/material/Box";
-// import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
-import Stack from "@mui/material/Stack";
-// import { Input, Space } from "antd";
 import {
   fetchEmployeesById,
   mutateEmployeePersonalDetails,
   queryClient,
 } from "@/utils/http";
+import Divider from "@mui/material/Divider";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, Form, Input, Select, Space } from "antd";
+import { Button, Form, Input, Modal, Select, Space, Spin } from "antd";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -19,7 +14,7 @@ import UploadImage from "./UploadImage";
 
 const { Option } = Select;
 
-const SubmitButton = ({ form, hasFormChanged }) => {
+const SubmitButton = ({ form, hasFormChanged, showModal }) => {
   const [submittable, setSubmittable] = useState(false);
 
   const { firstname, lastname, email, username, phone } = hasFormChanged;
@@ -46,16 +41,8 @@ const SubmitButton = ({ form, hasFormChanged }) => {
       );
   }, [values, lastname, firstname, email, username, phone, form]);
 
-  function onUpdateEmployeeInfoHandler() {
-    console.log(values, "values");
-  }
-
   return (
-    <Button
-      htmlType="submit"
-      disabled={!submittable}
-      onClick={onUpdateEmployeeInfoHandler}
-    >
+    <Button onClick={showModal} disabled={!submittable}>
       Update
     </Button>
   );
@@ -65,6 +52,7 @@ function AccountSettings() {
   const [form] = Form.useForm();
 
   const [isFormChanged, setFormMode] = useState(false);
+  const [isModalOpen, setOpen] = useState(false);
 
   const userId = useSelector((state) => state.user.userId);
 
@@ -85,11 +73,12 @@ function AccountSettings() {
 
   const { data, isPending, mutate, error, isError } = useMutation({
     mutationFn: mutateEmployeePersonalDetails,
-    onSuccess: (data) => {
-      
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["employee", { details: "personal" }],
       });
+      setFormMode(false);
+      hideModal();
     },
   });
 
@@ -140,7 +129,15 @@ function AccountSettings() {
 
   const onFinish = (values) => {
     const formData = { formData: values };
-    mutate({ formData, id: personalData._id });
+    mutate({ formData, id: personalData._id, mutatedFields: isFormChanged });
+  };
+
+  const showModal = () => {
+    setOpen(true);
+  };
+
+  const hideModal = () => {
+    setOpen(false);
   };
 
   const prefixSelector = (
@@ -244,7 +241,11 @@ function AccountSettings() {
 
           <Form.Item>
             <Space>
-              <SubmitButton form={form} hasFormChanged={isFormChanged} />
+              <SubmitButton
+                form={form}
+                hasFormChanged={isFormChanged}
+                showModal={showModal}
+              />
               <Button htmlType="reset" to="./">
                 Reset
               </Button>
@@ -252,6 +253,25 @@ function AccountSettings() {
           </Form.Item>
         </Form>
       </div>
+      <Modal
+        title="Clock in"
+        open={isModalOpen}
+        onCancel={hideModal}
+        footer={(_, { CancelBtn }) => (
+          <div className="tw-flex">
+            <CancelBtn />
+            <Button
+              className="tw-bg-[#5295E3]"
+              form={form}
+              onClick={() => onFinish(form.getFieldValue())}
+            >
+              {isPending ? <Spin /> : "Yes"}
+            </Button>
+          </div>
+        )}
+      >
+        <p>Are you sure you want to update profile?</p>
+      </Modal>
     </div>
   );
 }
@@ -260,4 +280,6 @@ export default AccountSettings;
 
 SubmitButton.propTypes = {
   hasFormChanged: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
+  form: PropTypes.object,
+  showModal: PropTypes.func,
 };

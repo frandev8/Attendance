@@ -24,12 +24,11 @@ function Messages() {
   }
 
   function closeAnnouncementModal() {
-    console.log("clicked");
     setAnnounceModalStatus(false);
   }
 
   const onChange = (key) => {
-    console.log(key);
+    
   };
   const items = [
     {

@@ -6,7 +6,7 @@ import { useSearchParams } from "react-router-dom";
 
 import Grid from "@mui/material/Grid";
 
-import { getPageBanner } from "@/utils/http";
+import { getMediaLogo, getPageBanner } from "@/utils/http";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -52,6 +52,14 @@ export function IdentityController() {
     queryKey: ["photo", { key: "cover" }],
     queryFn: () => getPageBanner({ id: "65852eb55f470300be649aaa" }),
     staleTime: 0,
+    gcTime: 0,
+  });
+
+  const { data: logo, isPending: isLogoPending } = useQuery({
+    queryKey: ["photo", { key: "logo" }],
+    queryFn: () => getMediaLogo({ id: "65b69d2c6b1a815476ff6d14" }),
+    staleTime: 0,
+    gcTime: 0,
   });
 
   return (
@@ -96,12 +104,17 @@ export function IdentityController() {
                   alignItems: "center",
                 }}
               >
-                <Typography component="h1" variant="h5">
+                <img
+                  src={logo ? logo.url : "../src/assets/images/Kasapa.png"}
+                  className="tw-h-[200px]"
+                  alt=""
+                />
+                {/* <Typography component="h1" variant="h5">
                   Kasapa Media
-                </Typography>
-                <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+                </Typography> */}
+                {/* <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
                   <LockOutlinedIcon />
-                </Avatar>
+                </Avatar> */}
 
                 <Outlet />
               </Box>

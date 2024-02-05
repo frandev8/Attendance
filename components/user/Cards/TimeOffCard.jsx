@@ -51,7 +51,7 @@ export function TimeOffCard2({ typeOfLeave, limit, used, isPending }) {
           type="circle"
           percent={usedPercentage}
           size={60}
-          strokeColor={"green"}
+          strokeColor={"#42CB65"}
           format={(percent) => {
             if (isPending) {
               return <Spin size="small" />;

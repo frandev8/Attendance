@@ -1,12 +1,12 @@
+import { getColorBasedOnStatus } from "@/utils/colors";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Timeline } from "antd";
+import { Spin, Timeline } from "antd";
 import { addDays, format } from "date-fns";
 import moment from "moment";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import {
   calculateTimeBetween,
   formatAttendanceDateTitle,
@@ -14,7 +14,12 @@ import {
 import { fetchAttendanceByDate } from "../../../utils/http";
 import CalenderDate from "./CalenderDate";
 export function CalendarAttendanceTimeline({ attendanceData }) {
-  const records = attendanceData.current[0];
+  const records = attendanceData.current;
+
+  const statusColor = getColorBasedOnStatus(records.status);
+
+  console.log(statusColor);
+
   return (
     <div className="tw-w-full tw-max-w-2xl tw-mx-auto  tw-overflow-hidden">
       <div>
@@ -73,7 +78,7 @@ export function CalendarAttendanceTimeline({ attendanceData }) {
                 Status
               </h3>
             </div>
-            <p className="tw-text-green-600">{records.status}</p>
+            <p className={`tw-text-[${statusColor}]`}>{records.status}</p>
           </div>
         </div>
       </div>
@@ -81,14 +86,14 @@ export function CalendarAttendanceTimeline({ attendanceData }) {
   );
 }
 
-export function AttendanceCalendar({ attendanceData, triggerRerender }) {
-  const [currentDate, setCurrentDate] = useState(new Date());
-
+export function AttendanceCalendar({
+  attendanceData,
+  triggerRerender,
+  currentDate,
+  todayData,
+  setCurrentDate,
+}) {
   const [selectedDate, setSelectedDate] = useState(0);
-
-  const userId = useSelector((state) => {
-    return state.user.userId;
-  });
 
   const { data, isPending, mutate, error, isError } = useMutation({
     mutationFn: fetchAttendanceByDate,
@@ -99,20 +104,9 @@ export function AttendanceCalendar({ attendanceData, triggerRerender }) {
       triggerRerender((prevRerender) => !prevRerender);
     },
     onError: () => {
-      console.log("my data");
-      attendanceData.current = [];
+      attendanceData.current = null;
       triggerRerender((prevRerender) => !prevRerender);
     },
-  });
-
-  const {
-    data: todayData,
-    isPending: isTodayPending,
-    error: todayError,
-    isError: isTodayError,
-  } = useQuery({
-    queryKey: ["attendance", { type: "today" }],
-    queryFn: () => fetchAttendanceByDate({ id: userId, date: currentDate }),
   });
 
   useEffect(() => {
@@ -134,50 +128,52 @@ export function AttendanceCalendar({ attendanceData, triggerRerender }) {
   const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   return (
-    <div className="tw-flex tw-flex-col tw-items-center  tw-w-full ">
-      <div className="tw-flex tw-justify-between tw-items-center tw-mb-4  tw-w-full ">
-        <p className="tw-text-lg tw-font-bold">{formattedDate}</p>
-        <div
-          className="tw-flex tw-items-center tw-space-x-2  
+    <>
+      <div className="tw-flex tw-flex-col tw-items-center  tw-w-full ">
+        <div className="tw-flex tw-justify-between tw-items-center tw-mb-4  tw-w-full ">
+          <p className="tw-text-lg tw-font-bold">{formattedDate}</p>
+          <div
+            className="tw-flex tw-items-center tw-space-x-2  
        "
-        >
-          <button
-            onClick={handlePreviousWeek}
-            className="tw-w-[30px] tw-h-[30px] tw-rounded-full tw-bg-[#dbe9f9] tw-flex tw-justify-center tw-items-center"
           >
-            <ArrowBackIosIcon
-              style={{ fontSize: "18px", color: "#5295e3" }}
-              className="tw-relative tw-left-1"
-            />
-          </button>
-          <button
-            onClick={handleNextWeek}
-            className="tw-w-[30px] tw-h-[30px]  tw-rounded-full tw-bg-[#dbe9f9]"
-          >
-            <ArrowForwardIosIcon
-              style={{ fontSize: "18px", color: "#5295e3" }}
-            />
-          </button>
-        </div>
-      </div>
-
-      <ul className="tw-flex tw-justify-between tw-w-full">
-        {daysOfWeek.map((day, index) => (
-          <li key={index} className="tw-text-center">
-            <ul>
-              <li> {day}</li>
-              <CalenderDate
-                currentDate={currentDate}
-                index={index}
-                mutateDate={mutate}
-                selectDate={setSelectedDate}
-                selectedDate={selectedDate}
+            <button
+              onClick={handlePreviousWeek}
+              className="tw-w-[30px] tw-h-[30px] tw-rounded-full tw-bg-[#dbe9f9] tw-flex tw-justify-center tw-items-center"
+            >
+              <ArrowBackIosIcon
+                style={{ fontSize: "18px", color: "#5295e3" }}
+                className="tw-relative tw-left-1"
               />
-            </ul>
-          </li>
-        ))}
-      </ul>
-    </div>
+            </button>
+            <button
+              onClick={handleNextWeek}
+              className="tw-w-[30px] tw-h-[30px]  tw-rounded-full tw-bg-[#dbe9f9]"
+            >
+              <ArrowForwardIosIcon
+                style={{ fontSize: "18px", color: "#5295e3" }}
+              />
+            </button>
+          </div>
+        </div>
+
+        <ul className="tw-flex tw-justify-between tw-w-full">
+          {daysOfWeek.map((day, index) => (
+            <li key={index} className="tw-text-center">
+              <ul>
+                <li> {day}</li>
+                <CalenderDate
+                  currentDate={currentDate}
+                  index={index}
+                  mutateDate={mutate}
+                  selectDate={setSelectedDate}
+                  selectedDate={selectedDate}
+                />
+              </ul>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
   );
 }
 

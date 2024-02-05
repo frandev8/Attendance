@@ -7,53 +7,202 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { formatAttendanceDate } from "@/utils/date";
+import {
+  deleteEmployee,
+  queryClient,
+  toggleEmployeeActiveness,
+} from "@/utils/http";
+import { useMutation } from "@tanstack/react-query";
+import { Modal, Spin } from "antd";
+import { useState } from "react";
 
 export default function EmployeeCard({ data }) {
+  const [isParalyzeModalOpen, setParalyzeOpen] = useState(false);
+  const [isDeleteModalOpen, setDeleteOpen] = useState(false);
+  const [isReviveModalOpen, setReviveOpen] = useState(false);
+
+  const { isPending: isDeletePending, mutate: delEmployee } = useMutation({
+    queryFn: deleteEmployee,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["employee", { type: "subscribed" }],
+      });
+    },
+  });
+
+  const { isPending: isDeactivatePending, mutate: deactivateEmployee } =
+    useMutation({
+      queryFn: toggleEmployeeActiveness,
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["employee", { type: "subscribed" }],
+        });
+      },
+    });
+
+  const { isPending: isActivatePending, mutate: activateEmployee } =
+    useMutation({
+      queryFn: toggleEmployeeActiveness,
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["employee", { type: "subscribed" }],
+        });
+      },
+    });
+
+  const showDeactivateModal = () => {
+    setParalyzeOpen(true);
+  };
+  const showActivateModal = () => {
+    setReviveOpen(true);
+  };
+
+  const hideDeleteModal = () => {
+    setDeleteOpen(false);
+  };
+
+  const showDeleteModal = () => {
+    setDeleteOpen(true);
+  };
+
+  const hideDeactivate = () => {
+    setParalyzeOpen(false);
+  };
+
+  const hideActivate = () => {
+    setReviveOpen(false);
+  };
+
+  const confirmDeletion = () => {
+    delEmployee({ id: data._id });
+    hideDeleteModal();
+  };
+
+  const confirmActivating = () => {
+    activateEmployee({ id: data._id, action: "activate" });
+    hideActivate();
+  };
+
+  const confirmDeactivating = () => {
+    deactivateEmployee({ id: data._id, action: "deactivate" });
+    hideDeactivate();
+  };
+
   return (
-    <Card className="tw-max-w-md tw-mx-auto">
-      <CardHeader>
-        <div className="tw-flex tw-items-center tw-gap-3">
-          <Avatar className="tw-h-14 tw-w-14">
-            <AvatarImage alt="Employee Name" src="/placeholder-avatar.jpg" />
-            <AvatarFallback>EN</AvatarFallback>
-          </Avatar>
-          <div className="tw-grid tw-gap-0.5">
-            <div className="tw-font-medium tw-text-lg">
-              {data.firstname} {data.lastname}{" "}
+    <>
+      <Card className="tw-max-w-md tw-mx-auto">
+        <CardHeader>
+          <div className="tw-flex tw-items-center tw-gap-3">
+            <Avatar className="tw-h-14 tw-w-14">
+              <AvatarImage alt="Employee Name" src="/placeholder-avatar.jpg" />
+              <AvatarFallback>EN</AvatarFallback>
+            </Avatar>
+            <div className="tw-grid tw-gap-0.5">
+              <div className="tw-font-medium tw-text-lg">
+                {data.firstname} {data.lastname}{" "}
+              </div>
+              <div className="tw-text-sm tw-text-gray-500 tw-dark:text-gray-400">
+                Position
+              </div>
             </div>
-            <div className="tw-text-sm tw-text-gray-500 tw-dark:text-gray-400">
-              Position
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="tw-grid tw-gap-2 tw-text-sm">
+            <div className="tw-flex tw-items-center tw-gap-2">
+              <MailIcon className="tw-h-5 tw-w-5 tw-text-gray-500 tw-dark:text-gray-400" />
+              <div>{data.email}</div>
+            </div>
+            <div className="tw-flex tw-items-center tw-gap-2">
+              <PhoneIcon className="tw-h-5 tw-w-5 tw-text-gray-500 tw-dark:text-gray-400" />
+              <div>+233 {data.phone}</div>
+            </div>
+            <div className="tw-flex tw-items-center tw-gap-2">
+              <CalendarIcon className="tw-h-5 tw-w-5 tw-text-gray-500 tw-dark:text-gray-400" />
+              <div>Joined on {formatAttendanceDate(data.createdAt)}</div>
             </div>
           </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="tw-grid tw-gap-2 tw-text-sm">
-          <div className="tw-flex tw-items-center tw-gap-2">
-            <MailIcon className="tw-h-5 tw-w-5 tw-text-gray-500 tw-dark:text-gray-400" />
-            <div>{data.email}</div>
+        </CardContent>
+        <CardFooter className="tw-flex tw-justify-end tw-gap-2">
+          <Button size="icon" variant="outline" onClick={showDeleteModal}>
+            <TrashIcon className="tw-h-5 tw-w-5" />
+            <span className="tw-sr-only">Delete Employee</span>
+          </Button>
+          {data.activate ? (
+            <Button size="icon" variant="outline" onClick={showDeactivateModal}>
+              <MinusCircleIcon
+                className="h-5 w-5 "
+                style={{ color: "#00ff00" }}
+              />
+              <span className="tw-sr-only">Deactivate Employee</span>
+            </Button>
+          ) : (
+            <Button size="icon" variant="outline" onClick={showActivateModal}>
+              <MinusCircleIcon
+                className="h-5 w-5 "
+                style={{ color: "#ff0000" }}
+              />
+              <span className="tw-sr-only">Activate Employee</span>
+            </Button>
+          )}
+        </CardFooter>
+      </Card>
+
+      <Modal
+        title="Notification"
+        open={isDeleteModalOpen}
+        onCancel={hideDeleteModal}
+        footer={(_, { CancelBtn }) => (
+          <div className="tw-flex">
+            <CancelBtn />
+            <Button
+              className="tw-bg-[#5295E3] tw-h-8 tw-text-white"
+              onClick={confirmDeletion}
+            >
+              {isDeletePending ? <Spin /> : "Yes"}
+            </Button>
           </div>
-          <div className="tw-flex tw-items-center tw-gap-2">
-            <PhoneIcon className="tw-h-5 tw-w-5 tw-text-gray-500 tw-dark:text-gray-400" />
-            <div>+233 {data.phone}</div>
+        )}
+      >
+        <p>Are you sure you want to remove employee?</p>
+      </Modal>
+      <Modal
+        title="Deactivate Employee"
+        open={isParalyzeModalOpen}
+        onCancel={hideDeactivate}
+        footer={(_, { CancelBtn }) => (
+          <div className="tw-flex">
+            <CancelBtn />
+            <Button
+              className="tw-bg-[#5295E3] tw-h-8 tw-text-white"
+              onClick={confirmDeactivating}
+            >
+              {isDeactivatePending ? <Spin /> : "Yes"}
+            </Button>
           </div>
-          <div className="tw-flex tw-items-center tw-gap-2">
-            <CalendarIcon className="tw-h-5 tw-w-5 tw-text-gray-500 tw-dark:text-gray-400" />
-            <div>Joined on {formatAttendanceDate(data.createdAt)}</div>
+        )}
+      >
+        <p>Are you sure you want to deactivate employee?</p>
+      </Modal>
+      <Modal
+        title="Activate Employee "
+        open={isReviveModalOpen}
+        onCancel={hideActivate}
+        footer={(_, { CancelBtn }) => (
+          <div className="tw-flex">
+            <CancelBtn />
+            <Button
+              className="tw-bg-[#5295E3] tw-h-8 tw-text-white"
+              onClick={confirmActivating}
+            >
+              {isActivatePending ? <Spin /> : "Yes"}
+            </Button>
           </div>
-        </div>
-      </CardContent>
-      <CardFooter className="tw-flex tw-justify-end tw-gap-2">
-        <Button size="icon" variant="outline">
-          <TrashIcon className="tw-h-5 tw-w-5" />
-          <span className="tw-sr-only">Delete Employee</span>
-        </Button>
-        <Button size="icon" variant="outline">
-          <MinusCircleIcon className="h-5 w-5" />
-          <span className="tw-sr-only">Deactivate Employee</span>
-        </Button>
-      </CardFooter>
-    </Card>
+        )}
+      >
+        <p>Are you sure you want to activate employee?</p>
+      </Modal>
+    </>
   );
 }
 

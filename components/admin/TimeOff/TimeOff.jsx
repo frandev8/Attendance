@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { fetchTimeOff } from "../../../utils/http";
-import { OnTimeOff } from "./OnTimeOff";
+import { RecentLeaves } from "./OnTimeOff";
 import SortTimeOff from "./SortTimeOff";
 import styles from "./TimeOff.module.css";
 import TimeOffCard from "./TimeOffCard";
@@ -162,9 +162,9 @@ export default function TimeOff() {
             )}
           </Container>
         </div>
-        <div className={`${styles.birthday} tw-border-2 tw-border-black `}>
+        <div className={`${styles.birthday}  `}>
           <div className={` tw-sticky tw-top-[90px] tw-z-[1000]`}>
-            <OnTimeOff />
+            <RecentLeaves />
           </div>
         </div>
       </Container>

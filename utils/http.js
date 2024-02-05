@@ -3,6 +3,7 @@ import {
   getAdminLoginToken,
   getBreakTokenCookie,
   getClockInTokenCookie,
+  getClockOutTokenCookie,
   getOvertimeTokenCookie,
   getUserLoginToken,
 } from "./auth";
@@ -35,8 +36,6 @@ export function register({ formData }) {
 export async function checkSignUpCredentials({ formData }) {
   const role = formData.role;
 
-  // console.log("detecting role, checking signup", formData);
-
   if (role === "employee") {
     return await checkEmployeeDuplicate({ formData });
   } else if (role === "admin") {
@@ -49,18 +48,10 @@ export async function checkSignUpCredentials({ formData }) {
  *
  */
 
-export async function fetchEmployees({ active }) {
+export async function fetchEmployees() {
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
   let url = serverURL + "/employee";
-
-  if (active) {
-    url += "?active=true";
-  }
-
-  console.log(url);
-
-  console.log("fetching for employees");
 
   const response = await fetch(url);
 
@@ -72,8 +63,6 @@ export async function fetchEmployees({ active }) {
   }
 
   const results = await response.json();
-
-  console.log(results, "results");
 
   return results;
 }
@@ -100,8 +89,6 @@ export async function fetchEmployeesById({ id }) {
 export async function logInEmployee({ formData }) {
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
-  console.log("logging in");
-
   let url = serverURL + "/employee/login";
 
   const response = await fetch(url, {
@@ -113,15 +100,14 @@ export async function logInEmployee({ formData }) {
   });
 
   if (!response.ok) {
-    const error = new Error("An error occurred while logging employee in");
+    const results = await response.json();
+
+    const error = new Error(results.msg);
     error.code = response.status;
-    error.info = await response.json();
     throw error;
   }
 
   const results = await response.json();
-
-  console.log(results, "logged in");
 
   return results;
 }
@@ -149,12 +135,31 @@ export async function registerEmployee({ formData }) {
   return results;
 }
 
+export async function employeeRegisterVerify({ id, token, pin }) {
+  const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+  const response = await fetch(
+    `${serverURL}/employee/register/verify/${id}/${token}/${pin}`
+  );
+
+  if (!response.ok) {
+    const error = new Error(
+      "An error occurred while activating employee account"
+    );
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  const results = await response.json();
+
+  return results;
+}
+
 export async function checkEmployeeDuplicate({ formData }) {
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
   let url = serverURL + "/employee/register/duplicate";
-
-  console.log(formData, "checking ...");
 
   const response = await fetch(url, {
     method: "POST",
@@ -172,7 +177,7 @@ export async function checkEmployeeDuplicate({ formData }) {
     error.info = await response.json();
     throw error;
   }
-  console.log("successful, checking");
+
   const results = await response.json();
 
   return results;
@@ -203,7 +208,11 @@ export async function changeEmployeePassword({ formData, id }) {
   return results;
 }
 
-export async function mutateEmployeePersonalDetails({ formData, id }) {
+export async function mutateEmployeePersonalDetails({
+  formData,
+  id,
+  mutatedFields,
+}) {
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
   let url = serverURL + "/employee/personal/" + id;
@@ -213,12 +222,12 @@ export async function mutateEmployeePersonalDetails({ formData, id }) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ formData }),
+    body: JSON.stringify({ ...formData, mutatedFields }),
   });
 
   if (!response.ok) {
     const error = new Error(
-      "An error occurred while changing your personal details"
+      "An error occurred while changing employee personal details"
     );
     error.code = response.status;
     error.info = await response.json();
@@ -278,6 +287,27 @@ export async function registerAdmin({ formData }) {
   }
 
   const results = await response.json();
+  return results;
+}
+
+export async function adminRegisterVerify({ id, token, pin }) {
+  const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+  const response = await fetch(
+    `${serverURL}/admin/register/verify/${id}/${token}/${pin}`
+  );
+
+  if (!response.ok) {
+    const error = new Error(
+      "An error occurred while activating admin account "
+    );
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  const results = await response.json();
+
   return results;
 }
 
@@ -346,13 +376,16 @@ export async function changeAdminPassword({ formData, id }) {
     error.info = await response.json();
     throw error;
   }
-  console.log("successful pass update");
   const results = await response.json();
 
   return results;
 }
 
-export async function mutateAdminPersonalDetails({ formData, id }) {
+export async function mutateAdminPersonalDetails({
+  formData,
+  id,
+  mutatedFields,
+}) {
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
   let url = serverURL + "/employee/personal/" + id;
@@ -362,13 +395,63 @@ export async function mutateAdminPersonalDetails({ formData, id }) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ formData }),
+    body: JSON.stringify({ ...formData, mutatedFields }),
   });
 
   if (!response.ok) {
     const error = new Error(
-      "An error occurred while changing your personal details"
+      "An error occurred while changing admin personal details"
     );
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  const results = await response.json();
+
+  return results;
+}
+
+export async function toggleEmployeeActiveness({ id, action }) {
+  const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+  let url = serverURL + "/employee/toggle-activeness/" + id;
+
+  if (action === "deactivate") {
+    url += "?action=deactivate";
+  } else if (action === "activate") {
+    url += "?action=activate";
+  }
+
+  const response = await fetch(url, {
+    method: "PATCH",
+  });
+
+  if (!response.ok) {
+    const error = new Error(
+      "An error occurred while activating/deactivating employee"
+    );
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  const results = await response.json();
+
+  return results;
+}
+
+export async function deleteEmployee({ id }) {
+  const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+  let url = serverURL + "/employee/" + id;
+
+  const response = await fetch(url, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    const error = new Error("An error occurred while deleting employee");
     error.code = response.status;
     error.info = await response.json();
     throw error;
@@ -500,6 +583,58 @@ export async function fetchBreakAttendance({ id, currentDate }) {
   return results;
 }
 
+export async function fetchAutoClockOutAttendance({ id }) {
+  const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+  let url = serverURL + "/employee/attendance/auto/clock-out/" + id;
+
+  const response = await fetch(url);
+  if (!response.ok) {
+    const error = new Error(
+      "An error occurred while fetching the auto clock out attendance"
+    );
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  const results = await response.json();
+  return results;
+}
+export async function fetchAutoEndBreakAttendance({ id }) {
+  const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+  let url = serverURL + "/employee/attendance/auto/break/" + id;
+
+  const response = await fetch(url);
+  if (!response.ok) {
+    const error = new Error(
+      "An error occurred while fetching the auto break attendance"
+    );
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  const results = await response.json();
+  return results;
+}
+export async function fetchAutoEndOvertimeAttendance({ id }) {
+  const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+  let url = serverURL + "/employee/attendance/auto/overtime/" + id;
+
+  const response = await fetch(url);
+  if (!response.ok) {
+    const error = new Error(
+      "An error occurred while fetching the auto overtime attendance"
+    );
+    error.code = response.status;
+    error.info = await response.json();
+    throw error;
+  }
+
+  const results = await response.json();
+  return results;
+}
+
 export async function fetchOvertimeAttendance({ id, currentDate }) {
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
@@ -521,7 +656,6 @@ export async function fetchOvertimeAttendance({ id, currentDate }) {
   }
 
   const results = await response.json();
-  // console.log(results);
 
   return results;
 }
@@ -577,8 +711,6 @@ export async function fetchClockInAttendance({ id }) {
 
   return results;
 }
-
-
 
 export async function fetchClockOutAttendance({ id }) {
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
@@ -719,7 +851,6 @@ export async function clockOut({ id }) {
     throw error;
   }
 
-  console.log("successful clockout");
   const results = await res.json();
 
   return results;
@@ -947,25 +1078,27 @@ export async function postTimeOff({ formData, id }) {
   return results;
 }
 
-export async function fetchTimeOff({ approved, pending }) {
+export async function fetchTimeOff({ approved, pending, filter }) {
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
   let url = serverURL + "/employee/timeOff";
 
   if (approved) {
-    url +=  "?accepted=true";
+    url += "?accepted=true";
   }
 
   if (pending) {
     url += "?pending=true";
   }
 
+  if (filter) {
+    url += `&filter=${filter}`;
+  }
+
   const response = await fetch(url);
 
   if (!response.ok) {
-    const error = new Error(
-      "An error occurred while fetching the notifications"
-    );
+    const error = new Error("An error occurred while fetching the timeOff");
     error.code = response.status;
     error.info = await response.json();
     throw error;
@@ -1218,7 +1351,7 @@ export async function mutateOvertime({ id, action, overtimeTime }) {
     url += "?mode=end";
   }
 
-  const token = getClockInTokenCookie() + "/" + getOvertimeTokenCookie();
+  const token = getClockOutTokenCookie() + "/" + getOvertimeTokenCookie();
 
   const response = await fetch(url, {
     method: "POST",
@@ -1247,7 +1380,27 @@ export async function mutateOvertime({ id, action, overtimeTime }) {
 export async function getPageBanner({ id }) {
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
-  let url = serverURL + "/banner/" + id;
+  let url = serverURL + "/media/banner" + id;
+
+  const res = await fetch(url);
+
+  if (!res.ok) {
+    const error = new Error(
+      "An error occurred while getting page banner. Try again"
+    );
+    error.code = res.status;
+    error.info = await res.json();
+    throw error;
+  }
+
+  const results = await res.json();
+  return results;
+}
+
+export async function getMediaLogo({ id }) {
+  const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+  let url = serverURL + "/media/logo" + id;
 
   const res = await fetch(url);
 

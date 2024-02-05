@@ -2,12 +2,19 @@ import { ArrowDownward, ArrowUpward } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
 import { useMutation } from "@tanstack/react-query";
 import { Button, Modal, Progress, Spin } from "antd";
-import React, { useState } from "react";
+import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { saveOvertimeTokenCookie } from "../../../utils/auth";
-import { mutateOvertime } from "../../../utils/http";
+import {
+  fetchAutoEndOvertimeAttendance,
+  mutateOvertime,
+} from "../../../utils/http";
 
-function StartOvertime({ setOvertimeActive }) {
+function StartOvertime({
+  setOvertimeActive,
+  autoEndOvertimeRef,
+  autoEndOvertimeIntervalRef,
+}) {
   const userId = useSelector((state) => {
     return state.user.userId;
   });
@@ -22,6 +29,16 @@ function StartOvertime({ setOvertimeActive }) {
       saveOvertimeTokenCookie(overtimeToken);
       setOvertimeActive();
       hideOvertimeModal();
+
+      if (autoEndOvertimeIntervalRef.current) {
+        clearInterval(autoEndOvertimeIntervalRef.current);
+      }
+
+      autoEndOvertimeIntervalRef.current = setInterval(() => {
+        autoEndOvertimeRef.current = fetchAutoEndOvertimeAttendance({
+          id: userId,
+        });
+      }, 10 * 1000);
     },
   });
 
@@ -57,7 +74,7 @@ function StartOvertime({ setOvertimeActive }) {
           <div className="tw-flex">
             <CancelBtn />
             <Button
-              className="tw-bg-[#DBE9F9]"
+              className="tw-bg-[#5295E3]"
               onClick={onStartOvertimeHandler}
             >
               Yes{" "}

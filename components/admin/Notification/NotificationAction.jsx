@@ -9,7 +9,7 @@ export const NotificationAction = ({
   setModalDetails,
   data,
   isPending,
-  deleteNotification,
+  delNotification,
 }) => {
   const [isModalOpen, setOpen] = useState(false);
 
@@ -28,8 +28,8 @@ export const NotificationAction = ({
     setOpen(false);
   };
 
-  const confirmClockIn = () => {
-    deleteNotification({ id: data._id });
+  const confirmDeletion = () => {
+    delNotification(data._id);
     hideModal();
   };
 
@@ -49,19 +49,22 @@ export const NotificationAction = ({
       </ul>
 
       <Modal
-        title="Clock in"
+        title="Notification"
         open={isModalOpen}
         onCancel={hideModal}
         footer={(_, { CancelBtn }) => (
           <div className="tw-flex">
             <CancelBtn />
-            <Button className="tw-bg-[#0000ff]" onClick={confirmClockIn}>
+            <Button
+              className="tw-bg-[#5295E3] tw-h-8 tw-text-white"
+              onClick={confirmDeletion}
+            >
               {isPending ? <Spin /> : "Yes"}
             </Button>
           </div>
         )}
       >
-        <p>Are you sure you want to clock in?</p>
+        <p>Are you sure you want to delete notification?</p>
       </Modal>
     </>
   );
@@ -73,5 +76,5 @@ NotificationAction.propTypes = {
   isPending: PropTypes.bool,
   openModal: PropTypes.func,
   setModalDetails: PropTypes.func,
-  deleteNotification: PropTypes.func,
+  delNotification: PropTypes.func,
 };

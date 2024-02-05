@@ -25,6 +25,7 @@ import { IdentityController } from "../pages/Auth/IdentityController.jsx";
 import SignUpController from "../pages/Auth/SignUpController.jsx";
 import AdminEmailVerification from "../pages/Email/AdminEmailVerifyPage.jsx";
 import UserEmailVerification from "../pages/Email/UserEmailVerifyPage.jsx";
+import { SuccessAccountActivation } from "../pages/Results/SuccessfulActivation";
 
 import UserPage from "../pages/User/UserPage.jsx";
 import {
@@ -65,8 +66,18 @@ function App() {
           // element: <>Hello world</>,
         },
         {
+          path: "register/user/verify/success/:id/:token",
+          element: <SuccessAccountActivation />,
+          // element: <>Hello world</>,
+        },
+        {
           path: "register/admin/verify/:id/:token",
           element: <AdminEmailVerification />,
+        },
+        {
+          path: "register/admin/verify/success/:id/:token",
+          element: <SuccessAccountActivation />,
+          // element: <>Hello world</>,
         },
       ],
     },

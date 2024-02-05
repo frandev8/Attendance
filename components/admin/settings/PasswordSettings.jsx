@@ -1,6 +1,6 @@
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { useMutation } from "@tanstack/react-query";
-import { Form, Input, Space } from "antd";
+import { Button, Form, Input, Space } from "antd";
 import React from "react";
 import { useSelector } from "react-redux";
 import { useNavigation } from "react-router-dom";
@@ -34,7 +34,9 @@ const PasswordSettings = () => {
   };
   return (
     <>
-      <h1>Password</h1>
+      <div className={"tw-mb-[10px]"}>
+        <h1 className={"tw-text-left"}>Password</h1>
+      </div>
 
       <Form
         name="mutate-password"
@@ -118,9 +120,9 @@ const PasswordSettings = () => {
         </Form.Item>
         <Space direction="vertical">
           <div>
-            <button type="submit" className="tw-border-2 tw-border-black">
+            <Button htmlType="submit" to="./">
               Change Password
-            </button>
+            </Button>
           </div>
         </Space>
       </Form>

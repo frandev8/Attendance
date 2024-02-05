@@ -4,8 +4,7 @@ a {
 }
 
 .active {
-  color: var(--color-primary-800);
-  color: blue;
+  color: #5295e3;
   text-decoration: underline;
 }
 

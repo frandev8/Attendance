@@ -1,3 +1,5 @@
+import { Badge } from "@/components/ui/badge";
+import { getColorBasedOnStatus } from "@/utils/colors";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { Container, Divider, Paper } from "@mui/material";
@@ -82,6 +84,7 @@ const History = () => {
   const { data: myData, isPending } = useQuery({
     queryKey: ["leave", { type: "request" }],
     queryFn: () => fetchTimeOffById({ id: userId }),
+    gcTime: 0,
   });
 
   // const [searchTerm, setSearchTerm] = useState("");
@@ -91,37 +94,51 @@ const History = () => {
 
   useEffect(() => {
     if (myData) {
-      timeOffRequestData.current = myData.map((leave) => ({
-        key: leave._id,
-        duration: formatLeaveDates(leave.startDate, leave.endDate),
-        type: leave.type,
-        days: calculateDaysBetween(leave.startDate, leave.endDate),
-        status: leave.status,
-        delete:
-          leave.status === "pending" ? (
-            <DeleteOutlineIcon
-              onClick={() => {
-                setLeaveId(leave._id);
-                showBreakModal();
-              }}
-              className="hover:tw-cursor-pointer"
-            />
-          ) : (
-            ""
+      timeOffRequestData.current = myData.map((leave) => {
+        const badgeColor = getColorBasedOnStatus(leave.status);
+
+        console.log(badgeColor, "data");
+
+        return {
+          key: leave._id,
+          duration: formatLeaveDates(leave.startDate, leave.endDate),
+          type: leave.type,
+          days: calculateDaysBetween(leave.startDate, leave.endDate),
+          status: (
+            <Badge
+              className={`tw-w-max `}
+              style={{ backgroundColor: badgeColor }}
+            >
+              {leave.status}
+            </Badge>
           ),
-        "see-more": (
-          <button
-            className="tw-w-max tw-text-emerald-300"
-            href="#"
-            onClick={() => {
-              dispatch(openViewTimeOffModal());
-              setViewLeaveId(leave._id);
-            }}
-          >
-            see more
-          </button>
-        ),
-      }));
+          delete:
+            leave.status === "pending" ? (
+              <DeleteOutlineIcon
+                onClick={() => {
+                  setLeaveId(leave._id);
+                  showBreakModal();
+                }}
+                className="hover:tw-cursor-pointer "
+                style={{ color: "#FF7875" }}
+              />
+            ) : (
+              ""
+            ),
+          "see-more": (
+            <button
+              className="tw-w-max tw-text-[#5295E3]"
+              href="#"
+              onClick={() => {
+                dispatch(openViewTimeOffModal());
+                setViewLeaveId(leave._id);
+              }}
+            >
+              see more
+            </button>
+          ),
+        };
+      });
       setTriggerRerender((prevRerender) => !prevRerender);
     }
   }, [myData, dispatch]);
@@ -209,7 +226,7 @@ const History = () => {
           <div className="tw-flex">
             <CancelBtn />
             <Button
-              className="tw-bg-[#0000ff]"
+              className="tw-bg-[#5295E3]"
               onClick={onDeleteTimeOffHandler}
             >
               Yes{" "}

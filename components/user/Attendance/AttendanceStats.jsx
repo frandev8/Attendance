@@ -15,21 +15,30 @@ const data = [
 
 function AttendanceStats() {
   return (
-    <Space direction="vertical" className=" tw-w-full tw-mb-[15px] ">
+    <Space
+      direction="vertical"
+      className=" tw-w-full tw-mb-[15px] tw-bg-white tw-p-3  "
+    >
       <div>Attendance</div>
       <Divider style={{ marginTop: "5px", marginBottom: "5px" }} />
       <div>
         <div>
-          <div className="tw-flex  tw-justify-around tw-mb-[8px]">
-            <TotalClockIn />
-
-            <TotalClockOut />
+          <div className="tw-flex  tw-justify-between tw-mb-[8px]">
+            <div className="tw-border tw-shadow-sm  tw-bg-white   tw-border-gray-100  tw-rounded-md">
+              <TotalClockIn />
+            </div>
+            <div className="tw-border tw-shadow-sm  tw-bg-white   tw-border-gray-100  tw-rounded-md">
+              <TotalClockOut />
+            </div>
           </div>
 
-          <div className="tw-flex tw-justify-around ">
-            <TotalLeave />
-
-            <TotalUncheckIn />
+          <div className="tw-flex tw-justify-between ">
+            <div className="tw-border tw-shadow-sm  tw-bg-white   tw-border-gray-100  tw-rounded-md">
+              <TotalLeave />
+            </div>
+            <div className="tw-border tw-shadow-sm  tw-bg-white   tw-border-gray-100  tw-rounded-md">
+              <TotalUncheckIn />
+            </div>
           </div>
         </div>
       </div>
@@ -39,21 +48,30 @@ function AttendanceStats() {
 
 export function AttendanceStats3() {
   return (
-    <Space direction="vertical" className=" tw-w-full tw-mb-[15px] ">
+    <Space
+      direction="vertical"
+      className=" tw-w-full tw-mb-[15px]  tw-bg-white "
+    >
       <div>Attendance</div>
       <Divider style={{ marginTop: "5px", marginBottom: "5px" }} />
       <div>
         <div className="tw-flex tw-flex-col">
-          <div className="tw-flex  tw-justify-around tw-mb-[8px]">
-            <TotalClockIn />
-
-            <TotalClockOut />
+          <div className="tw-flex  tw-justify-between tw-mb-[8px]">
+            <div className="tw-border tw-shadow-sm  tw-bg-white   tw-border-gray-100  tw-rounded-md">
+              <TotalClockIn />
+            </div>
+            <div className="tw-border tw-shadow-sm  tw-bg-white   tw-border-gray-100  tw-rounded-md">
+              <TotalClockOut />
+            </div>
           </div>
 
-          <div className="tw-flex tw-justify-around ">
-            <TotalLeave />
-
-            <TotalUncheckIn />
+          <div className="tw-flex tw-justify-between ">
+            <div className="tw-border tw-shadow-sm  tw-bg-white   tw-border-gray-100  tw-rounded-md">
+              <TotalLeave />
+            </div>
+            <div className="tw-border tw-shadow-sm  tw-bg-white   tw-border-gray-100  tw-rounded-md">
+              <TotalUncheckIn />
+            </div>
           </div>
         </div>
       </div>
@@ -66,13 +84,18 @@ export function AttendanceStats2() {
       <div>Attendance</div>
       <Divider style={{ marginTop: "5px", marginBottom: "5px" }} />
       <div className="tw-flex tw-justify-around">
-        <TotalClockIn />
-
-        <TotalClockOut />
-
-        <TotalLeave />
-
-        <TotalUncheckIn />
+        <div className="tw-border tw-shadow-sm  tw-bg-white   tw-border-gray-100  tw-rounded-md">
+          <TotalClockIn />
+        </div>
+        <div className="tw-border tw-shadow-sm  tw-bg-white   tw-border-gray-100  tw-rounded-md">
+          <TotalClockOut />
+        </div>
+        <div className="tw-border tw-shadow-sm  tw-bg-white   tw-border-gray-100  tw-rounded-md">
+          <TotalLeave />
+        </div>
+        <div className="tw-border tw-shadow-sm  tw-bg-white   tw-border-gray-100  tw-rounded-md">
+          <TotalUncheckIn />
+        </div>
       </div>
     </Space>
   );

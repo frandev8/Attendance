@@ -3,13 +3,13 @@ import { Avatar, Divider, List, Space, Spin } from "antd";
 import moment from "moment";
 import React from "react";
 import { getDateDuration } from "../../../utils/date";
-import { fetchNotification } from "../../../utils/http";
+import { fetchAnnouncement } from "../../../utils/http";
 import styles from "./Announcement.module.css";
 
 function Announcement() {
   const { data, isPending } = useQuery({
-    queryKey: ["notification"],
-    queryFn: fetchNotification,
+    queryKey: ["announcement"],
+    queryFn: fetchAnnouncement,
   });
 
   return (

@@ -1,8 +1,7 @@
 import TextField from "@mui/material/TextField";
 import { createRef, useEffect, useRef, useState } from "react";
 
-const TokenInput = () => {
-  const [token, setToken] = useState(["", "", "", "", ""]);
+const TokenInput = ({ token, setToken, setVerifyBtn }) => {
   const inputRefs = useRef([...Array(5)].map(() => createRef()));
 
   const handleChange = (index, value) => {
@@ -15,13 +14,12 @@ const TokenInput = () => {
     const isAllFilled = token.every((value) => value !== "");
 
     if (isAllFilled) {
-      // Call your function here
-      console.log("All fields filled:", token);
-
-      // If you have a specific function to run, replace the console.log above
-      // For example: yourFunction(token);
+      setVerifyBtn(true);
     }
-  }, [token]);
+    // else {
+    //   setVerifyBtn(false);
+    // }
+  }, [token, setVerifyBtn]);
 
   useEffect(() => {
     // Find the next empty input and focus on it

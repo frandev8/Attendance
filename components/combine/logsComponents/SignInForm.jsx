@@ -1,4 +1,6 @@
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { InfoCircleOutlined, UserOutlined } from "@ant-design/icons";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import Checkbox from "@mui/material/Checkbox";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
@@ -186,7 +188,15 @@ function SignIn() {
             </a>
           </div>
         </Form.Item>
-
+        {isError && (
+          <Alert className=" tw-mb-2" variant="destructive">
+            <WarningAmberIcon style={{ color: "#ff0000", fontSize: "16px" }} />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>
+              Incorrect username or password. Please try again.
+            </AlertDescription>
+          </Alert>
+        )}
         <Form.Item
           wrapperCol={{
             ...layout.wrapperCol,
@@ -196,7 +206,7 @@ function SignIn() {
             <Button
               type="primary"
               htmlType="submit"
-              className="tw-w-[40%] tw-mb-2 tw-bg-[#0000ff] tw-rounded-md"
+              className="tw-w-[40%] tw-mb-2 tw-bg-[#5295E3] tw-rounded-md"
             >
               {isPending ? <Spin /> : "Sign in "}
             </Button>

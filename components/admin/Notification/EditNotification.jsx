@@ -33,13 +33,11 @@ const ModalOverlay = ({ closeModal, notificationDetails }) => {
   const [isFormChanged, setFormMode] = useState(false);
 
   const adminId = useSelector((state) => state.admin.adminId);
-  const navigate = useNavigate();
 
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: mutateNotification,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notification"] });
-      navigate("./");
     },
   });
 
@@ -209,9 +207,15 @@ const SubmitButton = ({ form, hasFormChanged, isPending }) => {
   }, [values, message, title, form]);
 
   return (
-    <Button htmlType="submit" disabled={!submittable}>
-      {isPending ? <Spin /> : "Update"}
-    </Button>
+    <div className="tw-bg-[#f5f3f3] tw-w-full tw-rounded-lg">
+      <Button
+        htmlType="submit"
+        className="tw-bg-[#5295E3]"
+        disabled={!submittable}
+      >
+        {isPending ? <Spin /> : "Update"}
+      </Button>
+    </div>
   );
 };
 

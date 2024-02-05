@@ -1,8 +1,9 @@
+import { Badge } from "@/components/ui/badge";
+import { getColorBasedOnStatus } from "@/utils/colors";
 import { Container, Divider, Paper } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useQuery } from "@tanstack/react-query";
 import { Table } from "antd";
-import moment from "moment";
 import React from "react";
 import { useSelector } from "react-redux";
 import {
@@ -56,6 +57,8 @@ const AttendanceList = () => {
 
   if (myData) {
     myData.forEach((attendance) => {
+      const badgeColor = getColorBasedOnStatus(attendance.status);
+
       data.push({
         key: attendance._id,
         date: formatAttendanceDates(attendance.clockInTime),
@@ -69,8 +72,11 @@ const AttendanceList = () => {
           attendance.overtimeStartTime,
           attendance.overtimeEndTime
         ),
-        status:
-          attendance.status === "confirmed" ? "approved" : attendance.status,
+        status: (
+          <Badge className={`tw-w-max`} style={{ backgroundColor: badgeColor }}>
+            {attendance.status === "confirmed" ? "approved" : attendance.status}
+          </Badge>
+        ),
       });
     });
   }

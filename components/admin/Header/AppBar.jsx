@@ -48,7 +48,6 @@ function TopBar({ toggleDrawer, open }) {
 
   const adminName = capitalizeFirstLetter(personalData.firstname);
 
-
   return (
     <AppBar position="absolute" open={open}>
       <Toolbar
@@ -73,7 +72,7 @@ function TopBar({ toggleDrawer, open }) {
         >
           <MenuIcon />
         </IconButton>
-        <div className="tw-w-full tw-flex tw-border-2 tw-border-black tw-items-center">
+        <div className="tw-w-full tw-flex tw-items-center">
           <Typography
             component="h1"
             variant="h6"

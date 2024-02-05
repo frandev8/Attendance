@@ -28,7 +28,7 @@ const columns = [
     dataIndex: "message",
   },
   {
-    title: ".",
+    title: <div className="tw-text-white">action</div>,
     dataIndex: "action",
   },
 ];
@@ -40,17 +40,22 @@ const AnnouncementList = () => {
     // staleTime: 5000,
   });
 
-  const { isPending: isDeletePending, mutate: delNotification } = useMutation({
-    queryFn: deleteAnnouncement,
+  const {
+    mutate,
+    isPending: isDeletePending,
+    isError,
+    error,
+  } = useMutation({
+    mutationFn: deleteAnnouncement,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["announcement"] });
+      queryClient.invalidateQueries({
+        queryKey: ["announcement"],
+      });
     },
   });
 
   const [isEditAnnounceOpen, setEditAnnounceStatus] = useState(false);
   const [editAnnounceDetails, setEditAnnounceDetails] = useState(null);
-
-
 
   function openEditAnnounceModal() {
     setEditAnnounceStatus(true);
@@ -59,6 +64,10 @@ const AnnouncementList = () => {
   function closeEditAnnouncementModal() {
     setEditAnnounceStatus(false);
   }
+
+  const confirmDeletion = (id) => {
+    mutate({ id });
+  };
 
   let original = [];
 
@@ -74,7 +83,7 @@ const AnnouncementList = () => {
             setModalDetails={setEditAnnounceDetails}
             data={list}
             isPending={isDeletePending}
-            deleteAnnouncement={delNotification}
+            delNotification={confirmDeletion}
           ></AnnouncementAction>
         ),
       };

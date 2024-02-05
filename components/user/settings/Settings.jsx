@@ -27,7 +27,7 @@ const UserSettingsPage = () => {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4, backgroundColor: "#F1F2F6" }}>
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4, backgroundColor: "#F4F6FA" }}>
       <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
     </Container>
   );

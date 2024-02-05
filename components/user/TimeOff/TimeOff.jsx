@@ -9,8 +9,8 @@ import History from "./History";
 // import AttendanceCard from "../Cards/AttendanceCard";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import RecentLeaves from "../TimeOff/RecentLeaves";
 import TimeOffStats, { TimeOffStats2 } from "../TimeOff/TimeOffStats";
+import RecentLeaves from "./RecentLeaves";
 // import Clockin from "./Clockin";
 // import MyTimeSheet from "./MyTimesheet";
 import styles from "./TimeOff.module.css";
@@ -26,7 +26,7 @@ function TimeOffPage() {
         <div className={`${styles.box} ${styles.item1} tw-h-inherit`}>
           <Paper
             sx={{
-              p: 1,
+              p: 2,
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
@@ -40,9 +40,9 @@ function TimeOffPage() {
         </div>
 
         <div
-          className={`tw-w-full tw-flex tw-gap-3 ${styles.block2} tw-mt-[25px] tw-mb-[25px] tw-justify-between`}
+          className={`tw-w-full tw-flex tw-gap-3 ${styles.block2} tw-mt-[25px] tw-mb-[25px] tw-justify-between tw-bg-[#F4F6FA] tw-p-4`}
         >
-          <div className={`${styles.box} ${styles.item4} `}>
+          <div className={`${styles.box} ${styles.item4}  `}>
             {" "}
             <Paper
               sx={{
@@ -50,7 +50,6 @@ function TimeOffPage() {
                 display: "flex",
                 flexDirection: "column",
                 height: 370.23,
-                backgroundColor: "#F4F6FA",
               }}
               elevation={0}
             >
@@ -67,7 +66,6 @@ function TimeOffPage() {
                 flexDirection: "column",
                 height: 370.23,
                 overflow: "hidden",
-                backgroundColor: "#F4F6FA",
               }}
               elevation={0}
             >
@@ -76,7 +74,7 @@ function TimeOffPage() {
           </div>
         </div>
 
-        <div className={`${styles.box} ${styles.item6}`}>
+        <div className={`${styles.box} ${styles.item6} tw-bg-[#F4F6FA] tw-p-4`}>
           {" "}
           <Paper
             sx={{
@@ -84,7 +82,6 @@ function TimeOffPage() {
               display: "flex",
               flexDirection: "column",
               height: "100%",
-              backgroundColor: "#F4F6FA",
             }}
             elevation={0}
           >

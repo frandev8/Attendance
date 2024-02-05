@@ -1,14 +1,14 @@
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "antd";
 import PropTypes from "prop-types";
 import { createPortal } from "react-dom";
 import { useDispatch } from "react-redux";
 import { closeViewTimeOffModal } from "../../../src/store/main";
-import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card";
 import {
-  formatAttendanceDate,
   calculateDaysBetween,
+  formatAttendanceDate,
 } from "../../../utils/date";
-import { Badge } from "@/components/ui/badge";
 
 const BackDrop = () => {
   const dispatch = useDispatch();
@@ -90,9 +90,11 @@ const ModalOverlay = ({ formData }) => {
             </div>
             <div className="tw-flex tw-flex-col tw-col-span-2">
               <label className="tw-text-sm tw-font-medium">Status</label>
-              <Badge variant="secondary" className="tw-w-max">
+              {/* <Badge variant="secondary" className="tw-w-max">
                 {formData.status}
-              </Badge>
+              </Badge> */}
+
+              <Badge className={`tw-w-max`} >{formData.status}</Badge>
             </div>
           </div>
         </CardContent>

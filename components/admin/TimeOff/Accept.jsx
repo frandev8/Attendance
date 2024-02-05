@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { useSelector } from "react-redux";
 import { json, useNavigate, useParams } from "react-router-dom";
-import { endorseTimeOff } from "../../../utils/http";
+import { endorseTimeOff, queryClient } from "../../../utils/http";
 
 function AcceptBtn({ timeOffId }) {
   const params = useParams();
@@ -13,12 +13,13 @@ function AcceptBtn({ timeOffId }) {
   const adminId = useSelector((state) => {
     return state.admin.adminId;
   });
-  
+
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: endorseTimeOff,
     onSuccess: () => {
-      // queryClient.invalidateQueries({queryKey:[""]})
-      navigate("../");
+      queryClient.invalidateQueries({
+        queryKey: ["timeOff", { type: "pending" }],
+      });
     },
   });
 
@@ -26,7 +27,14 @@ function AcceptBtn({ timeOffId }) {
     mutate({ adminId, timeOffId, isValid: true });
   };
 
-  return <Button onClick={ConfirmAttendanceHandler}>Accept</Button>;
+  return (
+    <Button
+      onClick={ConfirmAttendanceHandler}
+      style={{ backgroundColor: "#5295E3" }}
+    >
+      Accept
+    </Button>
+  );
 }
 
 AcceptBtn.propTypes = {

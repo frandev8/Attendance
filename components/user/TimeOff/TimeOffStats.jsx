@@ -93,7 +93,7 @@ export function TimeOffStats2() {
 
   return (
     <>
-      <div className="tw-flex tw-flex-col tw-border-2 tw-border-black tw-justify-evenly  ">
+      <div className="tw-flex tw-flex-col  tw-justify-between tw-items-end  ">
         <div className="tw-mb-[5px]">
           <Button
             type="primary"
@@ -105,7 +105,7 @@ export function TimeOffStats2() {
             Request Time Off
           </Button>
         </div>
-        <div>
+        <div className={` tw-w-[100%]`}>
           <div
             className={`tw-flex tw-justify-between tw-w-[100%] tw-gap-2 tw-lg:gap-4 ${styles["main"]}`}
           >

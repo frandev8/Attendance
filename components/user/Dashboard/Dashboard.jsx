@@ -48,6 +48,7 @@ function UserDashboard() {
               sx={{
                 width: "100%",
                 backgroundColor: "#F4F6FA",
+                p: 2,
               }}
               elevation={0}
             >
@@ -82,7 +83,7 @@ function UserDashboard() {
             </Paper>
           </div>
         </div>
-        <div className="tw-w-full tw-flex tw-gap-3 tw-mt-[25px] tw-mb-[25px] tw-justify-between">
+        <div className="tw-w-full tw-flex tw-gap-3 tw-mt-[25px] tw-mb-[25px] tw-justify-between tw-bg-[#F4F6FA] tw-p-4">
           <div className={`${styles.box} ${styles.item4} `}>
             {" "}
             <Paper
@@ -91,9 +92,10 @@ function UserDashboard() {
                 display: "flex",
                 flexDirection: "column",
                 height: 370.23,
-                backgroundColor: "#F4F6FA",
+                backgroundColor: "#ffffff",
               }}
               elevation={0}
+              className="tw-shadow-sm"
             >
               <Announcement />
             </Paper>
@@ -108,23 +110,24 @@ function UserDashboard() {
                 flexDirection: "column",
                 height: 370.23,
                 overflow: "hidden",
-                backgroundColor: "#F4F6FA",
               }}
               elevation={0}
+              className="tw-shadow-sm"
             >
+              {/* <RecentLeaves enableMore={true} /> */}
               <RecentLeaves enableMore={true} />
             </Paper>
           </div>
         </div>
 
-        <div className={`${styles.box} ${styles.item6}`}>
+        <div className={`${styles.box} ${styles.item6} tw-bg-[#F4F6FA] tw-p-4`}>
           <Paper
             sx={{
               display: "flex",
               flexDirection: "column",
               height: "100%",
-              background: "#F4F6FA",
             }}
+            elevation={0}
           >
             <AttendanceList />
           </Paper>

@@ -68,7 +68,7 @@ export const getClockInTokenCookie = () => {
 
 export const saveClockInTokenCookie = (token) => {
   const expirationTime = new Date();
-  expirationTime.setHours(23, 40, 0, 0);
+  expirationTime.setHours(17, 0, 0, 0);
 
   document.cookie = `clockInToken=${token}; expires=${expirationTime.toUTCString()}`;
 };
@@ -79,14 +79,41 @@ export function deleteClockInTokenCookie() {
 }
 
 /**
- * @def Break token
+ * @def Clock-out token
  * @param {*} token
+ */
+
+export const getClockOutTokenCookie = () => {
+  const token = document.cookie.match("(^|;)\\s?clockOutToken=([^;]+)");
+
+  if (!token) {
+    return "";
+  }
+
+  return token[2];
+};
+
+export const saveClockOutTokenCookie = (token) => {
+  const expirationTime = new Date();
+  expirationTime.setHours(19, 0, 0, 0);
+
+  document.cookie = `clockOutToken=${token}; expires=${expirationTime.toUTCString()}`;
+};
+
+export function deleteClockOutTokenCookie() {
+  document.cookie = `clockOutToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`; // Delete the cookie named 'token'
+  document.cookie = `clockOutToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/user;`; // Delete the cookie named 'token'
+}
+
+/**
+ * @def Break token
+ * @pa  ram {*} token
  */
 
 export const saveBreakTokenCookie = (token) => {
   const expirationTime = new Date();
-
-  expirationTime.setHours(23, 30, 0, 0);
+  console.log("called");
+  expirationTime.setHours(15, 0, 0, 0);
 
   document.cookie = `breakToken=${token}; expires=${expirationTime.toUTCString()}`;
 };
@@ -102,6 +129,8 @@ export const getBreakTokenCookie = () => {
 };
 
 export function deleteBreakTokenCookie() {
+  console.log("called!, deleting");
+  document.cookie = `breakToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`; // Delete the cookie named 'token'
   document.cookie = `breakToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/user;`; // Delete the cookie named 'token'
 }
 
@@ -113,7 +142,7 @@ export function deleteBreakTokenCookie() {
 export const saveOvertimeTokenCookie = (token) => {
   const expirationTime = new Date();
 
-  expirationTime.setHours(24, 50, 0, 0);
+  expirationTime.setHours(19, 0, 0, 0);
 
   document.cookie = `overtimeToken=${token}; expires=${expirationTime.toUTCString()}`;
 };
@@ -128,7 +157,10 @@ export const getOvertimeTokenCookie = () => {
 };
 
 export function deleteOvertimeTokenCookie() {
-  document.cookie = `overtimeToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/user;`; // Delete the cookie named 'token'
+  document.cookie = `overtimeToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`; // Delete the cookie named 'token'
+  document.cookie = `overtimeToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/user;`;
+
+  // Delete the cookie named 'token'
 }
 
 /**
@@ -136,65 +168,120 @@ export function deleteOvertimeTokenCookie() {
  * @param {*} token
  */
 
+// * clock in
+
 export const saveClockInTime = (time) => {
   localStorage.setItem("clockInTime", time);
 
   // Check for a previous timeout and clear it to avoid multiple executions
-  clearTimeout(removeTokenTimeout);
 
-  const nextMidnight = new Date();
-  nextMidnight.setHours(0, 0, 0, 0);
-  nextMidnight.setDate(nextMidnight.getDate() + 1);
+  const expireDate = new Date();
+  expireDate.setHours(0, 0, 0, 0);
+  expireDate.setDate(expireDate.getDate() + 1);
 
-  const millisecondsTilMidnight = nextMidnight - new Date();
-
-  const removeTokenTimeout = setTimeout(() => {
-    localStorage.removeItem("clockInTime");
-  }, millisecondsTilMidnight);
+  localStorage.setItem("clockInTimeExpireDate", expireDate.toISOString());
 };
 
 export const getClockInTime = () => {
-  return localStorage.getItem("clockInTime");
+  const clockInTime = localStorage.getItem("clockInTime");
+
+  if (clockInTime) {
+    const duration = getTokenDuration("clockInTimeExpireDate");
+
+    if (duration < 0) {
+      delClockInTimeToken();
+      delClockInTimeExpireToken();
+      return "";
+    } else return clockInTime;
+  } else return "";
 };
+
+export function delClockInTimeToken() {
+  localStorage.removeItem("clockInTime");
+}
+export function delClockInTimeExpireToken() {
+  localStorage.removeItem("clockInTimeExpireDate");
+}
+
+//* clock out
 
 export const saveClockOutTime = (time) => {
   localStorage.setItem("clockOutTime", time);
+
   // Check for a previous timeout and clear it to avoid multiple executions
-  clearTimeout(removeTokenTimeout);
 
-  const nextMidnight = new Date();
-  nextMidnight.setHours(0, 0, 0, 0);
-  nextMidnight.setDate(nextMidnight.getDate() + 1);
+  const expireDate = new Date();
+  expireDate.setHours(0, 0, 0, 0);
+  expireDate.setDate(expireDate.getDate() + 1);
 
-  const millisecondsTilMidnight = nextMidnight - new Date();
-
-  const removeTokenTimeout = setTimeout(() => {
-    localStorage.removeItem("clockOutTime");
-  }, millisecondsTilMidnight);
+  localStorage.setItem("clockOutTimeExpireDate", expireDate.toISOString());
 };
 
 export const getClockOutTime = () => {
-  return localStorage.getItem("clockOutTime");
+  const clockOutTime = localStorage.getItem("clockOutTime");
+
+  if (clockOutTime) {
+    const duration = getTokenDuration("clockOutTimeExpireDate");
+
+    if (duration < 0) {
+      delClockOutTimeToken();
+      delClockInTimeExpireToken();
+      return "";
+    } else return clockOutTime;
+  } else return "";
 };
+
+export function delClockOutTimeToken() {
+  localStorage.removeItem("clockOutTime");
+}
+export function delClockOutTimeExpireToken() {
+  localStorage.removeItem("clockOutTimeExpireDate");
+}
+
+// * break
 
 export const saveBreakTime = (time) => {
   localStorage.setItem("breakTime", time);
   // Check for a previous timeout and clear it to avoid multiple executions
-  clearTimeout(removeTokenTimeout);
 
-  const nextMidnight = new Date();
-  nextMidnight.setHours(0, 0, 0, 0);
-  nextMidnight.setDate(nextMidnight.getDate() + 1);
+  const expireDate = new Date();
+  expireDate.setHours(0, 0, 0, 0);
+  expireDate.setDate(expireDate.getDate() + 1);
 
-  const millisecondsTilMidnight = nextMidnight - new Date();
-
-  const removeTokenTimeout = setTimeout(() => {
-    localStorage.removeItem("breakTime");
-  }, millisecondsTilMidnight);
+  localStorage.setItem("breakTimeExpireDate", expireDate.toISOString());
 };
 
 export const getBreakTime = () => {
-  return localStorage.getItem("breakTime");
+  const breakTime = localStorage.getItem("breakTime");
+
+  if (breakTime) {
+    const duration = getTokenDuration("breakTimeExpireDate");
+
+    if (duration < 0) {
+      delBreakTimeToken();
+      delBreakTimeExpireToken();
+      return "";
+    } else return breakTime;
+  } else return "";
+};
+
+export function delBreakTimeToken() {
+  localStorage.removeItem("breakTime");
+}
+export function delBreakTimeExpireToken() {
+  localStorage.removeItem("breakTimeExpireDate");
+}
+
+// * token duration
+export const getTokenDuration = (tokenName) => {
+  const storedExpirationDate = localStorage.getItem(tokenName);
+  const expirationDate = new Date(storedExpirationDate);
+
+  const now = new Date();
+
+  const duration = expirationDate.getTime() - now.getTime();
+
+  return duration;
 };
 
 export const saveUserId = (userId) => {
@@ -241,7 +328,7 @@ export function checkUserLoginTokenLoader() {
   const token = getUserLoginToken();
 
   if (!token) {
-    return redirect("/");
+    return redirect("/auth");
   }
   return null;
 }

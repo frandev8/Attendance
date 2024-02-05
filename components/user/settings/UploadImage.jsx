@@ -140,7 +140,7 @@ const UploadImage = () => {
         beforeUpload={beforeUpload}
         onChange={handleChange}
       >
-        {userImage ? (
+        {userImage?.url ? (
           <img
             src={userImage.url}
             alt="avatar"

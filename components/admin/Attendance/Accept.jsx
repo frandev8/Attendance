@@ -24,7 +24,14 @@ function Accept({ adminId, attendanceId, userId }) {
     mutate({ adminId, attendanceId, userId, isValid: true });
   };
 
-  return <Button onClick={ConfirmAttendanceHandler}>Accept</Button>;
+  return (
+    <Button
+      onClick={ConfirmAttendanceHandler}
+      style={{ backgroundColor: "#5295E3" }}
+    >
+      Accepts
+    </Button>
+  );
 }
 
 Accept.propTypes = {

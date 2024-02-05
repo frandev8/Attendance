@@ -18,115 +18,12 @@ export default function OnLeave() {
   return (
     <div className="tw-sticky tw-top-[90px] tw-z-[1000]">
       <Birthday />
-      <OnTimeOff />
+      <RecentLeaves />
     </div>
   );
 }
 
-export function OnTimeOff() {
-  const filteredLeavesRef = useRef([]);
-  const [searchDate, setSearchDate] = useState("");
-  const [triggerRerender, setTriggerRerender] = useState(false);
-
-  const { data: myData, isPending } = useQuery({
-    queryKey: ["leave", { type: "recent" }],
-    queryFn: () => fetchTimeOff({ approved: true }),
-  });
-
-  useEffect(() => {
-    if (myData) {
-      filteredLeavesRef.current = filterDateByRange(
-        myData,
-        new Date(),
-        "startDate",
-        "endDate"
-      );
-    }
-  }, [myData]);
-
-  useEffect(() => {
-    if (myData && searchDate) {
-      filteredLeavesRef.current = filterDateByRange(
-        myData,
-        searchDate,
-        "startDate",
-        "endDate"
-      );
-
-      setTriggerRerender((prevRerender) => !prevRerender);
-    }
-  }, [myData, searchDate]);
-
-  const onChange = (date, dateString) => {
-    setSearchDate(dateString);
-  };
-
-  let rows = [];
-
-  for (let i = 0; i < 70; i++) {
-    rows.push({
-      key: i,
-      date: "20 Jan 2023",
-      message: "my message",
-      title: "my title",
-    });
-  }
-
-  return (
-    <Card className="tw-bg-white tw-rounded-lg tw-shadow-lg ">
-      <CardHeader>
-        <CardTitle className="tw-text-2xl tw-font-bold">
-          Time Off Requests
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-2 tw-flex tw-items-center tw-justify-between">
-          <Label htmlFor="filter-date">Filter by Date</Label>
-          <DatePicker onChange={onChange} />
-        </div>
-        <Divider></Divider>
-        <div className={`tw-mt-4 tw-divide-y ${styles["leaveList"]}`}>
-          {isPending && <Spin />}
-          {myData &&
-            filteredLeavesRef.current.map((timeOff) => {
-              return (
-                <div
-                  key={timeOff._id}
-                  className="tw-py-2 tw-flex tw-justify-between tw-items-center"
-                >
-                  <div>
-                    <h4 className="tw-text-lg tw-font-semibold">
-                      Employee Name
-                    </h4>
-                    <p className="tw-text-sm tw-text-gray-500 tw-dark:text-gray-400">
-                      {calculateDaysBetween(timeOff.startDate, timeOff.endDate)}{" "}
-                      {calculateDaysBetween(
-                        timeOff.startDate,
-                        timeOff.endDate
-                      ) > 1
-                        ? " days "
-                        : " day "}
-                      off
-                    </p>
-                  </div>
-                  <p className="tw-text-sm tw-text-gray-500 tw-dark:text-gray-400">
-                    {formatDateRange(timeOff.startDate, timeOff.endDate)}
-                  </p>
-                </div>
-              );
-            })}
-          {!filteredLeavesRef?.current.length && (
-            <div className="tw-flex tw-justify-center tw-items-center tw-h-full ">
-              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-            </div>
-          )}
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-function Birthday() {
+export const Birthday = function () {
   return (
     <Card className="tw-bg-yellow-200 tw-rounded-lg tw-shadow-lg  tw-mb-8">
       <CardHeader>
@@ -147,9 +44,98 @@ function Birthday() {
             </p>
           </div>
         </div>
-        <Button className="tw-bg-red-500 tw-text-white tw-w-max">
+        <Button
+          className="bg-[#5295E3] text-white tw-w-max"
+          style={{ backgroundColor: "#5295E3" }}
+        >
           Send Wish
         </Button>
+      </CardContent>
+    </Card>
+  );
+};
+
+export function RecentLeaves() {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const { isLoading, isError, data, refetch } = useQuery({
+    queryKey: ["query", selectedDate],
+    queryFn: () => fetchTimeOff({ approved: true, filter: selectedDate }),
+  });
+
+  useEffect(() => {
+    // Fetch data on component mount with the initial date
+    refetch();
+  }, []); // Empty dependency array ensures it runs only on mount
+
+  const handleDateChange = (date, dateString) => {
+    // Update the selected date and trigger a refetch
+
+    if (date) {
+      setSelectedDate(dateString);
+      refetch();
+    }
+  };
+
+  return (
+    <Card className="tw-bg-white tw-rounded-lg tw-shadow-lg ">
+      <CardHeader>
+        <CardTitle className="tw-text-2xl tw-font-bold">
+          Time Off Requests
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-2 tw-flex tw-items-center tw-justify-between">
+          <Label htmlFor="filter-date">Filter by Date</Label>
+          <DatePicker onChange={handleDateChange} />
+        </div>
+        <Divider></Divider>
+        <div className={`tw-mt-4 tw-divide-y ${styles["leaveList"]}`}>
+          {isLoading ? (
+            <div className="tw-flex tw-justify-center tw-items-center tw-w-full ">
+              <Spin />
+            </div>
+          ) : (
+            data.map((timeOff) => {
+              return (
+                <div
+                  key={timeOff._doc._id}
+                  className="tw-py-2 tw-flex tw-justify-between tw-items-center"
+                >
+                  <div>
+                    <h4 className="tw-text-lg tw-font-semibold">
+                      {timeOff.firstname}
+                    </h4>
+                    <p className="tw-text-sm tw-text-gray-500 tw-dark:text-gray-400">
+                      {calculateDaysBetween(
+                        timeOff._doc.startDate,
+                        timeOff._doc.endDate
+                      )}{" "}
+                      {calculateDaysBetween(
+                        timeOff._doc.startDate,
+                        timeOff._doc.endDate
+                      ) > 1
+                        ? " days "
+                        : " day "}
+                      off
+                    </p>
+                  </div>
+                  <p className="tw-text-sm tw-text-gray-500 tw-dark:text-gray-400">
+                    {formatDateRange(
+                      timeOff._doc.startDate,
+                      timeOff._doc.endDate
+                    )}
+                  </p>
+                </div>
+              );
+            })
+          )}
+          {(isError || !data?.length) && (
+            <div className="tw-flex tw-justify-center tw-items-center tw-h-full ">
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            </div>
+          )}
+        </div>
       </CardContent>
     </Card>
   );

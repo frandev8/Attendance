@@ -43,7 +43,7 @@ export function MainListItems() {
       >
         <ListItemButton>
           <ListItemIcon>
-            <DashboardIcon sx={{ color: isDashboard ? "blue" : "" }} />
+            <DashboardIcon sx={{ color: isDashboard ? "#5295E3" : "" }} />
           </ListItemIcon>
           <ListItemText primary="Dashboard" />
         </ListItemButton>
@@ -54,7 +54,7 @@ export function MainListItems() {
       >
         <ListItemButton>
           <ListItemIcon>
-            <ScheduleSendIcon sx={{ color: isConfirm ? "blue" : "" }} />
+            <ScheduleSendIcon sx={{ color: isConfirm ? "#5295E3" : "" }} />
           </ListItemIcon>
           <ListItemText primary="Attendance" />
         </ListItemButton>
@@ -65,7 +65,7 @@ export function MainListItems() {
       >
         <ListItemButton>
           <ListItemIcon>
-            <EventBusyIcon sx={{ color: isTimeOff ? "blue" : "" }} />
+            <EventBusyIcon sx={{ color: isTimeOff ? "#5295E3" : "" }} />
           </ListItemIcon>
           <ListItemText primary="Leave" />
         </ListItemButton>
@@ -76,7 +76,7 @@ export function MainListItems() {
       >
         <ListItemButton>
           <ListItemIcon>
-            <PeopleIcon sx={{ color: isEmployee ? "blue" : "" }} />
+            <PeopleIcon sx={{ color: isEmployee ? "#5295E3" : "" }} />
           </ListItemIcon>
           <ListItemText primary="Employees" />
         </ListItemButton>
@@ -87,7 +87,7 @@ export function MainListItems() {
       >
         <ListItemButton>
           <ListItemIcon>
-            <SettingsIcon sx={{ color: isSetting ? "blue" : "" }} />
+            <SettingsIcon sx={{ color: isSetting ? "#5295E3" : "" }} />
           </ListItemIcon>
           <ListItemText primary="Settings" />
         </ListItemButton>

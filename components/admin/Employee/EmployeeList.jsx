@@ -1,13 +1,12 @@
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { Container, Paper } from "@mui/material";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Unstable_Grid2";
 import { useQuery } from "@tanstack/react-query";
 import { Divider, Empty, Popover, Spin } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { fetchEmployees, queryClient } from "../../../utils/http";
+import { fetchEmployees } from "../../../utils/http";
 import SearchBox from "../SearchBox";
 // import OnLeave from "../TimeOff/OnTimeOff";
 import { filterByDate } from "@/utils/date";
@@ -16,14 +15,14 @@ import styles from "./EmployeeList.module.css";
 import SortEmployee from "./SortEmployee";
 
 export default function EmployeeList() {
-  const { data, isPending } = useQuery({
-    queryKey: ["employee", { type: "active" }],
-    queryFn: () => fetchEmployees({ active: true }),
-    gcTime: 0,
-  });
-
   const adminId = useSelector((state) => {
     return state.admin.adminId;
+  });
+
+  const { data, isPending } = useQuery({
+    queryKey: ["employee", { type: "subscribed" }],
+    queryFn: fetchEmployees,
+    gcTime: 0,
   });
 
   const employeeRequestData = useRef([]);
@@ -161,9 +160,7 @@ export default function EmployeeList() {
             )}
           </Container>
         </div>
-        <div className={`${styles.birthday} tw-border-2 tw-border-black`}>
-          {" "}
-        </div>
+        <div className={`${styles.birthday} `}> </div>
       </Container>
     </>
   );
