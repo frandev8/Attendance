@@ -96,7 +96,7 @@ export function RecentLeaves() {
               <Spin />
             </div>
           ) : (
-            data.map((timeOff) => {
+            data?.map((timeOff) => {
               return (
                 <div
                   key={timeOff._doc._id}

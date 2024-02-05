@@ -108,7 +108,7 @@ const RecentLeaves = ({ enableMore }) => {
             <Spin />
           </div>
         ) : (
-          data.map((timeOff) => (
+          data?.map((timeOff) => (
             <div
               key={timeOff._doc._id}
               className="tw-py-2 tw-flex tw-justify-between tw-items-center"
