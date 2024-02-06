@@ -138,7 +138,7 @@ const RecentLeaves = ({ enableMore }) => {
           ))
         )}
 
-        {(isError || !data?.length) && (
+        {(isError || (data && !data?.length)) && (
           <div className="tw-flex tw-justify-center tw-items-center tw-h-[150px] ">
             <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
           </div>

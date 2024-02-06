@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Avatar, Divider, List, Space, Spin } from "antd";
+import { Avatar, Divider, Empty, List, Space, Spin } from "antd";
 import moment from "moment";
 import React from "react";
 import { getDateDuration } from "../../../utils/date";
@@ -7,7 +7,7 @@ import { fetchAnnouncement } from "../../../utils/http";
 import styles from "./Announcement.module.css";
 
 function Announcement() {
-  const { data, isPending } = useQuery({
+  const { data, isPending, isError } = useQuery({
     queryKey: ["announcement"],
     queryFn: fetchAnnouncement,
   });
@@ -41,6 +41,12 @@ function Announcement() {
               </List.Item>
             )}
           />
+        )}
+
+        {(isError || (data && !data?.length)) && (
+          <div className="tw-flex tw-justify-center tw-items-center tw-h-[150px] ">
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+          </div>
         )}
       </div>
     </Space>
