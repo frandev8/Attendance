@@ -23,7 +23,8 @@ export const setUserLoginToken = (token) => {
 };
 
 export function deleteUserLoginToken() {
-  document.cookie = `userLogToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`; // Delete the cookie named 'token'
+  document.cookie = `userLogToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`; // Delete the cookie named 'userLogToken'
+  document.cookie = `userLogToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/user;`; // Delete the cookie named 'userLogToken'
 }
 
 /**
@@ -48,7 +49,8 @@ export const setAdminLoginToken = (token) => {
 };
 
 export function deleteAdminLoginToken() {
-  document.cookie = `adminLogToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`; // Delete the cookie named 'token'
+  document.cookie = `adminLogToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`; // Delete the cookie named 'adminLogToken'
+  document.cookie = `adminLogToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/admin;`; // Delete the cookie named 'adminLogToken'
 }
 
 /**

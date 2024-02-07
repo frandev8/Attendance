@@ -77,32 +77,7 @@ const RecentLeaves = ({ enableMore }) => {
         </div>
       </div>
       <div>
-        {/* {isPending && <Spin />}
-
-      <List
-        itemLayout="horizontal"
-        className={`${styles["main"]}  `}
-        dataSource={filteredLeavesRef.current}
-        renderItem={(item, index) => (
-          <List.Item>
-            <List.Item.Meta
-              avatar={
-                <Avatar
-                  src={`https://xsgames.co/randomusers/avatar.php?g=pixel&key=${index}`}
-                />
-              }
-              title={<>Hi</>}
-              description={
-                <div> */}
-        {/* {getDateDuration(item?.startDate)} <span>{item?.type}</span> */}
-        {/* <span>wow</span>
-                </div>
-              }
-            />
-          </List.Item>
-        )}
-      /> */}
-
+ 
         {isLoading ? (
           <div className="tw-flex tw-justify-center tw-items-center tw-w-full ">
             <Spin />

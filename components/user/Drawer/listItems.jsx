@@ -11,7 +11,7 @@ import ListSubheader from "@mui/material/ListSubheader";
 import * as React from "react";
 
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { deleteUserId } from "../../../utils/auth";
+import { deleteUserId, deleteUserLoginToken } from "../../../utils/auth";
 import "./listItems.css";
 
 export function MainListItems() {
@@ -29,6 +29,7 @@ export function MainListItems() {
 
   const handleLogOut = () => {
     deleteUserId();
+    deleteUserLoginToken();
   };
   return (
     <React.Fragment>

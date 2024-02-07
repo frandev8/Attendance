@@ -11,7 +11,7 @@ import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import * as React from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { deleteAdminId } from "../../../utils/auth";
+import { deleteAdminId, deleteAdminLoginToken } from "../../../utils/auth";
 
 import "./listItems.css";
 
@@ -31,6 +31,7 @@ export function MainListItems() {
 
   const handleLogOut = () => {
     deleteAdminId();
+    deleteAdminLoginToken();
   };
 
   return (

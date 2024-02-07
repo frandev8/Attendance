@@ -58,10 +58,6 @@ export function IdentityController() {
     queryFn: () => getMediaLogo({ id: "65b69d2c6b1a815476ff6d14" }),
   });
 
-  if (data) {
-    console.log(data.url);
-  }
-
   return (
     <>
       <main className={styles.container}>

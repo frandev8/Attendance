@@ -70,6 +70,8 @@ export async function fetchEmployees() {
 export async function fetchEmployeesById({ id }) {
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
+  console.log("called", id);
+
   let url = serverURL + "/employee/" + id;
 
   const response = await fetch(url);
@@ -1380,7 +1382,7 @@ export async function mutateOvertime({ id, action, overtimeTime }) {
 export async function getPageBanner({ id }) {
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
-  let url = serverURL + "/media/banner" + id;
+  let url = serverURL + "/media/banner/" + id;
 
   const res = await fetch(url);
 
@@ -1400,7 +1402,7 @@ export async function getPageBanner({ id }) {
 export async function getMediaLogo({ id }) {
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
-  let url = serverURL + "/media/logo" + id;
+  let url = serverURL + "/media/logo/" + id;
 
   const res = await fetch(url);
 

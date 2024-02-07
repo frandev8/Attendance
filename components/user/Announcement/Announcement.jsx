@@ -19,7 +19,11 @@ function Announcement() {
       </div>
       <Divider style={{ marginTop: "5px", marginBottom: "5px" }} />
       <div>
-        {isPending && <Spin />}
+        {isPending && (
+          <div className="tw-flex tw-justify-center tw-items-center tw-w-full ">
+            <Spin />
+          </div>
+        )}
 
         {data && (
           <List

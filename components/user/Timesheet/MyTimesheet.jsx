@@ -270,8 +270,6 @@ function MyTimeSheet() {
     }, 1000);
   }
 
-  // console.log(street, city, "hmm");
-
   return (
     <div
       className={`tw-flex tw-flex-col tw-justify-between tw-h-full tw-items-center`}
