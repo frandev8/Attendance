@@ -48,7 +48,7 @@ const AdminEmailVerification = () => {
 
   const formValue = enteredPin.join("");
 
-  const { data, isPending } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["admin", { type: "email" }],
     queryFn: () => adminRegisterVerify({ id, token, pin: formValue }),
     enabled: isQueryEnabled,
@@ -69,10 +69,11 @@ const AdminEmailVerification = () => {
         // navigate(`../../error/${id}`);
       }
     }
-    if (data) {
-      navigate(`../register/admin/verify/success/${id}/${token}`);
-    }
   }, [searchParams, navigate, id, token, data]);
+
+  if (data) {
+    navigate(`../register/admin/verify/success/${id}/${token}`);
+  }
 
   function onVerifyHandler() {
     setQueryActiveness(true);
@@ -97,7 +98,7 @@ const AdminEmailVerification = () => {
             disabled={!isVerifyBtnActive}
             onClick={onVerifyHandler}
           >
-            {isPending && isQueryEnabled ? <Spin size="small" /> : "Verify"}
+            {isLoading ? <Spin size="small" /> : "Verify"}
           </Button>
           <div className="tw-flex tw-w-full tw-justify-between">
             <Button type="link">Resend Code</Button>

@@ -25,8 +25,7 @@ const UserEmailVerification = () => {
 
   const formValue = enteredPin.join("");
 
-  console.log(formValue, "pin");
-  const { data, isPending } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["employee", { type: "email" }],
     queryFn: () => employeeRegisterVerify({ id, token, pin: formValue }),
     enabled: isQueryEnabled,
@@ -47,11 +46,11 @@ const UserEmailVerification = () => {
         // navigate(`../../error/${id}`);
       }
     }
-
-    if (data) {
-      navigate(`../register/user/verify/success/${id}/${token}`);
-    }
   }, [searchParams, navigate, id, token, data]);
+
+  if (data) {
+    navigate(`../register/user/verify/success/${id}/${token}`);
+  }
 
   function onVerifyHandler() {
     setQueryActiveness(true);
@@ -77,9 +76,7 @@ const UserEmailVerification = () => {
             disabled={!isVerifyBtnActive}
             onClick={onVerifyHandler}
           >
-            {/* {isPending ? <Spin size="small" /> }
-             */}
-            Verify
+            {isLoading ? <Spin size="small" /> : "Verify"}
           </Button>
           <div className="tw-flex  tw-w-full tw-justify-between hover:tw-bg-[]">
             <Button type="link">Resend Code</Button>

@@ -14,6 +14,7 @@ import {
   formatAttendanceDate,
   formatAttendanceTime,
 } from "@/utils/date";
+import { capitalizeFirstLetter } from "@/utils/typography";
 import Accept from "./Accept";
 import Reject from "./Reject";
 
@@ -26,7 +27,10 @@ export default function AttendanceCard({ data, adminId }) {
           <AvatarFallback>EA</AvatarFallback>
         </Avatar>
         <div className="tw-space-y-1">
-          <CardTitle className="tw-text-lg">Employee Name</CardTitle>
+          <CardTitle className="tw-text-lg">
+            {capitalizeFirstLetter(data.firstname)}{" "}
+            {("", capitalizeFirstLetter(data.lastname))}
+          </CardTitle>
           <CardDescription className="tw-text-sm tw-text-gray-500 tw-dark:text-gray-400">
             Attendance - {formatAttendanceDate()}
           </CardDescription>

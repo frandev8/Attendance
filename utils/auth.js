@@ -302,13 +302,37 @@ export const saveAdminId = (userId) => {
   localStorage.setItem("adminId", userId);
 };
 
-export const saveSignUpPersonal = (values) => {
-  localStorage.setItem("personal", JSON.stringify(values));
+export const saveSignUpPersonalInfo = (values) => {
+  localStorage.setItem("signupPersonal", JSON.stringify(values));
+
+  const expireDate = new Date();
+  expireDate.setMinutes(expireDate.getMinutes() + 1);
+
+  localStorage.setItem("signupPersonalExpireDate", expireDate.toISOString());
 };
 
-export const getSignUpPersonal = () => {
-  return localStorage.getItem("personal");
+export const getSignupPersonalInfo = () => {
+  const userPersonalDetails = localStorage.getItem("signupPersonal");
+
+  if (userPersonalDetails) {
+    const duration = getTokenDuration("signupPersonalExpireDate");
+
+    if (duration < 0) {
+      delSignupPersonalInfoToken();
+      delSignupInfoExpToken();
+      return "";
+    } else return userPersonalDetails;
+  } else return "";
 };
+
+export function delSignupPersonalInfoToken() {
+  localStorage.removeItem("signupPersonal");
+}
+export function delSignupInfoExpToken() {
+  localStorage.removeItem("signupPersonalExpireDate");
+}
+
+/** Id's  */
 
 export const getAdminId = () => {
   return localStorage.getItem("adminId");

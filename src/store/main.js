@@ -1,12 +1,16 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 
-import { getAdminId, getSignUpPersonal, getUserId } from "../../utils/auth";
+import { getAdminId, getSignupPersonalInfo, getUserId } from "../../utils/auth";
 const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+console.log(getSignupPersonalInfo(), "info");
 
 const user = { userId: getUserId() ? getUserId() : "" };
 const admin = { adminId: getAdminId() ? getAdminId() : "" };
 const timeOff = { isModalOpen: false, isViewModalOpen: false };
-const register = { personal: JSON.parse(getSignUpPersonal()) };
+const register = {
+  personal: getSignupPersonalInfo() ? JSON.parse(getSignupPersonalInfo()) : {},
+};
 
 // server
 const serverSlice = createSlice({
@@ -41,10 +45,7 @@ const registerSlice = createSlice({
   initialState: register,
   reducers: {
     savePersonalDetails(state, action) {
-      state.personal = action.payload?.personalData;
-    },
-    savePrivateDetails(state, action) {
-      state.private = action.payload?.privateData;
+      state.personal = action.payload?.personal;
     },
   },
 });
@@ -79,8 +80,7 @@ export const { saveUserId } = userSlice.actions;
 export const { saveAdminId } = adminSlice.actions;
 // export const { saveEmployeePersonalDetails, saveEmployeePrivateDetails } =
 //   signUpEmployeeSlice.actions;
-export const { savePersonalDetails, savePrivateDetails } =
-  registerSlice.actions;
+export const { savePersonalDetails } = registerSlice.actions;
 
 const store = configureStore({
   reducer: {

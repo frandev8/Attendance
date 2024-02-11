@@ -130,7 +130,7 @@ export function RecentLeaves() {
               );
             })
           )}
-          {(isError || !data?.length) && (
+          {(isError || (data && !data?.length)) && (
             <div className="tw-flex tw-justify-center tw-items-center tw-h-full ">
               <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
             </div>

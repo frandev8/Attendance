@@ -16,6 +16,7 @@ import CalenderDate from "./CalenderDate";
 export function CalendarAttendanceTimeline({ attendanceData }) {
   const records = attendanceData.current;
 
+  console.log(records.status);
   const statusColor = getColorBasedOnStatus(records.status);
 
   console.log(statusColor);

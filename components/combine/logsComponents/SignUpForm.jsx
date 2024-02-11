@@ -10,7 +10,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { savePersonalDetails } from "../../../src/store/main";
-import { saveSignUpPersonal } from "../../../utils/auth";
+import { saveSignUpPersonalInfo } from "../../../utils/auth";
 import { checkSignUpCredentials } from "../../../utils/http";
 import { validateSignup } from "../../../utils/signinValidate";
 const { Option } = Select;
@@ -29,9 +29,7 @@ const validateMessages = {
   required: "${label} is required!",
   types: {
     email: "${label} is not a valid email!",
-   
   },
- 
 };
 
 /* eslint-enable no-template-curly-in-string */
@@ -43,20 +41,21 @@ function SignUp() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const personalData = useSelector((state) => state.register.personal);
+  const personalInfo = useSelector((state) => state.register.personal);
 
-  const formInitial = {
-    username: personalData?.username,
-    email: personalData?.email,
-    role: personalData?.role,
+  console.log("personal info ", personalInfo);
+  let formInitial = {
+    username: personalInfo?.username,
+    email: personalInfo?.email,
+    role: personalInfo?.role,
   };
 
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: checkSignUpCredentials,
     onSuccess: (data) => {
-      dispatch(savePersonalDetails({ personalData: data.personalData }));
-      saveSignUpPersonal(data.personalData);
       navigate("./?details=private");
+      saveSignUpPersonalInfo(data.personalData);
+      dispatch(savePersonalDetails({ personal: data.personalData }));
     },
   });
   const onFinish = (values) => {

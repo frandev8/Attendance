@@ -150,7 +150,7 @@ const Attendance = () => {
               </Popover>
             </div>
           </div>
-          <Container maxWidth="lg" sx={{ mb: 4, border: "2px solid blue" }}>
+          <Container maxWidth="lg" sx={{ mb: 4 }}>
             {isPending ? (
               <Spin />
             ) : (

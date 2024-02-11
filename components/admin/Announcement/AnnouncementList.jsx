@@ -92,8 +92,9 @@ const AnnouncementList = () => {
 
   return (
     <div>
-      {isPending && <Spin />}
-      {data && (
+      {isPending ? (
+        <Spin />
+      ) : (
         <Table
           columns={columns}
           dataSource={original}

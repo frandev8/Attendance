@@ -36,6 +36,7 @@ export function register({ formData }) {
 export async function checkSignUpCredentials({ formData }) {
   const role = formData.role;
 
+  console.log("called!");
   if (role === "employee") {
     return await checkEmployeeDuplicate({ formData });
   } else if (role === "admin") {
@@ -161,6 +162,7 @@ export async function employeeRegisterVerify({ id, token, pin }) {
 export async function checkEmployeeDuplicate({ formData }) {
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
+  console.log("called!2");
   let url = serverURL + "/employee/register/duplicate";
 
   const response = await fetch(url, {
@@ -862,7 +864,7 @@ export async function clockOut({ id }) {
  * @desc Notification http
  *
  */
-export async function postNotification({ formData, adminId }) {
+export async function postNotification({ formData }) {
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
   let url = serverURL + "/admin/notification";
@@ -872,7 +874,7 @@ export async function postNotification({ formData, adminId }) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ formData, adminId }),
+    body: JSON.stringify(formData),
   });
 
   if (!response.ok) {
@@ -982,7 +984,9 @@ export async function fetchAnnouncement() {
 export async function postAnnouncement({ formData }) {
   const serverURL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
-  let url = serverURL + "/admin/announcement/new";
+  let url = serverURL + "/admin/announcement";
+
+  console.log("called", formData)
 
   const response = await fetch(url, {
     method: "POST",

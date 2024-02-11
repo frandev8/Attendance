@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { formatTimeOffDate } from "@/utils/date";
+import { capitalizeFirstLetter } from "@/utils/typography";
 import PropTypes from "prop-types";
 import AcceptBtn from "./Accept";
 import RejectBtn from "./Reject";
@@ -15,7 +16,10 @@ export default function TimeOffCard({ data }) {
   return (
     <Card className="tw-w-full tw-max-w-md tw-mx-auto">
       <CardHeader>
-        <CardTitle>John Doe</CardTitle>
+        <CardTitle>
+          {capitalizeFirstLetter(data.firstname)}{" "}
+          {("", capitalizeFirstLetter(data.lastname))}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="tw-grid tw-gap-2">

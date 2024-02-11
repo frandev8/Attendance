@@ -4,11 +4,15 @@ import { Button, Divider, Form, Input, Space, Spin } from "antd";
 import PropTypes from "prop-types";
 import { useRef } from "react";
 import { createPortal } from "react-dom";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { postNotification, queryClient } from "../../../utils/http";
 import { isNotificationFormValid } from "../../../utils/joiValidation";
 
 const { TextArea } = Input;
+const validateMessages = {
+  required: "${label} is required!",
+};
 
 const BackDrop = ({ closeModal }) => {
   return (
@@ -28,34 +32,24 @@ const BackDrop = ({ closeModal }) => {
 };
 
 const ModalOverlay = ({ closeModal }) => {
-  const textAreaRef = useRef();
-  const titleInputRef = useRef();
-
-  const navigate = useNavigate();
-
+  const adminId = useSelector((state) => state.admin.adminId);
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: postNotification,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notification"] });
+      closeModal();
     },
   });
 
-  const handleNewNotificationForm = () => {
+  const onFinish = (values) => {
     const formData = {
-      title: titleInputRef.current.input.value?.trim(),
-      message: textAreaRef.current.resizableTextArea.textArea.value?.trim(),
+      ...values,
       date: new Date().toISOString(),
+      adminId,
     };
 
-    const { error } = isNotificationFormValid(formData);
-    if (error) {
-      return;
-    }
-
-    // console.log(formData);
-    mutate({ formData: formData });
+    mutate({ formData });
   };
-
   return (
     <div
       style={{
@@ -85,39 +79,53 @@ const ModalOverlay = ({ closeModal }) => {
               labelCol={{
                 span: 4,
               }}
-              wrapperCol={{
-                span: 14,
-              }}
               layout="horizontal"
-              style={{
-                maxWidth: 600,
-              }}
+              onFinish={onFinish}
+              validateMessages={validateMessages}
             >
-              <Form.Item label="Title">
-                <Input placeholder="" ref={titleInputRef} />
+              <Form.Item
+                name="title"
+                label="Title"
+                rules={[
+                  {
+                    required: true,
+                  },
+                  { max: 20, message: "Can't be more than 20 characters" },
+                ]}
+                validateTrigger="onBlur"
+              >
+                <Input placeholder="" />
               </Form.Item>
-              <Form.Item label="Message">
-                <TextArea
-                  rows={4}
-                  ref={textAreaRef}
-                  placeholder="Enter your message..."
-                />
+              <Form.Item
+                name={"message"}
+                label="Message"
+                rules={[
+                  {
+                    required: true,
+                  },
+                  { max: 200, message: "Can't be more than 200 characters" },
+                ]}
+                validateTrigger="onBlur"
+              >
+                <TextArea rows={4} placeholder="Enter your message..." />
+              </Form.Item>
+              <Form.Item className="tw-flex tw-justify-end">
+                <div className="tw-flex">
+                  <Button type="primary" danger onClick={() => closeModal()}>
+                    Cancel
+                  </Button>
+                  <Button
+                    htmlType="submit"
+                    type="primary"
+                    className="tw-bg-[#5295E3]"
+                  >
+                    {isPending ? <Spin /> : "Done"}
+                  </Button>
+                </div>
               </Form.Item>
             </Form>
           </Space>
         </Paper>
-        <div className="tw-flex tw-w-[40%]">
-          <Button type="primary" danger onClick={() => closeModal()}>
-            Cancel
-          </Button>
-          <Button
-            type="primary"
-            onClick={handleNewNotificationForm}
-            className="tw-bg-[#5295E3]"
-          >
-            {isPending ? <Spin /> : "Done"}
-          </Button>
-        </div>
       </div>
     </div>
   );

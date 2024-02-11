@@ -168,7 +168,7 @@ function SignIn() {
             },
           ]}
         >
-          <Select placeholder="select your gender">
+          <Select placeholder="select your role">
             <Option value="employee">user</Option>
             <Option value="admin">admin</Option>
           </Select>

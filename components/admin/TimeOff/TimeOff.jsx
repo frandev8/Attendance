@@ -33,7 +33,6 @@ export default function TimeOff() {
 
   useEffect(() => {
     if (data) {
-      console.log(data, "mydata");
       timeOffRequestData.current = data;
       setTriggerRerender((prevRerender) => !prevRerender);
     }
