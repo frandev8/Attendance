@@ -51,11 +51,13 @@ export function IdentityController() {
   const { data, isPending } = useQuery({
     queryKey: ["photo", { key: "cover" }],
     queryFn: () => getPageBanner({ id: "65852eb55f470300be649aaa" }),
+    staleTime: 50000,
   });
 
   const { data: logo, isPending: isLogoPending } = useQuery({
     queryKey: ["photo", { key: "logo" }],
     queryFn: () => getMediaLogo({ id: "65b69d2c6b1a815476ff6d14" }),
+    staleTime: 50000,
   });
 
   return (

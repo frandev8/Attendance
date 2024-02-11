@@ -123,7 +123,7 @@ function SignUpPrivacy() {
 
         <Form.Item
           name="confirm"
-          label="Confirm Password"
+          label="Repeat Password"
           dependencies={["password"]}
           hasFeedback
           rules={[
