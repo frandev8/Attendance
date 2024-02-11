@@ -131,7 +131,6 @@ export const getBreakTokenCookie = () => {
 };
 
 export function deleteBreakTokenCookie() {
-  console.log("called!, deleting");
   document.cookie = `breakToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`; // Delete the cookie named 'token'
   document.cookie = `breakToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/user;`; // Delete the cookie named 'token'
 }

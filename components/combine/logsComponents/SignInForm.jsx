@@ -192,9 +192,7 @@ function SignIn() {
           <Alert className=" tw-mb-2" variant="destructive">
             <WarningAmberIcon style={{ color: "#ff0000", fontSize: "16px" }} />
             <AlertTitle>Error</AlertTitle>
-            <AlertDescription>
-              Incorrect username or password. Please try again.
-            </AlertDescription>
+            <AlertDescription>{error.message}</AlertDescription>
           </Alert>
         )}
         <Form.Item

@@ -43,7 +43,6 @@ function SignUp() {
 
   const personalInfo = useSelector((state) => state.register.personal);
 
-  console.log("personal info ", personalInfo);
   let formInitial = {
     username: personalInfo?.username,
     email: personalInfo?.email,
